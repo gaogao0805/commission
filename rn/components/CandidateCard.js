@@ -8,6 +8,7 @@ const C = {
   grayDeep: '#656D76',    // 灰蓝色深文本
   grayMid: '#7B838D',     // 灰蓝色中深文本
   grayLight: '#9EA7B3',   // 灰蓝色中浅文本
+  greenGray: '#9EB3B3',   // 绿灰icon/AI理由文本
   grayShadow: '#BBC1C9',  // 占位符阴影
   green: '#02A87E',       // 主绿
   greenDeep: '#598C75',   // 稍浅深绿
@@ -69,11 +70,13 @@ export default function CandidateCard({ candidate, onPress, onRequestResume }) {
         ))}
       </View>
 
-      {/* AI Reason with green left bar + quote */}
+      {/* AI Reason with avatar + quote */}
       <View style={s.reasonRow}>
-        <View style={s.reasonBar} />
-        <Text style={s.reasonT} numberOfLines={2}>
+        <View style={s.reasonLeft}>
           <Text style={s.quote}>{'\u201C'}</Text>
+          <View style={s.reasonAvatar} />
+        </View>
+        <Text style={s.reasonT} numberOfLines={2}>
           {c.aiReason}
         </Text>
       </View>
@@ -142,12 +145,12 @@ const s = StyleSheet.create({
 
   // AI Reason
   reasonRow: { flexDirection: 'row', marginTop: 16 },
-  reasonBar: { width: 2, backgroundColor: C.green, borderRadius: 1, marginRight: 8 },
-  quote: { fontSize: 16, color: C.grayLight },
+  reasonLeft: { alignItems: 'center', marginRight: 4, width: 24 },
+  quote: { fontSize: 14, color: C.greenGray, lineHeight: 14 },
+  reasonAvatar: { width: 20, height: 20, borderRadius: 10, backgroundColor: C.green, marginTop: 2 },
   reasonT: {
-    flex: 1, fontSize: 13, color: C.grayLight,
-    letterSpacing: 0.5, lineHeight: 19,
-    fontStyle: 'italic',
+    flex: 1, fontSize: 13, color: C.greenGray,
+    letterSpacing: 0.5, lineHeight: 18,
   },
 
   // Request resume button

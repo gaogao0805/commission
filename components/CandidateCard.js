@@ -1,6 +1,21 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { getResumeStatusLabel, getMatchingStatus } from '../data/candidates';
+
+// Figma design tokens
+const C = {
+  black: '#000000',
+  grayDeep: '#656D76',    // 灰蓝色深文本
+  grayMid: '#7B838D',     // 灰蓝色中深文本
+  grayLight: '#9EA7B3',   // 灰蓝色中浅文本
+  greenGray: '#9EB3B3',   // 绿灰icon/AI理由文本
+  grayShadow: '#BBC1C9',  // 占位符阴影
+  green: '#02A87E',       // 主绿
+  greenDeep: '#598C75',   // 稍浅深绿
+  greenBubble: '#EBFAF5', // 浅绿气泡
+  chatBg: '#F8FAFC',      // 聊天气泡/技能背景
+  yellow: '#E19D16',
+};
 
 export default function CandidateCard({ candidate, onPress, onRequestResume }) {
   const c = candidate;
@@ -9,51 +24,64 @@ export default function CandidateCard({ candidate, onPress, onRequestResume }) {
   const resumeLabel = getResumeStatusLabel(c);
   const matchStatus = getMatchingStatus(c);
 
-  // Resume inline tag
-  let rText = null, rColor = '#059669';
-  if (isHighlight) { rText = '新简历'; rColor = '#059669'; }
-  else if (resumeLabel) { rText = resumeLabel.text; rColor = resumeLabel.type === 'requested' ? '#d97706' : '#059669'; }
-
-  // Match status colors
-  const msColor = matchStatus?.type === 'green' ? '#059669' : matchStatus?.type === 'orange' ? '#d97706' : '#9ca3af';
-  const msBg = matchStatus?.type === 'green' ? 'rgba(5,150,105,0.06)' : matchStatus?.type === 'orange' ? 'rgba(217,119,6,0.06)' : 'rgba(0,0,0,0.03)';
+  // Resume inline: green dot + text
+  let rText = null, rColor = C.green;
+  if (isHighlight) { rText = '新简历'; }
+  else if (resumeLabel) {
+    rText = resumeLabel.text;
+    rColor = resumeLabel.type === 'requested' ? C.yellow : C.green;
+  }
 
   return (
     <TouchableOpacity style={s.card} activeOpacity={0.7} onPress={onPress}>
-      {/* Row 1: avatar + name/title + match tag */}
+      {/* Match status tag - top right, pill left-rounded */}
+      {matchStatus && (
+        <View style={s.msWrap}>
+          <Text style={s.msText}>{matchStatus.text}</Text>
+        </View>
+      )}
+
+      {/* Row 1: Avatar + Name + Resume + Role */}
       <View style={s.top}>
         <View style={s.avatar}>
           <Text style={s.avatarT}>{initial}</Text>
-          {isHighlight && <View style={s.redDot} />}
+
         </View>
         <View style={s.info}>
           <View style={s.nameRow}>
             <Text style={s.name}>{c.name}</Text>
-            {rText && <>
-              <View style={[s.dot, { backgroundColor: rColor }]} />
-              <Text style={[s.rText, { color: rColor }]}>{rText}</Text>
-            </>}
+            {rText && (
+              <View style={s.resumeInline}>
+                <View style={[s.dot, { backgroundColor: rColor }]} />
+                <Text style={[s.rText, { color: rColor }]}>{rText}</Text>
+              </View>
+            )}
           </View>
           <Text style={s.role}>{c.company} / {c.title}</Text>
         </View>
-        {matchStatus && (
-          <View style={[s.msTag, { backgroundColor: msBg, borderColor: msColor + '30' }]}>
-            <Text style={[s.msText, { color: msColor }]}>{matchStatus.text}</Text>
-          </View>
-        )}
       </View>
 
-      {/* Skills */}
+      {/* Skills row */}
       <View style={s.skills}>
-        {c.skills.map(sk => <View key={sk} style={s.pill}><Text style={s.pillT}>{sk}</Text></View>)}
+        {c.skills.map(sk => (
+          <View key={sk} style={s.pill}>
+            <Text style={s.pillT}>{sk}</Text>
+          </View>
+        ))}
       </View>
 
-      {/* AI Reason */}
-      <View style={s.reason}>
-        <Text style={s.reasonT} numberOfLines={2}>{c.aiReason}</Text>
+      {/* AI Reason: avatar + floating quote + text */}
+      <View style={s.reasonRow}>
+        <View style={s.reasonIconWrap}>
+          <Image source={require('../assets/agent-avatar.png')} style={s.reasonAvatar} />
+          <Text style={s.quote}>{'\u201C'}</Text>
+        </View>
+        <Text style={s.reasonT} numberOfLines={2}>
+          {c.aiReason}
+        </Text>
       </View>
 
-      {/* Request resume button if none */}
+      {/* Request resume if none */}
       {c.resumeStatus === 'none' && (
         <TouchableOpacity style={s.reqBtn} onPress={() => onRequestResume?.(c.id)}>
           <Text style={s.reqBtnT}>请求简历</Text>
@@ -64,24 +92,72 @@ export default function CandidateCard({ candidate, onPress, onRequestResume }) {
 }
 
 const s = StyleSheet.create({
-  card: { backgroundColor: '#fff', borderRadius: 12, padding: 16, marginBottom: 10, borderWidth: 0.5, borderColor: '#e5e7eb', shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.04, shadowRadius: 4, elevation: 1 },
-  top: { flexDirection: 'row', alignItems: 'flex-start', gap: 12, marginBottom: 12 },
-  avatar: { width: 44, height: 44, borderRadius: 22, backgroundColor: '#f0f0f5', alignItems: 'center', justifyContent: 'center' },
-  avatarT: { fontSize: 17, fontWeight: '500', color: '#9ca3af' },
-  redDot: { position: 'absolute', top: -2, right: -2, width: 12, height: 12, borderRadius: 6, backgroundColor: '#dc2626', borderWidth: 2, borderColor: '#fff' },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    marginBottom: 12,
+    position: 'relative',
+    overflow: 'hidden',
+    // subtle shadow
+    shadowColor: '#000', shadowOffset: { width: 1, height: 1 }, shadowOpacity: 0.07, shadowRadius: 5, elevation: 2,
+  },
+
+  // Match status tag - positioned top right, left-side rounded pill
+  msWrap: {
+    position: 'absolute', top: 12, right: 0,
+    backgroundColor: C.greenBubble,
+    borderTopLeftRadius: 999, borderBottomLeftRadius: 999,
+    paddingLeft: 12, paddingRight: 8, paddingVertical: 1,
+  },
+  msText: { fontSize: 12, color: C.greenDeep, letterSpacing: 0.5 },
+
+  // Top row
+  top: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  avatar: {
+    width: 40, height: 40, borderRadius: 20,
+    backgroundColor: '#e8e8ed',
+    alignItems: 'center', justifyContent: 'center',
+  },
+  avatarT: { fontSize: 16, fontWeight: '500', color: C.grayShadow },
+  redDot: {
+    position: 'absolute', top: -2, right: -2,
+    width: 10, height: 10, borderRadius: 5,
+    backgroundColor: '#dc2626', borderWidth: 2, borderColor: '#fff',
+  },
   info: { flex: 1 },
-  nameRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  name: { fontSize: 16, fontWeight: '600', color: '#1a1a2e' },
+  nameRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  name: { fontSize: 16, fontWeight: '600', color: C.black },
+  resumeInline: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   dot: { width: 6, height: 6, borderRadius: 3 },
-  rText: { fontSize: 13, fontWeight: '500' },
-  role: { fontSize: 13, color: '#6b7280', marginTop: 3 },
-  msTag: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20, borderWidth: 1, alignSelf: 'flex-start' },
-  msText: { fontSize: 11, fontWeight: '500' },
-  skills: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 12, paddingTop: 4, borderTopWidth: 0.5, borderTopColor: '#f0f0f5' },
-  pill: { paddingHorizontal: 14, paddingVertical: 6, borderRadius: 6, backgroundColor: '#f7f7fb', borderWidth: 0.5, borderColor: '#e5e7eb' },
-  pillT: { fontSize: 13, color: '#4b5563' },
-  reason: { borderLeftWidth: 3, borderLeftColor: '#059669', paddingLeft: 12 },
-  reasonT: { fontSize: 13, color: '#4b5563', lineHeight: 20 },
-  reqBtn: { marginTop: 10, alignSelf: 'flex-start', paddingHorizontal: 14, paddingVertical: 6, borderRadius: 20, borderWidth: 1, borderColor: '#6366f1', backgroundColor: 'rgba(99,102,241,0.06)' },
-  reqBtnT: { fontSize: 12, fontWeight: '500', color: '#4f46e5' },
+  rText: { fontSize: 12, letterSpacing: 0.5 },
+  role: { fontSize: 13, color: C.grayDeep, letterSpacing: 0.5, marginTop: 6 },
+
+  // Skills
+  skills: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 16 },
+  pill: {
+    backgroundColor: C.chatBg,
+    borderRadius: 4,
+    paddingHorizontal: 12, paddingVertical: 2,
+  },
+  pillT: { fontSize: 12, color: C.grayMid, letterSpacing: 0.5, lineHeight: 18 },
+
+  // AI Reason
+  reasonRow: { flexDirection: 'row', marginTop: 16 },
+  reasonIconWrap: { width: 28, alignSelf: 'center', alignItems: 'center', position: 'relative' },
+  reasonAvatar: { width: 20, height: 20, borderRadius: 10 },
+  quote: { position: 'absolute', top: -10, right: -2, fontSize: 16, color: '#DDE2E8', fontWeight: '600' },
+  reasonT: {
+    flex: 1, fontSize: 13, color: C.greenGray,
+    letterSpacing: 0.5, lineHeight: 18, alignSelf: 'center',
+  },
+
+  // Request resume button
+  reqBtn: {
+    marginTop: 12, alignSelf: 'flex-start',
+    paddingHorizontal: 12, paddingVertical: 4, borderRadius: 4,
+    backgroundColor: C.greenBubble,
+  },
+  reqBtnT: { fontSize: 12, fontWeight: '500', color: C.green, letterSpacing: 0.5 },
 });
