@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Animated, PanResponder, Dimensions, ScrollView } from 'react-native';
+import Svg, { Rect, Defs, LinearGradient as SvgLinearGradient, Stop } from 'react-native-svg';
 import { useApp } from '../data/AppContext';
 import { getResumeStatusLabel } from '../data/candidates';
 import Toast from '../components/Toast';
@@ -8,7 +9,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const SWIPE_THRESHOLD = 80;
 const SWIPE_DOWN_THRESHOLD = 100;
 
-function SwipeableCard({ candidate, isFront, behind, onSwipe, onRequestResume, cardRef }) {
+function SwipeableCard({ candidate, isFront, behind, onSwipe, onRequestResume, cardRef, passProgress }) {
   const pan = useRef(new Animated.ValueXY()).current;
   const passOp = useRef(new Animated.Value(0)).current;
   const rejectOp = useRef(new Animated.Value(0)).current;
@@ -27,7 +28,9 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onRequestResume, c
     onMoveShouldSetPanResponder: (_, g) => isFront && (Math.abs(g.dx) > 8 || Math.abs(g.dy) > 8),
     onPanResponderMove: (_, g) => {
       pan.setValue({ x: g.dx, y: Math.max(0, g.dy) });
-      passOp.setValue(Math.min(Math.max(g.dx / SWIPE_THRESHOLD, 0), 1));
+      const pv = Math.min(Math.max(g.dx / SWIPE_THRESHOLD, 0), 1);
+      passOp.setValue(pv);
+      if (passProgress) passProgress.setValue(pv);
       rejectOp.setValue(Math.min(Math.max(-g.dx / SWIPE_THRESHOLD, 0), 1));
       pendOp.setValue(Math.min(Math.max(g.dy / SWIPE_DOWN_THRESHOLD, 0), 1) * Math.max(0, 1 - Math.abs(g.dx) / 200));
     },
@@ -37,7 +40,7 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onRequestResume, c
       else if (g.dy > SWIPE_DOWN_THRESHOLD && Math.abs(g.dx) < 50) animateOut('pending');
       else {
         Animated.spring(pan, { toValue: { x: 0, y: 0 }, useNativeDriver: false }).start();
-        [passOp, rejectOp, pendOp].forEach(o => Animated.timing(o, { toValue: 0, duration: 200, useNativeDriver: false }).start());
+        [passOp, rejectOp, pendOp, passProgress].filter(Boolean).forEach(o => Animated.timing(o, { toValue: 0, duration: 200, useNativeDriver: false }).start());
       }
     },
   })).current;
@@ -108,6 +111,7 @@ export default function DecisionScreen({ navigation }) {
   const [index, setIndex] = useState(0);
   const [toast, setToast] = useState({ visible: false, message: '', type: '' });
   const cardRef = useRef();
+  const passProgress = useRef(new Animated.Value(0)).current;
   const newList = getNew();
 
   const handleSwipe = useCallback((decision) => {
@@ -156,6 +160,17 @@ export default function DecisionScreen({ navigation }) {
       </View>
 
       <View style={styles.swipeContainer}>
+        <Animated.View pointerEvents="none" style={[styles.passBg, { opacity: passProgress }]}>
+          <Svg width="100%" height="275" preserveAspectRatio="none">
+            <Defs>
+              <SvgLinearGradient id="passBgGrad" x1="0" y1="0" x2="0" y2="1">
+                <Stop offset="0" stopColor="#8EF1CD" stopOpacity="0.5" />
+                <Stop offset="1" stopColor="#ffffff" stopOpacity="0" />
+              </SvgLinearGradient>
+            </Defs>
+            <Rect x="0" y="0" width="100%" height="275" fill="url(#passBgGrad)" />
+          </Svg>
+        </Animated.View>
         <View style={styles.stack}>
           {newList.slice(index, index + 3).reverse().map((c, i, arr) => {
             const pos = arr.length - 1 - i;
@@ -165,6 +180,7 @@ export default function DecisionScreen({ navigation }) {
                 isFront={pos === 0} behind={pos}
                 onSwipe={handleSwipe}
                 onRequestResume={handleRequestResume}
+                passProgress={pos === 0 ? passProgress : undefined}
                 cardRef={pos === 0 ? cardRef : undefined}
               />
             );
@@ -203,7 +219,8 @@ const styles = StyleSheet.create({
   backArrow: { fontSize: 24, color: '#1a1a2e', marginTop: -2 },
   navTitle: { fontSize: 17, fontWeight: '600' },
   counter: { fontSize: 14, color: '#9ca3af', fontWeight: '500' },
-  swipeContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16 },
+  swipeContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16, position: 'relative' },
+  passBg: { position: 'absolute', top: 0, left: 0, right: 0, height: 275 },
   stack: { width: '100%', height: 480, position: 'relative' },
   swipeCard: {
     position: 'absolute', top: 0, left: 0, right: 0, maxHeight: 480,

@@ -14,60 +14,59 @@ function QuoteIcon() {
 // Figma design tokens
 const C = {
   black: '#000000',
-  grayDeep: '#656D76',    // 灰蓝色深文本
-  grayMid: '#7B838D',     // 灰蓝色中深文本
-  grayLight: '#9EA7B3',   // 灰蓝色中浅文本
-  greenGray: '#9EB3B3',   // 绿灰icon/AI理由文本
-  grayShadow: '#BBC1C9',  // 占位符阴影
-  green: '#02A87E',       // 主绿
-  greenDeep: '#598C75',   // 稍浅深绿
-  greenBubble: '#EBFAF5', // 浅绿气泡
-  chatBg: '#F8FAFC',      // 聊天气泡/技能背景
+  grayDeep: '#656D76',
+  grayMid: '#7B838D',
+  grayLight: '#9EA7B3',
+  greenGray: '#9EB3B3',
+  grayShadow: '#BBC1C9',
+  green: '#02A87E',
+  greenText: '#008B68',
+  greenDeep: '#598C75',
+  greenBubble: '#EBFAF5',
+  chatBg: '#F8FAFC',
   yellow: '#E19D16',
+  divider: '#F1F2F4',
+  btnBg: '#494949',
+  btnText: '#D1FFF0',
 };
 
 export default function CandidateCard({ candidate, onPress, onRequestResume }) {
   const c = candidate;
   const initial = c.name.charAt(0);
-  const isHighlight = c.hasNewResume && !c.newResumeRead;
   const resumeLabel = getResumeStatusLabel(c);
   const matchStatus = getMatchingStatus(c);
 
-  // Resume inline: green dot + text
-  let rText = null, rColor = C.green;
-  if (isHighlight) { rText = '新简历'; }
-  else if (resumeLabel) {
-    rText = resumeLabel.text;
-    rColor = resumeLabel.type === 'requested' ? C.yellow : C.green;
-  }
+  // Resume pill text
+  let rText = null;
+  if (c.hasNewResume && !c.newResumeRead) { rText = '新简历'; }
+  else if (resumeLabel) { rText = resumeLabel.text; }
+
+  const isPass = c.recruiterDecision === 'pass';
+  const showTopBtn = !isPass && c.resumeStatus === 'none';
 
   return (
     <TouchableOpacity style={s.card} activeOpacity={0.7} onPress={onPress}>
-      {/* Match status tag - top right, pill left-rounded */}
-      {matchStatus && (
-        <View style={[s.msWrap, matchStatus.type === 'orange' && { backgroundColor: '#FAF7EB' }, matchStatus.type === 'gray' && { backgroundColor: '#DDE2E8' }]}>
-          <Text style={[s.msText, matchStatus.type === 'orange' && { color: '#B17E51' }, matchStatus.type === 'gray' && { color: '#7B838D' }]}>{matchStatus.text}</Text>
-        </View>
-      )}
-
-      {/* Row 1: Avatar + Name + Resume + Role */}
+      {/* Row 1: Avatar + Name + Resume pill + Role | Button (pending/reject) */}
       <View style={s.top}>
         <View style={s.avatar}>
           <Text style={s.avatarT}>{initial}</Text>
-
         </View>
         <View style={s.info}>
           <View style={s.nameRow}>
             <Text style={s.name}>{c.name}</Text>
             {rText && (
-              <View style={s.resumeInline}>
-                <View style={[s.dot, { backgroundColor: rColor }]} />
-                <Text style={[s.rText, { color: rColor }]}>{rText}</Text>
+              <View style={s.resumePill}>
+                <Text style={s.resumePillT}>{rText}</Text>
               </View>
             )}
           </View>
-          <Text style={s.role}>{c.company} / {c.title}</Text>
+          <Text style={s.role}>{c.company} · {c.title}</Text>
         </View>
+        {showTopBtn && (
+          <TouchableOpacity style={s.reqBtn} onPress={() => onRequestResume?.(c.id)}>
+            <Text style={s.reqBtnT}>请求简历</Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       {/* Skills row */}
@@ -79,7 +78,7 @@ export default function CandidateCard({ candidate, onPress, onRequestResume }) {
         ))}
       </View>
 
-      {/* AI Reason: avatar + quote + text — Figma node 2046:6097 */}
+      {/* AI Reason: avatar + quote + text */}
       <View style={s.reasonRow}>
         <View style={s.reasonIconArea}>
           <Image source={require('../assets/agent-avatar.png')} style={s.reasonAvatar} />
@@ -90,11 +89,24 @@ export default function CandidateCard({ candidate, onPress, onRequestResume }) {
         </Text>
       </View>
 
-      {/* Request resume if none */}
-      {c.resumeStatus === 'none' && (
-        <TouchableOpacity style={s.reqBtn} onPress={() => onRequestResume?.(c.id)}>
-          <Text style={s.reqBtnT}>请求简历</Text>
-        </TouchableOpacity>
+      {/* Bottom section: only for pass tab */}
+      {isPass && (
+        <>
+          <View style={s.divider} />
+          <View style={s.bottomRow}>
+            {matchStatus ? (
+              <View style={s.matchInline}>
+                <View style={[s.matchDot, matchStatus.type === 'orange' && { backgroundColor: C.yellow }, matchStatus.type === 'gray' && { backgroundColor: C.grayMid }]} />
+                <Text style={[s.matchText, matchStatus.type === 'orange' && { color: '#B17E51' }, matchStatus.type === 'gray' && { color: C.grayMid }]}>{matchStatus.text}</Text>
+              </View>
+            ) : <View />}
+            {c.resumeStatus === 'none' && (
+              <TouchableOpacity style={s.reqBtn} onPress={() => onRequestResume?.(c.id)}>
+                <Text style={s.reqBtnT}>请求简历</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        </>
       )}
     </TouchableOpacity>
   );
@@ -105,22 +117,11 @@ const s = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 8,
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 13,
     marginBottom: 12,
-    position: 'relative',
-    overflow: 'hidden',
-    // subtle shadow
+    gap: 16,
     shadowColor: '#000', shadowOffset: { width: 1, height: 1 }, shadowOpacity: 0.07, shadowRadius: 5, elevation: 2,
   },
-
-  // Match status tag - positioned top right, left-side rounded pill
-  msWrap: {
-    position: 'absolute', top: 12, right: 0,
-    backgroundColor: C.greenBubble,
-    borderTopLeftRadius: 999, borderBottomLeftRadius: 999,
-    paddingLeft: 12, paddingRight: 8, paddingVertical: 1,
-  },
-  msText: { fontSize: 12, color: C.greenDeep, letterSpacing: 0.5 },
 
   // Top row
   top: { flexDirection: 'row', alignItems: 'center', gap: 12 },
@@ -130,21 +131,19 @@ const s = StyleSheet.create({
     alignItems: 'center', justifyContent: 'center',
   },
   avatarT: { fontSize: 16, fontWeight: '500', color: C.grayShadow },
-  redDot: {
-    position: 'absolute', top: -2, right: -2,
-    width: 10, height: 10, borderRadius: 5,
-    backgroundColor: '#dc2626', borderWidth: 2, borderColor: '#fff',
-  },
   info: { flex: 1 },
   nameRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   name: { fontSize: 16, fontWeight: '600', color: C.black },
-  resumeInline: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  dot: { width: 6, height: 6, borderRadius: 3 },
-  rText: { fontSize: 12, letterSpacing: 0.5 },
+  resumePill: {
+    backgroundColor: C.greenBubble,
+    borderRadius: 999,
+    paddingHorizontal: 8, paddingVertical: 1,
+  },
+  resumePillT: { fontSize: 12, color: C.greenText, letterSpacing: 0.5 },
   role: { fontSize: 13, color: C.grayDeep, letterSpacing: 0.5, marginTop: 6 },
 
   // Skills
-  skills: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 16 },
+  skills: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   pill: {
     backgroundColor: C.chatBg,
     borderRadius: 4,
@@ -153,7 +152,7 @@ const s = StyleSheet.create({
   pillT: { fontSize: 12, color: C.grayMid, letterSpacing: 0.5, lineHeight: 18 },
 
   // AI Reason
-  reasonRow: { flexDirection: 'row', alignItems: 'center', marginTop: 16 },
+  reasonRow: { flexDirection: 'row', alignItems: 'center' },
   reasonIconArea: { position: 'relative', marginRight: 4 },
   reasonAvatar: { width: 20, height: 20, borderRadius: 10 },
   quoteWrap: { position: 'absolute', top: -8, right: -14 },
@@ -162,11 +161,20 @@ const s = StyleSheet.create({
     letterSpacing: 0.5, lineHeight: 18,
   },
 
+  // Divider
+  divider: { height: 0.5, backgroundColor: C.divider },
+
+  // Bottom row
+  bottomRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  matchInline: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  matchDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: C.green },
+  matchText: { fontSize: 12, color: C.green, letterSpacing: 0.5 },
+
   // Request resume button
   reqBtn: {
-    marginTop: 12, alignSelf: 'flex-start',
-    paddingHorizontal: 12, paddingVertical: 4, borderRadius: 4,
-    backgroundColor: C.greenBubble,
+    backgroundColor: C.btnBg,
+    borderRadius: 8,
+    paddingHorizontal: 12, paddingVertical: 4,
   },
-  reqBtnT: { fontSize: 12, fontWeight: '500', color: C.green, letterSpacing: 0.5 },
+  reqBtnT: { fontSize: 14, fontWeight: '600', color: C.btnText, lineHeight: 21 },
 });
