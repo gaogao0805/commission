@@ -109,10 +109,12 @@ export default function CategoryScreen({ navigation, route }) {
       <Toast {...toast} onHide={() => setToast(t => ({ ...t, visible: false }))} />
       <View style={styles.nav}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <Text style={styles.backArrow}>‹</Text>
+          <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
+            <Path d="M14.0713 5L7.15073 11.9206C7.06761 12.0037 7.06761 12.1385 7.15073 12.2216L14.0713 19.1421" stroke="black" strokeWidth={2} strokeLinecap="round" />
+          </Svg>
         </TouchableOpacity>
         <Text style={styles.navTitle}>候选人管理</Text>
-        <View style={{ width: 36 }} />
+        <View style={{ width: 24 }} />
       </View>
 
       {/* Tabs */}
@@ -159,13 +161,12 @@ export default function CategoryScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: '#FBFBFB' },
-  nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 6 },
-  backBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: '#fff', borderWidth: 1, borderColor: 'rgba(0,0,0,0.06)', alignItems: 'center', justifyContent: 'center' },
-  backArrow: { fontSize: 24, color: '#1a1a2e', marginTop: -2 },
-  navTitle: { fontSize: 17, fontWeight: '600', color: '#1a1a2e' },
+  nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 9 },
+  backBtn: { width: 24, height: 24, alignItems: 'center', justifyContent: 'center' },
+  navTitle: { fontSize: 16, fontWeight: '600', color: '#171718' },
   tabBar: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, gap: 4, marginTop: 8 },
   tabItem: { flex: 1, paddingVertical: 12, alignItems: 'center', justifyContent: 'center', position: 'relative' },
-  tabText: { fontSize: 14, fontWeight: '400', color: '#000', lineHeight: 21 },
+  tabText: { fontSize: 14, fontWeight: '400', color: '#656D76', lineHeight: 21 },
   tabTextActive: { fontSize: 18, fontWeight: '600', letterSpacing: 0.5, lineHeight: 24 },
   listContent: { padding: 16 },
   empty: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 60 },
