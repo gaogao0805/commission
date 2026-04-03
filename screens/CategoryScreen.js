@@ -75,6 +75,7 @@ export default function CategoryScreen({ navigation, route }) {
         <FlatList
           data={list}
           keyExtractor={item => item.id}
+          style={{ flex: 1 }}
           contentContainerStyle={styles.listContent}
           renderItem={({ item }) => (
             <CandidateCard
