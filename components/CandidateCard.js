@@ -48,8 +48,11 @@ export default function CandidateCard({ candidate, onPress, onRequestResume }) {
     <TouchableOpacity style={s.card} activeOpacity={0.7} onPress={onPress}>
       {/* Row 1: Avatar + Name + Resume pill + Role | Button (pending/reject) */}
       <View style={s.top}>
-        <View style={s.avatar}>
-          <Text style={s.avatarT}>{initial}</Text>
+        <View style={s.avatarWrap}>
+          <View style={s.avatar}>
+            <Text style={s.avatarT}>{initial}</Text>
+          </View>
+          {c.hasNewResume && !c.newResumeRead && <View style={s.avatarDot} />}
         </View>
         <View style={s.info}>
           <View style={s.nameRow}>
@@ -138,6 +141,8 @@ const s = StyleSheet.create({
     backgroundColor: '#e8e8ed',
     alignItems: 'center', justifyContent: 'center',
   },
+  avatarWrap: { position: 'relative' },
+  avatarDot: { position: 'absolute', top: 0, right: 0, width: 6, height: 6, borderRadius: 3, backgroundColor: '#F55252' },
   avatarT: { fontSize: 16, fontWeight: '500', color: C.grayShadow },
   info: { flex: 1 },
   nameRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
