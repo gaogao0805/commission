@@ -49,7 +49,7 @@ export function getResumeStatusLabel(c) {
   switch (c.resumeStatus) {
     case 'has': return { text: '有简历', type: 'has' };
     case 'requested': return { text: '已请求简历', type: 'requested' };
-    case 'authorized': return { text: '候选人已授权', type: 'has' };
+    case 'authorized': return { text: '新简历', type: 'new' };
     case 'proactive': return { text: '候选人发送简历', type: 'new' };
     default: return null;
   }
