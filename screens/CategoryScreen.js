@@ -18,8 +18,8 @@ function TabDecor({ tabKey }) {
   const c = DECOR_COLORS[tabKey] || DECOR_COLORS.pass;
   const uid = tabKey;
   return (
-    <View pointerEvents="none" style={{ position: 'absolute', top: 8, left: 0, right: 0, alignItems: 'center' }}>
-      <View style={{ width: 36, height: 24, marginLeft: 4 }}>
+    <View pointerEvents="none" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, alignItems: 'center', justifyContent: 'center' }}>
+      <View>
       <Svg width={36} height={24} viewBox="0 0 36 24" fill="none">
         <Path d={DECOR_PATH} stroke={`url(#s${uid})`} />
         <Path d={STAR1_PATH} fill={`url(#f1${uid})`} />
@@ -123,10 +123,16 @@ export default function CategoryScreen({ navigation, route }) {
           const active = activeTab === tab.key;
           return (
             <TouchableOpacity key={tab.key} style={styles.tabItem} onPress={() => setActiveTab(tab.key)}>
-              {active && <TabDecor tabKey={tab.key} />}
-              <Text style={[styles.tabText, active && styles.tabTextActive]}>
-                {tab.label}
-              </Text>
+              {active ? (
+                <View style={styles.activeTabContent}>
+                  <TabDecor tabKey={tab.key} />
+                  <Text style={[styles.tabText, styles.tabTextActive]}>
+                    {tab.label} · {counts[tab.key]}
+                  </Text>
+                </View>
+              ) : (
+                <Text style={styles.tabText}>{tab.label}</Text>
+              )}
             </TouchableOpacity>
           );
         })}
@@ -179,7 +185,8 @@ const styles = StyleSheet.create({
   backBtn: { width: 24, height: 24, alignItems: 'center', justifyContent: 'center' },
   navTitle: { fontSize: 16, fontWeight: '600', color: '#171718' },
   tabBar: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, gap: 4, marginTop: 0 },
-  tabItem: { flex: 1, paddingVertical: 12, alignItems: 'center', justifyContent: 'center', position: 'relative' },
+  tabItem: { flex: 1, paddingVertical: 12, alignItems: 'center', justifyContent: 'center' },
+  activeTabContent: { alignItems: 'center', position: 'relative' },
   tabText: { fontSize: 14, fontWeight: '400', color: '#656D76', lineHeight: 21 },
   tabTextActive: { fontSize: 18, fontWeight: '600', color: '#000', letterSpacing: 0.5, lineHeight: 24 },
   listContent: { paddingHorizontal: 16, paddingTop: 8 },
