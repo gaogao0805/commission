@@ -85,6 +85,11 @@ export default function CategoryScreen({ navigation, route }) {
   };
 
   const counts = { pass: getPassed().length, pending: getPending().length, reject: getRejected().length };
+  const hasUnread = {
+    pass: getPassed().some(c => c.hasNewResume && !c.newResumeRead),
+    pending: getPending().some(c => c.hasNewResume && !c.newResumeRead),
+    reject: getRejected().some(c => c.hasNewResume && !c.newResumeRead),
+  };
 
   const handleCardPress = (c) => {
     if (c.hasNewResume && !c.newResumeRead) {
@@ -129,9 +134,13 @@ export default function CategoryScreen({ navigation, route }) {
                   <Text style={[styles.tabText, styles.tabTextActive]}>
                     {tab.label} · {counts[tab.key]}
                   </Text>
+                  {hasUnread[tab.key] && <View style={styles.unreadDot} />}
                 </View>
               ) : (
-                <Text style={styles.tabText}>{tab.label}</Text>
+                <View style={{ position: 'relative' }}>
+                  <Text style={styles.tabText}>{tab.label}</Text>
+                  {hasUnread[tab.key] && <View style={styles.unreadDot} />}
+                </View>
               )}
             </TouchableOpacity>
           );
@@ -189,6 +198,7 @@ const styles = StyleSheet.create({
   activeTabContent: { alignItems: 'center', position: 'relative' },
   tabText: { fontSize: 14, fontWeight: '400', color: '#656D76', lineHeight: 21 },
   tabTextActive: { fontSize: 18, fontWeight: '600', color: '#000', letterSpacing: 0.5, lineHeight: 24 },
+  unreadDot: { position: 'absolute', top: 0, right: -6, width: 4, height: 4, borderRadius: 2, backgroundColor: '#F55252' },
   listContent: { paddingHorizontal: 16, paddingTop: 8 },
   empty: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 60 },
   emptyIcon: { fontSize: 48, opacity: 0.3, marginBottom: 12 },
