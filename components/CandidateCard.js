@@ -1,6 +1,15 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
 import { getResumeStatusLabel, getMatchingStatus } from '../data/candidates';
+
+function QuoteIcon() {
+  return (
+    <Svg width={14} height={10} viewBox="0 0 14 10" fill="none">
+      <Path opacity={0.5} d="M11.2596 0L12.5404 1.19186L10.9319 2.87791C11.2894 3.38178 11.7163 3.90504 12.2128 4.44767C12.7291 4.99031 13.3248 5.56201 14 6.16279C13.4837 6.70543 12.9078 7.24806 12.2723 7.7907C11.6369 8.31395 11.0511 8.75969 10.5149 9.12791C9.81986 8.25581 9.16454 7.37403 8.54894 6.48256C7.93333 5.5717 7.36738 4.67054 6.85106 3.77907C7.5461 3.23643 8.27092 2.63566 9.02553 1.97674C9.8 1.31783 10.5447 0.658914 11.2596 0ZM4.40851 0.872092L5.68936 2.06395L4.08085 3.75C4.4383 4.25388 4.86525 4.77713 5.3617 5.31977C5.87801 5.8624 6.47376 6.43411 7.14894 7.03488C6.63262 7.57752 6.05674 8.12016 5.42128 8.66279C4.78582 9.18605 4.2 9.63178 3.66383 10C2.96879 9.12791 2.31348 8.24612 1.69787 7.35465C1.08227 6.4438 0.516312 5.54264 0 4.65116C0.695035 4.10853 1.41986 3.50775 2.17447 2.84884C2.94894 2.18992 3.69362 1.53101 4.40851 0.872092Z" fill="#DDE2E8" />
+    </Svg>
+  );
+}
 
 // Figma design tokens
 const C = {
@@ -36,8 +45,8 @@ export default function CandidateCard({ candidate, onPress, onRequestResume }) {
     <TouchableOpacity style={s.card} activeOpacity={0.7} onPress={onPress}>
       {/* Match status tag - top right, pill left-rounded */}
       {matchStatus && (
-        <View style={[s.msWrap, matchStatus.type === 'orange' && { backgroundColor: '#FAF7EB' }]}>
-          <Text style={[s.msText, matchStatus.type === 'orange' && { color: '#B17E51' }]}>{matchStatus.text}</Text>
+        <View style={[s.msWrap, matchStatus.type === 'orange' && { backgroundColor: '#FAF7EB' }, matchStatus.type === 'gray' && { backgroundColor: '#DDE2E8' }]}>
+          <Text style={[s.msText, matchStatus.type === 'orange' && { color: '#B17E51' }, matchStatus.type === 'gray' && { color: '#7B838D' }]}>{matchStatus.text}</Text>
         </View>
       )}
 
@@ -70,11 +79,11 @@ export default function CandidateCard({ candidate, onPress, onRequestResume }) {
         ))}
       </View>
 
-      {/* AI Reason: avatar + floating quote + text */}
+      {/* AI Reason: avatar + quote + text — Figma node 2046:6097 */}
       <View style={s.reasonRow}>
-        <View style={s.reasonIconWrap}>
+        <View style={s.reasonIconArea}>
           <Image source={require('../assets/agent-avatar.png')} style={s.reasonAvatar} />
-          <Text style={s.quote}>{'\u201C'}</Text>
+          <View style={s.quoteWrap}><QuoteIcon /></View>
         </View>
         <Text style={s.reasonT} numberOfLines={2}>
           {c.aiReason}
@@ -144,13 +153,13 @@ const s = StyleSheet.create({
   pillT: { fontSize: 12, color: C.grayMid, letterSpacing: 0.5, lineHeight: 18 },
 
   // AI Reason
-  reasonRow: { flexDirection: 'row', marginTop: 16 },
-  reasonIconWrap: { width: 28, alignSelf: 'center', alignItems: 'center', position: 'relative' },
+  reasonRow: { flexDirection: 'row', alignItems: 'center', marginTop: 16 },
+  reasonIconArea: { position: 'relative', marginRight: 4 },
   reasonAvatar: { width: 20, height: 20, borderRadius: 10 },
-  quote: { position: 'absolute', top: -10, right: -2, fontSize: 16, color: '#DDE2E8', fontWeight: '600' },
+  quoteWrap: { position: 'absolute', top: -8, right: -14 },
   reasonT: {
     flex: 1, fontSize: 13, color: C.greenGray,
-    letterSpacing: 0.5, lineHeight: 18, alignSelf: 'center',
+    letterSpacing: 0.5, lineHeight: 18,
   },
 
   // Request resume button
