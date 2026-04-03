@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, SafeAreaView, Animated } from 'react-native';
-import Svg, { Path, Defs, LinearGradient, Stop } from 'react-native-svg';
+import Svg, { Path, Rect, Defs, LinearGradient, Stop } from 'react-native-svg';
 import { useApp } from '../data/AppContext';
 import CandidateCard from '../components/CandidateCard';
 import Toast from '../components/Toast';
@@ -132,6 +132,19 @@ export default function CategoryScreen({ navigation, route }) {
         })}
       </View>
 
+      {/* Tab gradient background */}
+      <View pointerEvents="none" style={styles.passGradient}>
+        <Svg width="100%" height={275} preserveAspectRatio="none">
+          <Defs>
+            <LinearGradient id="tabGrad" x1="0" y1="0" x2="0" y2="1">
+              <Stop offset="0" stopColor={activeTab === 'pass' ? '#8EF1CD' : activeTab === 'pending' ? '#F1D88E' : '#F1988E'} stopOpacity="0.5" />
+              <Stop offset="1" stopColor="#ffffff" stopOpacity="0" />
+            </LinearGradient>
+          </Defs>
+          <Rect x="0" y="0" width="100%" height="275" fill="url(#tabGrad)" />
+        </Svg>
+      </View>
+
       {/* List */}
       {list.length === 0 ? (
         <View style={styles.empty}>
@@ -160,8 +173,9 @@ export default function CategoryScreen({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#FBFBFB' },
-  nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 9 },
+  safe: { flex: 1, backgroundColor: '#FBFBFB', position: 'relative' },
+  passGradient: { position: 'absolute', top: 0, left: 0, right: 0, height: 275, zIndex: 0 },
+  nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 9, zIndex: 1 },
   backBtn: { width: 24, height: 24, alignItems: 'center', justifyContent: 'center' },
   navTitle: { fontSize: 16, fontWeight: '600', color: '#171718' },
   tabBar: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, gap: 4, marginTop: 0 },
