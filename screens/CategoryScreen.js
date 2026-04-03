@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, FlatList, StyleSheet, SafeAreaView } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, TouchableOpacity, FlatList, StyleSheet, SafeAreaView, Animated } from 'react-native';
 import { useApp } from '../data/AppContext';
 import CandidateCard from '../components/CandidateCard';
 import Toast from '../components/Toast';
@@ -9,6 +9,30 @@ const TABS = [
   { key: 'pending', label: '待定' },
   { key: 'reject', label: '拒绝' },
 ];
+
+function AnimatedCard({ index, children }) {
+  const opacity = useRef(new Animated.Value(0)).current;
+  const translateY = useRef(new Animated.Value(40)).current;
+  const maxH = useRef(new Animated.Value(6)).current;
+
+  useEffect(() => {
+    const base = index * 120;
+    // Step 1: pop up
+    setTimeout(() => {
+      Animated.parallel([
+        Animated.timing(opacity, { toValue: 1, duration: 400, useNativeDriver: false }),
+        Animated.timing(translateY, { toValue: 0, duration: 400, useNativeDriver: false }),
+        Animated.timing(maxH, { toValue: 500, duration: 500, delay: 150, useNativeDriver: false }),
+      ]).start();
+    }, base);
+  }, []);
+
+  return (
+    <Animated.View style={{ opacity, transform: [{ translateY }], maxHeight: maxH, overflow: 'hidden' }}>
+      {children}
+    </Animated.View>
+  );
+}
 
 export default function CategoryScreen({ navigation, route }) {
   const { getPassed, getPending, getRejected, updateCandidate } = useApp();
@@ -77,12 +101,14 @@ export default function CategoryScreen({ navigation, route }) {
           keyExtractor={item => item.id}
           style={{ flex: 1 }}
           contentContainerStyle={styles.listContent}
-          renderItem={({ item }) => (
-            <CandidateCard
-              candidate={item}
-              onPress={() => handleCardPress(item)}
-              onRequestResume={handleRequestResume}
-            />
+          renderItem={({ item, index }) => (
+            <AnimatedCard index={index}>
+              <CandidateCard
+                candidate={item}
+                onPress={() => handleCardPress(item)}
+                onRequestResume={handleRequestResume}
+              />
+            </AnimatedCard>
           )}
         />
       )}

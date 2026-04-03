@@ -36,8 +36,8 @@ export default function CandidateCard({ candidate, onPress, onRequestResume }) {
     <TouchableOpacity style={s.card} activeOpacity={0.7} onPress={onPress}>
       {/* Match status tag - top right, pill left-rounded */}
       {matchStatus && (
-        <View style={s.msWrap}>
-          <Text style={s.msText}>{matchStatus.text}</Text>
+        <View style={[s.msWrap, matchStatus.type === 'orange' && { backgroundColor: '#FAF7EB' }]}>
+          <Text style={[s.msText, matchStatus.type === 'orange' && { color: '#B17E51' }]}>{matchStatus.text}</Text>
         </View>
       )}
 
