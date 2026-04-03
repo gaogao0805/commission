@@ -78,20 +78,18 @@ export default function CandidateCard({ candidate, onPress, onRequestResume }) {
         ))}
       </View>
 
-      {/* AI Reason: avatar + quote + text */}
-      <View style={s.reasonRow}>
-        <View style={s.reasonIconArea}>
-          <Image source={require('../assets/agent-avatar.png')} style={s.reasonAvatar} />
-          <View style={s.quoteWrap}><QuoteIcon /></View>
-        </View>
-        <Text style={s.reasonT} numberOfLines={2}>
-          {c.aiReason}
-        </Text>
-      </View>
-
-      {/* Bottom section: only for pass tab */}
-      {isPass && (
-        <>
+      {/* For pass cards: reason + divider + status wrapped in gap:8 container */}
+      {isPass ? (
+        <View style={s.bottomSection}>
+          <View style={s.reasonRow}>
+            <View style={s.reasonIconArea}>
+              <Image source={require('../assets/agent-avatar.png')} style={s.reasonAvatar} />
+              <View style={s.quoteWrap}><QuoteIcon /></View>
+            </View>
+            <Text style={s.reasonT} numberOfLines={2}>
+              {c.aiReason}
+            </Text>
+          </View>
           <View style={s.divider} />
           <View style={s.bottomRow}>
             {matchStatus ? (
@@ -106,7 +104,17 @@ export default function CandidateCard({ candidate, onPress, onRequestResume }) {
               </TouchableOpacity>
             )}
           </View>
-        </>
+        </View>
+      ) : (
+        <View style={s.reasonRow}>
+          <View style={s.reasonIconArea}>
+            <Image source={require('../assets/agent-avatar.png')} style={s.reasonAvatar} />
+            <View style={s.quoteWrap}><QuoteIcon /></View>
+          </View>
+          <Text style={s.reasonT} numberOfLines={2}>
+            {c.aiReason}
+          </Text>
+        </View>
       )}
     </TouchableOpacity>
   );
@@ -161,7 +169,8 @@ const s = StyleSheet.create({
     letterSpacing: 0.5, lineHeight: 18,
   },
 
-  // Divider
+  // Bottom section wrapper
+  bottomSection: { gap: 8 },
   divider: { height: 0.5, backgroundColor: C.divider },
 
   // Bottom row
