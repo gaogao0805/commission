@@ -119,7 +119,7 @@ export default function CandidateScreen({ navigation, route }) {
         <View style={{ width: 24 }} />
       </View>
 
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 100 }}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
         {/* Top section: Profile + AI Reason + Skills, gap:12 */}
         <View style={styles.topSection}>
           {/* Profile */}
@@ -289,6 +289,7 @@ const styles = StyleSheet.create({
   bottomCard: {
     backgroundColor: '#fff', borderTopLeftRadius: 20, borderTopRightRadius: 20,
     paddingTop: 16, paddingHorizontal: 16, gap: 16, marginTop: 20,
+    flexGrow: 1, paddingBottom: 40,
   },
   resumeRow: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
