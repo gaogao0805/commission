@@ -152,20 +152,31 @@ export default function CandidateScreen({ navigation, route }) {
 
         {/* Resume */}
         <View style={styles.resumeSectionWrap}>
-          <View style={styles.resumeLeft}>
-            <View style={[styles.resumeDot, { backgroundColor: resumeDotColor }]} />
-            <Text style={[styles.resumeStatusT, { color: resumeDotColor }]}>{resumeText || '暂无简历'}</Text>
+          {/* Left: resume tag + match status */}
+          <View style={styles.resumeLeftCol}>
+            {resumeText && (
+              <View style={[styles.resumeTag, { backgroundColor: resumeDotColor + '18' }]}>
+                <Text style={[styles.resumeTagT, { color: resumeDotColor }]}>{resumeText}</Text>
+              </View>
+            )}
+            {matchStatus && (
+              <View style={styles.resumeMatchRow}>
+                <View style={[styles.resumeMatchDot, { backgroundColor: matchStatus.type === 'green' ? '#02A87E' : matchStatus.type === 'orange' ? '#E19D16' : '#7B838D' }]} />
+                <Text style={[styles.resumeMatchT, { color: matchStatus.type === 'green' ? '#02A87E' : matchStatus.type === 'orange' ? '#E19D16' : '#7B838D' }]}>{matchStatus.text}</Text>
+              </View>
+            )}
           </View>
+          {/* Right: action */}
           {resumeAction === 'request' && (
             <TouchableOpacity style={styles.resumeRightBtn} onPress={handleRequestResume}>
               <Text style={styles.resumeRightT}>请求简历</Text>
-              <Text style={styles.resumeArrow}>›</Text>
+              <Text style={styles.resumeArrow}>»</Text>
             </TouchableOpacity>
           )}
           {resumeAction === 'view' && (
             <TouchableOpacity style={styles.resumeRightBtn}>
               <Text style={styles.resumeRightT}>查看简历</Text>
-              <Text style={styles.resumeArrow}>›</Text>
+              <Text style={styles.resumeArrow}>»</Text>
             </TouchableOpacity>
           )}
           {resumeAction === 'waiting' && (
@@ -278,15 +289,18 @@ const styles = StyleSheet.create({
   skillTagT: { fontSize: 12, color: '#7B838D', letterSpacing: 0.5, lineHeight: 18 },
   resumeSectionWrap: {
     marginHorizontal: 16, marginVertical: 20, backgroundColor: '#fff', borderRadius: 999,
-    paddingHorizontal: 30, paddingVertical: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    paddingHorizontal: 20, paddingVertical: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     shadowColor: '#000', shadowOffset: { width: 1, height: 1 }, shadowOpacity: 0.07, shadowRadius: 5, elevation: 2,
   },
-  resumeLeft: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  resumeDot: { width: 4, height: 4, borderRadius: 2 },
-  resumeStatusT: { fontSize: 13, fontWeight: '500', letterSpacing: 0.5 },
-  resumeRightBtn: { flexDirection: 'row', alignItems: 'center' },
+  resumeLeftCol: { flexDirection: 'column', gap: 8 },
+  resumeTag: { borderRadius: 999, paddingHorizontal: 10, paddingVertical: 3, alignSelf: 'flex-start' },
+  resumeTagT: { fontSize: 12, fontWeight: '500', letterSpacing: 0.5 },
+  resumeMatchRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  resumeMatchDot: { width: 6, height: 6, borderRadius: 3 },
+  resumeMatchT: { fontSize: 16, fontWeight: '600', letterSpacing: 0.5 },
+  resumeRightBtn: { flexDirection: 'row', alignItems: 'center', gap: 2 },
   resumeRightT: { fontSize: 13, color: '#9EA7B3', letterSpacing: 0.5 },
-  resumeArrow: { fontSize: 16, color: '#9EA7B3', marginLeft: 2 },
+  resumeArrow: { fontSize: 13, color: '#9EA7B3' },
   waitingText: { fontSize: 13, color: '#BBC1C9' },
   infoRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8 },
   infoLabel: { fontSize: 14, color: '#7B838D' },
