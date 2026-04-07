@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, ScrollView, Modal, StyleSheet, SafeAreaView } from 'react-native';
 import Svg, { Path, Rect, Defs, LinearGradient as SvgLinearGradient, Stop } from 'react-native-svg';
 
@@ -57,6 +57,16 @@ export default function CandidateScreen({ navigation, route }) {
     : null;
   const decLabels = { pass: '通过', pending: '待定', reject: '拒绝' };
   const decColors = { pass: '#02A87E', pending: '#d97706', reject: '#dc2626' };
+
+  // 返回时标记新简历已读
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', () => {
+      if (c.hasNewResume && !c.newResumeRead) {
+        updateCandidate(c.id, { newResumeRead: true, hasNewResume: false });
+      }
+    });
+    return unsubscribe;
+  }, [navigation, c]);
 
   let resumeText = null, resumeDotColor = '#BBC1C9', resumeAction = null;
   if (c.resumeStatus === 'none') {
