@@ -61,9 +61,8 @@ export function getMatchingStatus(c) {
     if (c.seekerIntent === 'reject') return { text: '对方暂无意向', type: 'gray' };
     return { text: '等待候选人确认', type: 'orange' };
   }
-  // 待定/拒绝卡片也展示对方状态
-  if (c.seekerIntent === 'connect') return { text: '对方有意向', type: 'green' };
+  // 待定/拒绝卡片也展示对方状态（一定有状态）
+  if (c.seekerIntent === 'connect') return { text: '候选人已通过', type: 'green' };
   if (c.seekerIntent === 'reject') return { text: '对方暂无意向', type: 'gray' };
-  if (c.seekerIntent === 'later') return { text: '等待候选人确认', type: 'orange' };
-  return null;
+  return { text: '等待候选人确认', type: 'orange' };
 }
