@@ -1,34 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, SafeAreaView } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { useApp } from '../data/AppContext';
 import CandidateCard from '../components/CandidateCard';
-import Toast from '../components/Toast';
 
 export default function NewCandidatesScreen({ navigation }) {
-  const { getNew, updateCandidate } = useApp();
-  const [toast, setToast] = useState({ visible: false, message: '', type: '' });
+  const { getNew } = useApp();
   const list = getNew();
 
   const handleCardPress = (c) => {
-    if (c.hasNewResume && !c.newResumeRead) {
-      updateCandidate(c.id, { newResumeRead: true, hasNewResume: false, resumeStatus: c.resumeStatus === 'proactive' ? 'authorized' : c.resumeStatus });
-    }
     navigation.navigate('Decision', { candidateId: c.id });
-  };
-
-  const handleRequestResume = (id) => {
-    updateCandidate(id, { resumeStatus: 'requested' });
-    setToast({ visible: true, message: '已发送简历请求', type: 'info' });
-    setTimeout(() => {
-      updateCandidate(id, { resumeStatus: 'authorized', hasNewResume: true, newResumeRead: false });
-      setToast({ visible: true, message: '候选人已授权简历', type: 'success' });
-    }, 3000);
   };
 
   return (
     <SafeAreaView style={styles.safe}>
-      <Toast {...toast} onHide={() => setToast(t => ({ ...t, visible: false }))} />
       <View style={styles.nav}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
           <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -54,7 +39,7 @@ export default function NewCandidatesScreen({ navigation }) {
             <CandidateCard
               candidate={item}
               onPress={() => handleCardPress(item)}
-              onRequestResume={handleRequestResume}
+              hideResume
             />
           )}
         />

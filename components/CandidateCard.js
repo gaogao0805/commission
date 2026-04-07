@@ -30,7 +30,7 @@ const C = {
   btnText: '#D1FFF0',
 };
 
-export default function CandidateCard({ candidate, onPress, onRequestResume }) {
+export default function CandidateCard({ candidate, onPress, onRequestResume, hideResume }) {
   const c = candidate;
   const initial = c.name.charAt(0);
   const resumeLabel = getResumeStatusLabel(c);
@@ -38,11 +38,13 @@ export default function CandidateCard({ candidate, onPress, onRequestResume }) {
 
   // Resume pill text
   let rText = null;
-  if (c.hasNewResume && !c.newResumeRead) { rText = '新简历'; }
-  else if (resumeLabel) { rText = resumeLabel.text; }
+  if (!hideResume) {
+    if (c.hasNewResume && !c.newResumeRead) { rText = '新简历'; }
+    else if (resumeLabel) { rText = resumeLabel.text; }
+  }
 
   const isPass = c.recruiterDecision === 'pass';
-  const showTopBtn = !isPass && c.resumeStatus === 'none';
+  const showTopBtn = !hideResume && !isPass && c.resumeStatus === 'none';
 
   return (
     <TouchableOpacity style={s.card} activeOpacity={0.7} onPress={onPress}>
@@ -52,7 +54,7 @@ export default function CandidateCard({ candidate, onPress, onRequestResume }) {
           <View style={s.avatar}>
             <Text style={s.avatarT}>{initial}</Text>
           </View>
-          {c.hasNewResume && !c.newResumeRead && <View style={s.avatarDot} />}
+          {!hideResume && c.hasNewResume && !c.newResumeRead && <View style={s.avatarDot} />}
         </View>
         <View style={s.info}>
           <View style={s.nameRow}>
@@ -87,11 +89,13 @@ export default function CandidateCard({ candidate, onPress, onRequestResume }) {
           <View style={s.reasonRow}>
             <View style={s.reasonIconArea}>
               <Image source={require('../assets/agent-avatar.png')} style={s.reasonAvatar} />
+            </View>
+            <View style={{ flex: 1, position: 'relative' }}>
+              <Text style={s.reasonT} numberOfLines={2}>
+                {c.aiReason}
+              </Text>
               <View style={s.quoteWrap}><QuoteIcon /></View>
             </View>
-            <Text style={s.reasonT} numberOfLines={2}>
-              {c.aiReason}
-            </Text>
           </View>
           <View style={s.divider} />
           <View style={s.bottomRow}>
@@ -168,7 +172,7 @@ const s = StyleSheet.create({
   reasonRow: { flexDirection: 'row', alignItems: 'center' },
   reasonIconArea: { position: 'relative', marginRight: 4 },
   reasonAvatar: { width: 20, height: 20, borderRadius: 10 },
-  quoteWrap: { position: 'absolute', top: -8, right: -14 },
+  quoteWrap: { position: 'absolute', bottom: -6, left: 4 },
   reasonT: {
     flex: 1, fontSize: 13, color: C.greenGray,
     letterSpacing: 0.5, lineHeight: 18,
