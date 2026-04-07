@@ -71,8 +71,8 @@ export default function CandidateScreen({ navigation, route }) {
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 100 }}>
         {/* Profile */}
         <View style={styles.profile}>
-          <View style={[styles.avatarLg, { backgroundColor: isMale ? '#dbeafe' : '#f3e8ff' }]}>
-            <Text style={[styles.avatarLgT, { color: isMale ? '#2563eb' : '#7c3aed' }]}>{initial}</Text>
+          <View style={styles.avatarLg}>
+            <Text style={styles.avatarLgT}>{initial}</Text>
           </View>
           <View>
             <Text style={styles.nameLg}>{c.name}</Text>
@@ -174,8 +174,8 @@ const styles = StyleSheet.create({
   backArrow: { fontSize: 24, color: '#000', marginTop: -2 },
   navTitle: { fontSize: 16, fontWeight: '600', color: '#000' },
   profile: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 16, paddingVertical: 16 },
-  avatarLg: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#e8e8ed', alignItems: 'center', justifyContent: 'center' },
-  avatarLgT: { fontSize: 16, fontWeight: '500', color: '#BBC1C9' },
+  avatarLg: { width: 60, height: 60, borderRadius: 30, backgroundColor: '#e8e8ed', alignItems: 'center', justifyContent: 'center' },
+  avatarLgT: { fontSize: 24, fontWeight: '500', color: '#BBC1C9' },
   nameLg: { fontSize: 20, fontWeight: '600', color: '#000', marginBottom: 2 },
   titleLg: { fontSize: 13, color: '#7B838D' },
   expLg: { fontSize: 12, color: '#BBC1C9', marginTop: 2 },
