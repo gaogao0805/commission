@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
   skillTagT: { fontSize: 12, color: '#7B838D', letterSpacing: 0.5, lineHeight: 18 },
   resumeSectionWrap: {
     marginHorizontal: 16, marginVertical: 20, backgroundColor: '#fff', borderRadius: 999,
-    paddingHorizontal: 20, paddingVertical: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    paddingHorizontal: 30, paddingVertical: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     shadowColor: '#000', shadowOffset: { width: 1, height: 1 }, shadowOpacity: 0.07, shadowRadius: 5, elevation: 2,
   },
   resumeLeftCol: { flexDirection: 'column', gap: 6 },
