@@ -1,7 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Modal, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, Image, TouchableOpacity, ScrollView, Modal, StyleSheet, SafeAreaView } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
 import { useApp } from '../data/AppContext';
 import Toast from '../components/Toast';
+
+function QuoteIcon() {
+  return (
+    <Svg width={14} height={10} viewBox="0 0 14 10" fill="none">
+      <Path opacity={0.5} d="M11.2596 0L12.5404 1.19186L10.9319 2.87791C11.2894 3.38178 11.7163 3.90504 12.2128 4.44767C12.7291 4.99031 13.3248 5.56201 14 6.16279C13.4837 6.70543 12.9078 7.24806 12.2723 7.7907C11.6369 8.31395 11.0511 8.75969 10.5149 9.12791C9.81986 8.25581 9.16454 7.37403 8.54894 6.48256C7.93333 5.5717 7.36738 4.67054 6.85106 3.77907C7.5461 3.23643 8.27092 2.63566 9.02553 1.97674C9.8 1.31783 10.5447 0.658914 11.2596 0ZM4.40851 0.872092L5.68936 2.06395L4.08085 3.75C4.4383 4.25388 4.86525 4.77713 5.3617 5.31977C5.87801 5.8624 6.47376 6.43411 7.14894 7.03488C6.63262 7.57752 6.05674 8.12016 5.42128 8.66279C4.78582 9.18605 4.2 9.63178 3.66383 10C2.96879 9.12791 2.31348 8.24612 1.69787 7.35465C1.08227 6.4438 0.516312 5.54264 0 4.65116C0.695035 4.10853 1.41986 3.50775 2.17447 2.84884C2.94894 2.18992 3.69362 1.53101 4.40851 0.872092Z" fill="#DDE2E8" />
+    </Svg>
+  );
+}
 
 export default function CandidateScreen({ navigation, route }) {
   const { getById, updateCandidate } = useApp();
@@ -75,7 +84,13 @@ export default function CandidateScreen({ navigation, route }) {
         {/* AI Reason */}
         <View style={styles.section}>
           <Text style={styles.secTitle}>AI 推荐理由</Text>
-          <View style={styles.reasonBox}><Text style={styles.reasonText}>{c.aiReason}</Text></View>
+          <View style={styles.aiReasonRow}>
+            <View style={styles.aiReasonIconArea}>
+              <Image source={require('../assets/agent-avatar.png')} style={styles.aiReasonAvatar} />
+              <View style={styles.aiQuoteWrap}><QuoteIcon /></View>
+            </View>
+            <Text style={styles.aiReasonText}>{c.aiReason}</Text>
+          </View>
         </View>
 
         {/* Skills */}
@@ -172,8 +187,11 @@ const styles = StyleSheet.create({
     shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.07, shadowRadius: 4, elevation: 2,
   },
   secTitle: { fontSize: 12, fontWeight: '600', color: '#008B68', marginBottom: 10, letterSpacing: 0.5 },
-  reasonBox: { padding: 12, backgroundColor: '#EBFAF5', borderRadius: 6, borderLeftWidth: 3, borderLeftColor: '#02A87E' },
-  reasonText: { fontSize: 14, color: '#000', lineHeight: 22 },
+  aiReasonRow: { flexDirection: 'row', alignItems: 'flex-start' },
+  aiReasonIconArea: { position: 'relative', marginRight: 4 },
+  aiReasonAvatar: { width: 20, height: 20, borderRadius: 10 },
+  aiQuoteWrap: { position: 'absolute', top: -8, right: -14 },
+  aiReasonText: { flex: 1, fontSize: 13, color: '#9EB3B3', letterSpacing: 0.5, lineHeight: 18 },
   skillsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   skillTag: { paddingHorizontal: 12, paddingVertical: 4, borderRadius: 4, backgroundColor: '#F1F2F4' },
   skillTagT: { fontSize: 12, color: '#7B838D' },
