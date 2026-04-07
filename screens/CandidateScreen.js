@@ -150,61 +150,60 @@ export default function CandidateScreen({ navigation, route }) {
           </View>
         </View>
 
-        {/* Resume */}
-        <View style={styles.resumeSectionWrap}>
-          {/* Left: resume tag + match status */}
-          <View style={styles.resumeLeftCol}>
-            {resumeText && (
-              <View style={[styles.resumeTag, { backgroundColor: resumeDotColor + '18' }]}>
-                <Text style={[styles.resumeTagT, { color: resumeDotColor }]}>{resumeText}</Text>
-              </View>
-            )}
-            {matchStatus && (
-              <View style={styles.resumeMatchRow}>
-                <View style={[styles.resumeMatchDot, { backgroundColor: matchStatus.type === 'green' ? '#02A87E' : matchStatus.type === 'orange' ? '#E19D16' : '#7B838D' }]} />
-                <Text style={[styles.resumeMatchT, { color: matchStatus.type === 'green' ? '#02A87E' : matchStatus.type === 'orange' ? '#E19D16' : '#7B838D' }]}>{matchStatus.text}</Text>
-              </View>
-            )}
-          </View>
-          {/* Right: action */}
-          {resumeAction === 'request' && (
-            <TouchableOpacity style={styles.resumeRightBtn} onPress={handleRequestResume}>
-              <Text style={styles.resumeRightT}>请求简历</Text>
-              <Text style={styles.resumeArrow}>»</Text>
-            </TouchableOpacity>
-          )}
-          {resumeAction === 'view' && (
-            <TouchableOpacity style={styles.resumeRightBtn}>
-              <Text style={styles.resumeRightT}>查看简历</Text>
-              <Text style={styles.resumeArrow}>»</Text>
-            </TouchableOpacity>
-          )}
-          {resumeAction === 'waiting' && (
-            <Text style={styles.resumeRightT}>等待授权中</Text>
-          )}
-        </View>
-
-        {/* Work Experience */}
-        <View style={styles.expSection}>
-          <View style={styles.expTitleRow}>
-            <View style={styles.expTitleBar} />
-            <Text style={styles.expTitleText}>工作经历</Text>
-          </View>
-          {(c.workHistory || [{ company: c.company, title: c.title, period: '至今' }]).flatMap((w, i) => [
-            i > 0 ? <View key={`d${i}`} style={styles.expDivider} /> : null,
-            <View key={i} style={styles.expItem}>
-              <View style={styles.expItemTop}>
-                <View style={styles.expCompanyLeft}>
-                  <View style={[styles.expLogo, { backgroundColor: getCompanyColor(w.company) }]}>
-                    <Text style={[styles.expLogoT, { color: getCompanyTextColor(w.company) }]}>{w.company.charAt(0)}</Text>
-                  </View>
-                  <Text style={styles.expCompany}>{w.company}</Text>
+        {/* Bottom white card: resume + work exp */}
+        <View style={styles.bottomCard}>
+          {/* Resume row */}
+          <View style={styles.resumeRow}>
+            <View style={styles.resumeLeftCol}>
+              {resumeText && (
+                <View style={[styles.resumeTag, { backgroundColor: resumeDotColor + '18' }]}>
+                  <Text style={[styles.resumeTagT, { color: resumeDotColor }]}>{resumeText}</Text>
                 </View>
-                <Text style={styles.expDate}>{w.period}</Text>
-              </View>
-              <Text style={styles.expRole}>{w.title}</Text>
-            </View>,
-          ])}
+              )}
+              {matchStatus && (
+                <View style={styles.resumeMatchRow}>
+                  <View style={[styles.resumeMatchDot, { backgroundColor: matchStatus.type === 'green' ? '#02A87E' : matchStatus.type === 'orange' ? '#E19D16' : '#7B838D' }]} />
+                  <Text style={[styles.resumeMatchT, { color: matchStatus.type === 'green' ? '#02A87E' : matchStatus.type === 'orange' ? '#E19D16' : '#7B838D' }]}>{matchStatus.text}</Text>
+                </View>
+              )}
+            </View>
+            {resumeAction === 'request' && (
+              <TouchableOpacity style={styles.resumeActionBtn} onPress={handleRequestResume}>
+                <Text style={styles.resumeActionBtnT}>请求简历</Text>
+              </TouchableOpacity>
+            )}
+            {resumeAction === 'view' && (
+              <TouchableOpacity style={styles.resumeActionBtn}>
+                <Text style={styles.resumeActionBtnT}>查看简历</Text>
+              </TouchableOpacity>
+            )}
+            {resumeAction === 'waiting' && (
+              <Text style={styles.resumeWaitingT}>等待授权中</Text>
+            )}
+          </View>
+
+          {/* Work Experience */}
+          <View style={styles.expSection}>
+            <View style={styles.expTitleRow}>
+              <View style={styles.expTitleBar} />
+              <Text style={styles.expTitleText}>工作经历</Text>
+            </View>
+            {(c.workHistory || [{ company: c.company, title: c.title, period: '至今' }]).flatMap((w, i) => [
+              i > 0 ? <View key={`d${i}`} style={styles.expDivider} /> : null,
+              <View key={i} style={styles.expItem}>
+                <View style={styles.expItemTop}>
+                  <View style={styles.expCompanyLeft}>
+                    <View style={[styles.expLogo, { backgroundColor: getCompanyColor(w.company) }]}>
+                      <Text style={[styles.expLogoT, { color: getCompanyTextColor(w.company) }]}>{w.company.charAt(0)}</Text>
+                    </View>
+                    <Text style={styles.expCompany}>{w.company}</Text>
+                  </View>
+                  <Text style={styles.expDate}>{w.period}</Text>
+                </View>
+                <Text style={styles.expRole}>{w.title}</Text>
+              </View>,
+            ])}
+          </View>
         </View>
 
       </ScrollView>
@@ -266,7 +265,7 @@ const styles = StyleSheet.create({
     shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.07, shadowRadius: 4, elevation: 2,
   },
   secTitle: { fontSize: 12, fontWeight: '600', color: '#008B68', marginBottom: 10, letterSpacing: 0.5 },
-  expSection: { marginHorizontal: 16, marginBottom: 12, gap: 16 },
+  expSection: { gap: 16 },
   expTitleRow: { flexDirection: 'row', alignItems: 'stretch', gap: 8 },
   expTitleBar: { width: 4, borderRadius: 999, backgroundColor: '#6FCDAE' },
   expTitleText: { fontSize: 16, fontWeight: '600', color: '#000', lineHeight: 21 },
@@ -287,20 +286,23 @@ const styles = StyleSheet.create({
   skillsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   skillTag: { paddingHorizontal: 12, paddingVertical: 2, borderRadius: 4, backgroundColor: '#F6F7F9' },
   skillTagT: { fontSize: 12, color: '#7B838D', letterSpacing: 0.5, lineHeight: 18 },
-  resumeSectionWrap: {
-    marginHorizontal: 16, marginVertical: 20, backgroundColor: '#fff', borderRadius: 999,
-    paddingHorizontal: 30, paddingVertical: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    shadowColor: '#000', shadowOffset: { width: 1, height: 1 }, shadowOpacity: 0.07, shadowRadius: 5, elevation: 2,
+  bottomCard: {
+    backgroundColor: '#fff', borderTopLeftRadius: 20, borderTopRightRadius: 20,
+    paddingTop: 16, paddingHorizontal: 16, gap: 16,
   },
-  resumeLeftCol: { flexDirection: 'column', gap: 6 },
-  resumeTag: { borderRadius: 999, paddingHorizontal: 8, paddingVertical: 1, alignSelf: 'flex-start' },
-  resumeTagT: { fontSize: 12, letterSpacing: 0.5 },
-  resumeMatchRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  resumeMatchDot: { width: 6, height: 6, borderRadius: 3 },
-  resumeMatchT: { fontSize: 12, letterSpacing: 0.5 },
-  resumeRightBtn: { flexDirection: 'row', alignItems: 'center', gap: 2 },
-  resumeRightT: { fontSize: 13, color: '#9EA7B3', letterSpacing: 0.5 },
-  resumeArrow: { fontSize: 13, color: '#9EA7B3' },
+  resumeRow: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    paddingHorizontal: 4, paddingBottom: 16,
+  },
+  resumeLeftCol: { flexDirection: 'column', gap: 3 },
+  resumeTag: { backgroundColor: '#EBFAF5', borderRadius: 999, paddingHorizontal: 4, paddingVertical: 2, height: 18, alignSelf: 'flex-start', alignItems: 'center', justifyContent: 'center' },
+  resumeTagT: { fontSize: 10, color: '#009688', letterSpacing: 0.5 },
+  resumeMatchRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  resumeMatchDot: { width: 4, height: 4, borderRadius: 2 },
+  resumeMatchT: { fontSize: 13, fontWeight: '500', letterSpacing: 0.5 },
+  resumeActionBtn: { backgroundColor: '#EBFAF5', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 4 },
+  resumeActionBtnT: { fontSize: 14, fontWeight: '600', color: '#009688', lineHeight: 21 },
+  resumeWaitingT: { fontSize: 13, color: '#BBC1C9' },
   waitingText: { fontSize: 13, color: '#BBC1C9' },
   infoRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8 },
   infoLabel: { fontSize: 14, color: '#7B838D' },
