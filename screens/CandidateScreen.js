@@ -56,7 +56,7 @@ export default function CandidateScreen({ navigation, route }) {
     ? { bg: '#DDE2E8', color: '#7B838D' }
     : null;
   const decLabels = { pass: '通过', pending: '待定', reject: '拒绝' };
-  const decColors = { pass: '#02A87E', pending: '#d97706', reject: '#dc2626' };
+  const decColors = { pass: '#02A87E', pending: '#E19D16', reject: '#dc2626' };
 
   // 返回时标记新简历已读
   useEffect(() => {
@@ -68,18 +68,19 @@ export default function CandidateScreen({ navigation, route }) {
     return unsubscribe;
   }, [navigation, c]);
 
-  let resumeText = null, resumeDotColor = '#BBC1C9', resumeAction = null;
+  // tag颜色与CandidateCard pill完全一致：新简历蓝、有简历绿、已请求黄
+  let resumeText = null, resumeTagBg = null, resumeTagColor = null, resumeDotColor = '#BBC1C9', resumeAction = null;
   if (c.resumeStatus === 'none') {
     resumeAction = 'request';
   } else if (c.resumeStatus === 'requested') {
-    resumeText = '已请求简历'; resumeDotColor = '#E19D16'; resumeAction = 'waiting';
+    resumeText = '已请求简历'; resumeTagBg = '#FFFBF2'; resumeTagColor = '#E19D16'; resumeDotColor = '#E19D16'; resumeAction = 'waiting';
   } else if (c.resumeStatus === 'has') {
-    resumeText = '有简历'; resumeDotColor = '#02A87E'; resumeAction = 'view';
+    resumeText = '有简历'; resumeTagBg = '#EBFAF5'; resumeTagColor = '#008B68'; resumeDotColor = '#02A87E'; resumeAction = 'view';
   } else if (c.resumeStatus === 'authorized' || c.resumeStatus === 'proactive') {
     if (c.hasNewResume && !c.newResumeRead) {
-      resumeText = '新简历'; resumeDotColor = '#1690E1';
+      resumeText = '新简历'; resumeTagBg = '#F2FAFF'; resumeTagColor = '#1690E1'; resumeDotColor = '#1690E1';
     } else {
-      resumeText = '有简历'; resumeDotColor = '#02A87E';
+      resumeText = '有简历'; resumeTagBg = '#EBFAF5'; resumeTagColor = '#008B68'; resumeDotColor = '#02A87E';
     }
     resumeAction = 'view';
   }
@@ -98,7 +99,7 @@ export default function CandidateScreen({ navigation, route }) {
 
   const options = [
     { key: 'pass', label: '通过', color: '#02A87E', bg: 'rgba(5,150,105,0.08)', border: 'rgba(5,150,105,0.2)' },
-    { key: 'pending', label: '待定', color: '#d97706', bg: 'rgba(217,119,6,0.08)', border: 'rgba(217,119,6,0.2)' },
+    { key: 'pending', label: '待定', color: '#E19D16', bg: 'rgba(225,157,22,0.08)', border: 'rgba(225,157,22,0.2)' },
     { key: 'reject', label: '拒绝', color: '#dc2626', bg: 'rgba(220,38,38,0.08)', border: 'rgba(220,38,38,0.2)' },
   ];
 
@@ -166,8 +167,8 @@ export default function CandidateScreen({ navigation, route }) {
           <View style={styles.resumeRow}>
             <View style={styles.resumeLeftCol}>
               {resumeText && (
-                <View style={[styles.resumeTag, { backgroundColor: resumeDotColor + '18' }]}>
-                  <Text style={[styles.resumeTagT, { color: resumeDotColor }]}>{resumeText}</Text>
+                <View style={[styles.resumeTag, { backgroundColor: resumeTagBg }]}>
+                  <Text style={[styles.resumeTagT, { color: resumeTagColor }]}>{resumeText}</Text>
                 </View>
               )}
               {matchStatus && (
