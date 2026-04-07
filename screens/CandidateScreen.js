@@ -49,7 +49,7 @@ export default function CandidateScreen({ navigation, route }) {
   } else if (c.resumeStatus === 'requested') {
     resumeText = '已请求简历'; resumePillBg = '#FFFBF2'; resumePillColor = '#E19D16'; resumeAction = 'waiting';
   } else if (c.resumeStatus === 'has' || c.resumeStatus === 'authorized') {
-    resumeText = '有简历'; resumePillBg = '#EBFAF5'; resumePillColor = '#008B68'; resumeAction = 'view';
+    resumeText = '有简历'; resumePillBg = 'transparent'; resumePillColor = '#008B68'; resumeAction = 'view';
   } else if (c.resumeStatus === 'proactive') {
     if (c.hasNewResume) {
       resumeText = '新简历'; resumePillBg = '#F2FAFF'; resumePillColor = '#1690E1';
@@ -143,11 +143,6 @@ export default function CandidateScreen({ navigation, route }) {
                 <Text style={[styles.resumePillT, { color: resumePillColor }]}>{resumeText}</Text>
               </View>
             )}
-            {matchStatus && matchTagStyle && (
-              <View style={[styles.resumePill, { backgroundColor: matchTagStyle.bg }]}>
-                <Text style={[styles.resumePillT, { color: matchTagStyle.color }]}>{matchStatus.text}</Text>
-              </View>
-            )}
           </View>
           {resumeAction === 'request' && (
             <TouchableOpacity style={styles.resumeReqBtn} onPress={handleRequestResume}>
@@ -168,18 +163,23 @@ export default function CandidateScreen({ navigation, route }) {
             <View style={styles.expTitleBar} />
             <Text style={styles.expTitleText}>工作经历</Text>
           </View>
-          <View style={styles.expItem}>
-            <View style={styles.expItemTop}>
-              <View style={styles.expCompanyLeft}>
-                <View style={styles.expLogo}>
-                  <Text style={styles.expLogoT}>{c.company.charAt(0)}</Text>
+          {(c.workHistory || [{ company: c.company, title: c.title, period: '至今' }]).map((w, i) => (
+            <View key={i}>
+              {i > 0 && <View style={styles.expDivider} />}
+              <View style={styles.expItem}>
+                <View style={styles.expItemTop}>
+                  <View style={styles.expCompanyLeft}>
+                    <View style={styles.expLogo}>
+                      <Text style={styles.expLogoT}>{w.company.charAt(0)}</Text>
+                    </View>
+                    <Text style={styles.expCompany}>{w.company}</Text>
+                  </View>
+                  <Text style={styles.expDate}>{w.period}</Text>
                 </View>
-                <Text style={styles.expCompany}>{c.company}</Text>
+                <Text style={styles.expRole}>{w.title}</Text>
               </View>
-              <Text style={styles.expDate}>至今</Text>
             </View>
-            <Text style={styles.expRole}>{c.title}</Text>
-          </View>
+          ))}
         </View>
 
       </ScrollView>
@@ -253,6 +253,7 @@ const styles = StyleSheet.create({
   expCompany: { fontSize: 14, fontWeight: '500', color: '#000', lineHeight: 21 },
   expDate: { fontSize: 12, fontWeight: '300', color: '#78787D', lineHeight: 21 },
   expRole: { fontSize: 13, fontWeight: '400', color: '#000', letterSpacing: 0.5, lineHeight: 18 },
+  expDivider: { height: 0.5, backgroundColor: '#F1F2F4', marginVertical: 12 },
   aiReasonRow: { flexDirection: 'row', alignItems: 'center' },
   aiReasonIconArea: { position: 'relative', marginRight: 4 },
   aiReasonAvatar: { width: 20, height: 20, borderRadius: 10 },
@@ -268,7 +269,7 @@ const styles = StyleSheet.create({
   },
   resumeLeft: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   resumePill: { borderRadius: 999, paddingHorizontal: 8, paddingVertical: 1 },
-  resumePillT: { fontSize: 12, letterSpacing: 0.5 },
+  resumePillT: { fontSize: 14, letterSpacing: 0.5 },
   resumeReqBtn: { paddingHorizontal: 18, paddingVertical: 8, borderRadius: 8, backgroundColor: '#EBFAF5', borderWidth: 1, borderColor: 'rgba(111,205,174,1)' },
   resumeReqBtnT: { fontSize: 13, fontWeight: '600', color: '#008B68' },
   resumeViewBtn: { paddingHorizontal: 18, paddingVertical: 8, borderRadius: 8, backgroundColor: '#02A87E' },
