@@ -4,17 +4,18 @@ import Svg, { Path, Rect, Defs, LinearGradient as SvgLinearGradient, Stop } from
 
 const GRAD_COLORS = { pass: '#8EF1CD', pending: '#F1D88E', reject: '#F1988E' };
 
-const COMPANY_DOMAINS = {
-  '字节跳动': 'bytedance.com', '蚂蚁集团': 'antgroup.com', '网易': 'netease.com',
-  '拼多多': 'pinduoduo.com', '阿里巴巴': 'alibaba.com', '美团': 'meituan.com',
-  '腾讯': 'tencent.com', '京东': 'jd.com', '小红书': 'xiaohongshu.com',
-  '快手': 'kuaishou.com', '华为': 'huawei.com', '中兴通讯': 'zte.com.cn',
-  'B站': 'bilibili.com', '米哈游': 'mihoyo.com', '滴滴出行': 'didiglobal.com',
-  '百度': 'baidu.com', '小米': 'mi.com', '广告公司': null, '创业公司': null,
+const COMPANY_COLORS = {
+  '字节跳动': '#1A1A1A', '蚂蚁集团': '#1677FF', '网易': '#D0021B', '拼多多': '#E02E24',
+  '阿里巴巴': '#FF6A00', '美团': '#FFD100', '腾讯': '#12B7F5', '京东': '#E1251B',
+  '小红书': '#FF2442', '快手': '#FF4906', '华为': '#CF0A2C', '中兴通讯': '#0066CC',
+  'B站': '#FB7299', '米哈游': '#1A73E8', '滴滴出行': '#FF8C00', '百度': '#2932E1',
+  '小米': '#FF6900', '广告公司': '#888', '创业公司': '#888',
 };
-const getLogoUrl = (company) => {
-  const domain = COMPANY_DOMAINS[company];
-  return domain ? `https://logo.clearbit.com/${domain}` : null;
+const getCompanyColor = (company) => COMPANY_COLORS[company] || '#7B838D';
+const getCompanyTextColor = (company) => {
+  const bg = getCompanyColor(company);
+  if (['美团'].includes(company)) return '#333';
+  return '#fff';
 };
 
 const BackIcon = () => (
@@ -181,10 +182,8 @@ export default function CandidateScreen({ navigation, route }) {
             <View key={i} style={styles.expItem}>
               <View style={styles.expItemTop}>
                 <View style={styles.expCompanyLeft}>
-                  <View style={styles.expLogo}>
-                    {getLogoUrl(w.company)
-                      ? <Image source={{ uri: getLogoUrl(w.company) }} style={styles.expLogoImg} />
-                      : <Text style={styles.expLogoT}>{w.company.charAt(0)}</Text>}
+                  <View style={[styles.expLogo, { backgroundColor: getCompanyColor(w.company) }]}>
+                    <Text style={[styles.expLogoT, { color: getCompanyTextColor(w.company) }]}>{w.company.charAt(0)}</Text>
                   </View>
                   <Text style={styles.expCompany}>{w.company}</Text>
                 </View>
@@ -261,9 +260,8 @@ const styles = StyleSheet.create({
   expItem: { gap: 4, paddingLeft: 12 },
   expItemTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', height: 21 },
   expCompanyLeft: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  expLogo: { width: 21, height: 21, borderRadius: 4, backgroundColor: '#F1F2F4', alignItems: 'center', justifyContent: 'center' },
-  expLogoImg: { width: 21, height: 21, borderRadius: 4 },
-  expLogoT: { fontSize: 10, fontWeight: '500', color: '#7B838D' },
+  expLogo: { width: 21, height: 21, borderRadius: 4, alignItems: 'center', justifyContent: 'center' },
+  expLogoT: { fontSize: 10, fontWeight: '600' },
   expCompany: { fontSize: 14, fontWeight: '500', color: '#000', lineHeight: 21 },
   expDate: { fontSize: 12, fontWeight: '300', color: '#78787D', lineHeight: 21 },
   expRole: { fontSize: 13, fontWeight: '400', color: '#000', letterSpacing: 0.5, lineHeight: 18, paddingLeft: 29 },
