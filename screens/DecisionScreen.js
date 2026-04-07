@@ -1,6 +1,12 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Animated, PanResponder, Dimensions, ScrollView } from 'react-native';
-import Svg, { Rect, Defs, LinearGradient as SvgLinearGradient, Stop } from 'react-native-svg';
+import Svg, { Path, Rect, Defs, LinearGradient as SvgLinearGradient, Stop } from 'react-native-svg';
+
+const BackIcon = () => (
+  <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
+    <Path d="M14.0713 5L7.15073 11.9206C7.06761 12.0037 7.06761 12.1385 7.15073 12.2216L14.0713 19.1421" stroke="black" strokeWidth={2} strokeLinecap="round" />
+  </Svg>
+);
 import { useApp } from '../data/AppContext';
 import { getResumeStatusLabel } from '../data/candidates';
 import Toast from '../components/Toast';
@@ -157,7 +163,7 @@ export default function DecisionScreen({ navigation, route }) {
       <Toast {...toast} onHide={() => setToast(t => ({ ...t, visible: false }))} />
       <View style={styles.nav}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <Text style={styles.backArrow}>‹</Text>
+          <BackIcon />
         </TouchableOpacity>
         <Text style={styles.navTitle}>待处理</Text>
         <Text style={styles.counter}>{index + 1}/{newList.length}</Text>
@@ -217,12 +223,11 @@ export default function DecisionScreen({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#f2f2f7' },
-  nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 6, paddingBottom: 12 },
-  backBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: '#fff', borderWidth: 1, borderColor: 'rgba(0,0,0,0.06)', alignItems: 'center', justifyContent: 'center' },
-  backArrow: { fontSize: 24, color: '#1a1a2e', marginTop: -2 },
-  navTitle: { fontSize: 17, fontWeight: '600' },
-  counter: { fontSize: 14, color: '#9ca3af', fontWeight: '500' },
+  safe: { flex: 1, backgroundColor: '#FBFBFB' },
+  nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 9, zIndex: 1 },
+  backBtn: { width: 24, height: 24, alignItems: 'center', justifyContent: 'center' },
+  navTitle: { fontSize: 16, fontWeight: '600', color: '#171718' },
+  counter: { fontSize: 14, color: '#7B838D', fontWeight: '500' },
   swipeContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16, position: 'relative' },
   passBg: { position: 'absolute', top: 0, left: 0, right: 0, height: 275 },
   stack: { width: '100%', height: 480, position: 'relative' },
