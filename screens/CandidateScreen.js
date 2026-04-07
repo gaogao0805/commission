@@ -229,19 +229,6 @@ export default function CandidateScreen({ navigation, route }) {
       <Modal visible={sheetOpen} transparent animationType="slide">
         <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={() => setSheetOpen(false)}>
           <View style={styles.sheet}>
-            {dec && (
-              <View pointerEvents="none" style={styles.sheetGradBg}>
-                <Svg width="100%" height={120} preserveAspectRatio="none">
-                  <Defs>
-                    <SvgLinearGradient id="sheetGrad" x1="0" y1="0" x2="0" y2="1">
-                      <Stop offset="0" stopColor={GRAD_COLORS[dec]} stopOpacity="0.4" />
-                      <Stop offset="1" stopColor="#ffffff" stopOpacity="0" />
-                    </SvgLinearGradient>
-                  </Defs>
-                  <Rect x="0" y="0" width="100%" height="120" fill="url(#sheetGrad)" />
-                </Svg>
-              </View>
-            )}
             <View style={styles.handle} />
             <Text style={styles.sheetTitle}>选择决策</Text>
             {options.map(o => (

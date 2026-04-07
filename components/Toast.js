@@ -42,7 +42,7 @@ export default function Toast({ message, type, visible, onHide }) {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute', top: 60, alignSelf: 'center', zIndex: 999,
-    backgroundColor: '#f0f0f5', borderWidth: 1, borderRadius: 10,
+    backgroundColor: '#ffffff', borderWidth: 1, borderRadius: 10,
     paddingHorizontal: 20, paddingVertical: 10,
     shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.1, shadowRadius: 15, elevation: 8,
   },
