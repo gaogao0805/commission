@@ -10,6 +10,7 @@ const BackIcon = () => (
   </Svg>
 );
 import { useApp } from '../data/AppContext';
+import { getMatchingStatus } from '../data/candidates';
 import Toast from '../components/Toast';
 
 function QuoteIcon() {
@@ -31,6 +32,14 @@ export default function CandidateScreen({ navigation, route }) {
   const initial = c.name.charAt(0);
   const isMale = c.gender === 'male';
   const dec = c.recruiterDecision;
+  const matchStatus = getMatchingStatus(c);
+  const matchTagStyle = matchStatus?.type === 'green'
+    ? { bg: '#EBFAF5', color: '#008B68' }
+    : matchStatus?.type === 'orange'
+    ? { bg: '#FFFBF2', color: '#E19D16' }
+    : matchStatus?.type === 'gray'
+    ? { bg: '#DDE2E8', color: '#7B838D' }
+    : null;
   const decLabels = { pass: '通过', pending: '待定', reject: '拒绝' };
   const decColors = { pass: '#02A87E', pending: '#d97706', reject: '#dc2626' };
 
@@ -134,6 +143,11 @@ export default function CandidateScreen({ navigation, route }) {
                 <Text style={[styles.resumePillT, { color: resumePillColor }]}>{resumeText}</Text>
               </View>
             )}
+            {matchStatus && matchTagStyle && (
+              <View style={[styles.resumePill, { backgroundColor: matchTagStyle.bg }]}>
+                <Text style={[styles.resumePillT, { color: matchTagStyle.color }]}>{matchStatus.text}</Text>
+              </View>
+            )}
           </View>
           {resumeAction === 'request' && (
             <TouchableOpacity style={styles.resumeReqBtn} onPress={handleRequestResume}>
@@ -149,7 +163,7 @@ export default function CandidateScreen({ navigation, route }) {
         </View>
 
         {/* Work Experience */}
-        <View style={styles.section}>
+        <View style={styles.expSection}>
           <View style={styles.expTitleRow}>
             <View style={styles.expTitleBar} />
             <Text style={styles.expTitleText}>工作经历</Text>
@@ -238,6 +252,7 @@ const styles = StyleSheet.create({
   expCompany: { fontSize: 14, fontWeight: '500', color: '#000' },
   expDate: { fontSize: 12, fontWeight: '300', color: '#78787D' },
   expRole: { fontSize: 13, color: '#000', letterSpacing: 0.5, lineHeight: 18 },
+  expSection: { marginHorizontal: 16, marginBottom: 12, gap: 16 },
   aiReasonRow: { flexDirection: 'row', alignItems: 'center' },
   aiReasonIconArea: { position: 'relative', marginRight: 4 },
   aiReasonAvatar: { width: 20, height: 20, borderRadius: 10 },
