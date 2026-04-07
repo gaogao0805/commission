@@ -1,39 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, Image, TouchableOpacity, ScrollView, Modal, StyleSheet, SafeAreaView, Animated } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Image, TouchableOpacity, ScrollView, Modal, StyleSheet, SafeAreaView } from 'react-native';
 import Svg, { Path, Rect, Defs, LinearGradient as SvgLinearGradient, Stop } from 'react-native-svg';
 
-function AnimatedGradientBorder({ color, children, style }) {
-  const rotation = useRef(new Animated.Value(0)).current;
-  useEffect(() => {
-    Animated.loop(
-      Animated.timing(rotation, { toValue: 1, duration: 2500, useNativeDriver: false })
-    ).start();
-  }, []);
-  const rotate = rotation.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg'] });
-  return (
-    <View style={[{ borderRadius: 999, overflow: 'hidden', padding: 1 }, style]}>
-      <Animated.View style={{
-        position: 'absolute', width: '600%', height: '600%',
-        top: '-250%', left: '-250%',
-        transform: [{ rotate }],
-      }}>
-        <Svg width="100%" height="100%">
-          <Defs>
-            <SvgLinearGradient id="capsuleGrad" x1="0" y1="0" x2="0" y2="1">
-              <Stop offset="0" stopColor={color} />
-              <Stop offset="0.08" stopColor="#ffffff" />
-              <Stop offset="1" stopColor="#ffffff" />
-            </SvgLinearGradient>
-          </Defs>
-          <Rect width="100%" height="100%" fill="url(#capsuleGrad)" />
-        </Svg>
-      </Animated.View>
-      <View style={{ backgroundColor: '#fff', borderRadius: 999, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 30, paddingVertical: 8 }}>
-        {children}
-      </View>
-    </View>
-  );
-}
 
 const GRAD_COLORS = { pass: '#8EF1CD', pending: '#F1D88E', reject: '#F1988E' };
 
@@ -183,7 +151,7 @@ export default function CandidateScreen({ navigation, route }) {
         </View>
 
         {/* Resume */}
-        <AnimatedGradientBorder color={resumeDotColor} style={styles.resumeSectionWrap}>
+        <View style={styles.resumeSectionWrap}>
           <View style={styles.resumeLeft}>
             <View style={[styles.resumeDot, { backgroundColor: resumeDotColor }]} />
             <Text style={[styles.resumeStatusT, { color: resumeDotColor }]}>{resumeText || '暂无简历'}</Text>
@@ -203,7 +171,7 @@ export default function CandidateScreen({ navigation, route }) {
           {resumeAction === 'waiting' && (
             <Text style={styles.resumeRightT}>等待授权中</Text>
           )}
-        </AnimatedGradientBorder>
+        </View>
 
         {/* Work Experience */}
         <View style={styles.expSection}>
@@ -308,7 +276,11 @@ const styles = StyleSheet.create({
   skillsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   skillTag: { paddingHorizontal: 12, paddingVertical: 2, borderRadius: 4, backgroundColor: '#F6F7F9' },
   skillTagT: { fontSize: 12, color: '#7B838D', letterSpacing: 0.5, lineHeight: 18 },
-  resumeSectionWrap: { marginHorizontal: 16, marginVertical: 20 },
+  resumeSectionWrap: {
+    marginHorizontal: 16, marginVertical: 20, backgroundColor: '#fff', borderRadius: 999,
+    paddingHorizontal: 30, paddingVertical: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    shadowColor: '#000', shadowOffset: { width: 1, height: 1 }, shadowOpacity: 0.07, shadowRadius: 5, elevation: 2,
+  },
   resumeLeft: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   resumeDot: { width: 4, height: 4, borderRadius: 2 },
   resumeStatusT: { fontSize: 13, fontWeight: '500', letterSpacing: 0.5 },
