@@ -129,7 +129,7 @@ export default function DecisionScreen({ navigation, route }) {
     if (!c) return;
     updateCandidate(c.id, { recruiterDecision: decision === 'pass' ? 'pass' : decision === 'reject' ? 'reject' : 'pending' });
     const labels = { pass: '已通过', pending: '已待定', reject: '已拒绝' };
-    setToast({ visible: true, message: `${labels[decision]} · ${c.name}`, type: decision === 'pass' ? 'success' : 'info' });
+    setToast({ visible: true, message: `${labels[decision]} · ${c.name}`, type: decision });
     setTimeout(() => {
       setIndex(prev => {
         const next = prev + 1;

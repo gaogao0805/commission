@@ -80,7 +80,7 @@ export default function CandidateScreen({ navigation, route }) {
     updateCandidate(c.id, { recruiterDecision: decision });
     setSheetOpen(false);
     const labels = { pass: '已通过', pending: '已待定', reject: '已拒绝' };
-    setToast({ visible: true, message: `${labels[decision]} · ${c.name}`, type: decision === 'pass' ? 'success' : 'info' });
+    setToast({ visible: true, message: `${labels[decision]} · ${c.name}`, type: decision });
   };
 
   const handleRequestResume = () => {
@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
   bottomLeft: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   bottomDot: { width: 8, height: 8, borderRadius: 4 },
   bottomText: { fontSize: 16, fontWeight: '600', color: '#000' },
-  bottomArrow: { width: 28, height: 28, borderRadius: 14, backgroundColor: '#F1F2F4', alignItems: 'center', justifyContent: 'center' },
+  bottomArrow: { alignItems: 'center', justifyContent: 'center' },
   overlay: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.5)' },
   sheet: { backgroundColor: '#fff', borderTopLeftRadius: 16, borderTopRightRadius: 16, paddingHorizontal: 16, paddingBottom: 34, overflow: 'hidden' },
   sheetGradBg: { position: 'absolute', top: 0, left: 0, right: 0, height: 120 },
