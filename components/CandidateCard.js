@@ -90,11 +90,11 @@ export default function CandidateCard({ candidate, onPress, onRequestResume, hid
             <View style={s.reasonIconArea}>
               <Image source={require('../assets/agent-avatar.png')} style={s.reasonAvatar} />
             </View>
-            <View style={{ flex: 1, position: 'relative' }}>
+            <View style={{ flex: 1 }}>
               <Text style={s.reasonT} numberOfLines={2}>
                 {c.aiReason}
               </Text>
-              <View style={s.quoteWrap}><QuoteIcon /></View>
+              <QuoteIcon />
             </View>
           </View>
           <View style={s.divider} />
@@ -169,10 +169,9 @@ const s = StyleSheet.create({
   pillT: { fontSize: 12, color: C.grayMid, letterSpacing: 0.5, lineHeight: 18 },
 
   // AI Reason
-  reasonRow: { flexDirection: 'row', alignItems: 'center' },
-  reasonIconArea: { position: 'relative', marginRight: 4 },
+  reasonRow: { flexDirection: 'row', alignItems: 'flex-start' },
+  reasonIconArea: { marginRight: 4 },
   reasonAvatar: { width: 20, height: 20, borderRadius: 10 },
-  quoteWrap: { position: 'absolute', bottom: -6, left: 4 },
   reasonT: {
     flex: 1, fontSize: 13, color: C.greenGray,
     letterSpacing: 0.5, lineHeight: 18,

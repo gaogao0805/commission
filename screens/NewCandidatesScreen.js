@@ -20,8 +20,8 @@ export default function NewCandidatesScreen({ navigation }) {
             <Path d="M14.0713 5L7.15073 11.9206C7.06761 12.0037 7.06761 12.1385 7.15073 12.2216L14.0713 19.1421" stroke="black" strokeWidth={2} strokeLinecap="round" />
           </Svg>
         </TouchableOpacity>
-        <Text style={styles.navTitle}>待处理</Text>
-        <Text style={styles.counter}>{list.length}位候选人</Text>
+        <Text style={styles.navTitle}>待处理 · {list.length}</Text>
+        <View style={{ width: 24 }} />
       </View>
 
       {list.length === 0 ? (
@@ -53,7 +53,6 @@ const styles = StyleSheet.create({
   nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 9, zIndex: 1 },
   backBtn: { width: 24, height: 24, alignItems: 'center', justifyContent: 'center' },
   navTitle: { fontSize: 16, fontWeight: '600', color: '#000' },
-  counter: { fontSize: 14, color: '#7B838D', fontWeight: '500' },
   listContent: { paddingHorizontal: 16, paddingTop: 8 },
   empty: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 60 },
   emptyIcon: { fontSize: 48, opacity: 0.3, marginBottom: 12 },
