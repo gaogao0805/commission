@@ -80,6 +80,11 @@ export default function CandidateScreen({ navigation, route }) {
           </View>
         </View>
 
+        {/* Skills */}
+        <View style={styles.skillsRow}>
+          {c.skills.map(s => <View key={s} style={styles.skillTag}><Text style={styles.skillTagT}>{s}</Text></View>)}
+        </View>
+
         {/* AI Reason */}
         <View style={styles.aiReasonRow}>
           <View style={styles.aiReasonIconArea}>
@@ -87,14 +92,6 @@ export default function CandidateScreen({ navigation, route }) {
             <View style={styles.aiQuoteWrap}><QuoteIcon /></View>
           </View>
           <Text style={styles.aiReasonText}>{c.aiReason}</Text>
-        </View>
-
-        {/* Skills */}
-        <View style={styles.section}>
-          <Text style={styles.secTitle}>技能标签</Text>
-          <View style={styles.skillsRow}>
-            {c.skills.map(s => <View key={s} style={styles.skillTag}><Text style={styles.skillTagT}>{s}</Text></View>)}
-          </View>
         </View>
 
         {/* Resume */}
@@ -188,7 +185,7 @@ const styles = StyleSheet.create({
   aiReasonAvatar: { width: 20, height: 20, borderRadius: 10 },
   aiQuoteWrap: { position: 'absolute', top: -8, right: -14 },
   aiReasonText: { flex: 1, fontSize: 13, color: '#9EB3B3', letterSpacing: 0.5, lineHeight: 18 },
-  skillsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  skillsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginHorizontal: 16, marginBottom: 12 },
   skillTag: { paddingHorizontal: 12, paddingVertical: 4, borderRadius: 4, backgroundColor: '#F1F2F4' },
   skillTagT: { fontSize: 12, color: '#7B838D' },
   resumeSection: {
