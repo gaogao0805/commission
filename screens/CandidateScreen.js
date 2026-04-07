@@ -77,7 +77,6 @@ export default function CandidateScreen({ navigation, route }) {
           <View>
             <Text style={styles.nameLg}>{c.name}</Text>
             <Text style={styles.titleLg}>{c.title} · {c.company}</Text>
-            <Text style={styles.expLg}>{c.exp}经验 · {c.location}</Text>
           </View>
         </View>
 
