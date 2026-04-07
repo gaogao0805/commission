@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
   aiQuoteWrap: { position: 'absolute', top: -8, right: -14 },
   aiReasonText: { flex: 1, fontSize: 13, color: '#9EB3B3', letterSpacing: 0.5, lineHeight: 18 },
   skillsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginHorizontal: 16, marginBottom: 12 },
-  skillTag: { paddingHorizontal: 12, paddingVertical: 2, borderRadius: 4, backgroundColor: '#F8FAFC' },
+  skillTag: { paddingHorizontal: 12, paddingVertical: 2, borderRadius: 4, backgroundColor: '#F6F7F9' },
   skillTagT: { fontSize: 12, color: '#7B838D', letterSpacing: 0.5, lineHeight: 18 },
   resumeSection: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',

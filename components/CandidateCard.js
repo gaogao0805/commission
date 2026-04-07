@@ -23,7 +23,7 @@ const C = {
   greenText: '#008B68',
   greenDeep: '#598C75',
   greenBubble: '#EBFAF5',
-  chatBg: '#F8FAFC',
+  chatBg: '#F6F7F9',
   yellow: '#E19D16',
   divider: '#F1F2F4',
   btnBg: '#494949',
