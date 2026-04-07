@@ -43,23 +43,22 @@ const TABS = [
 
 function AnimatedCard({ index, children }) {
   const opacity = useRef(new Animated.Value(0)).current;
-  const translateY = useRef(new Animated.Value(40)).current;
-  const maxH = useRef(new Animated.Value(6)).current;
+  const translateY = useRef(new Animated.Value(24)).current;
+  const scale = useRef(new Animated.Value(0.96)).current;
 
   useEffect(() => {
-    const base = index * 120;
-    // Step 1: pop up
+    const base = index * 100;
     setTimeout(() => {
       Animated.parallel([
-        Animated.timing(opacity, { toValue: 1, duration: 400, useNativeDriver: false }),
-        Animated.timing(translateY, { toValue: 0, duration: 400, useNativeDriver: false }),
-        Animated.timing(maxH, { toValue: 500, duration: 500, delay: 150, useNativeDriver: false }),
+        Animated.timing(opacity, { toValue: 1, duration: 350, useNativeDriver: true }),
+        Animated.spring(translateY, { toValue: 0, friction: 8, tension: 60, useNativeDriver: true }),
+        Animated.spring(scale, { toValue: 1, friction: 8, tension: 60, useNativeDriver: true }),
       ]).start();
     }, base);
   }, []);
 
   return (
-    <Animated.View style={{ opacity, transform: [{ translateY }], maxHeight: maxH, overflow: 'hidden' }}>
+    <Animated.View style={{ opacity, transform: [{ translateY }, { scale }] }}>
       {children}
     </Animated.View>
   );

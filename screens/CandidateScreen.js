@@ -34,16 +34,20 @@ export default function CandidateScreen({ navigation, route }) {
   const decLabels = { pass: '通过', pending: '待定', reject: '拒绝' };
   const decColors = { pass: '#02A87E', pending: '#d97706', reject: '#dc2626' };
 
-  let resumeText = '暂无简历', resumeDotColor = '#BBC1C9', resumeAction = null;
+  let resumeText = null, resumePillBg = null, resumePillColor = null, resumeAction = null;
   if (c.resumeStatus === 'none') {
     resumeAction = 'request';
   } else if (c.resumeStatus === 'requested') {
-    resumeText = '已请求简历'; resumeDotColor = '#E19D16'; resumeAction = 'waiting';
+    resumeText = '已请求简历'; resumePillBg = '#FFFBF2'; resumePillColor = '#E19D16'; resumeAction = 'waiting';
   } else if (c.resumeStatus === 'has' || c.resumeStatus === 'authorized') {
-    resumeText = '有简历'; resumeDotColor = '#02A87E'; resumeAction = 'view';
+    resumeText = '有简历'; resumePillBg = '#EBFAF5'; resumePillColor = '#008B68'; resumeAction = 'view';
   } else if (c.resumeStatus === 'proactive') {
-    resumeText = c.hasNewResume && !c.newResumeRead ? '新简历' : '有简历';
-    resumeDotColor = c.hasNewResume ? '#02A87E' : '#008B68'; resumeAction = 'view';
+    if (c.hasNewResume) {
+      resumeText = '新简历'; resumePillBg = '#F2FAFF'; resumePillColor = '#1690E1';
+    } else {
+      resumeText = '有简历'; resumePillBg = '#EBFAF5'; resumePillColor = '#008B68';
+    }
+    resumeAction = 'view';
   }
 
   const handleDecision = (decision) => {
@@ -111,8 +115,11 @@ export default function CandidateScreen({ navigation, route }) {
         {/* Resume */}
         <View style={styles.resumeSection}>
           <View style={styles.resumeLeft}>
-            <View style={[styles.resumeDot, { backgroundColor: resumeDotColor }]} />
-            <Text style={styles.resumeText}>{resumeText}</Text>
+            {resumeText && (
+              <View style={[styles.resumePill, { backgroundColor: resumePillBg }]}>
+                <Text style={[styles.resumePillT, { color: resumePillColor }]}>{resumeText}</Text>
+              </View>
+            )}
           </View>
           {resumeAction === 'request' && (
             <TouchableOpacity style={styles.resumeReqBtn} onPress={handleRequestResume}>
@@ -209,16 +216,16 @@ const styles = StyleSheet.create({
   aiQuoteWrap: { position: 'absolute', top: -8, right: -14 },
   aiReasonText: { flex: 1, fontSize: 13, color: '#9EB3B3', letterSpacing: 0.5, lineHeight: 18 },
   skillsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginHorizontal: 16, marginBottom: 12 },
-  skillTag: { paddingHorizontal: 12, paddingVertical: 4, borderRadius: 4, backgroundColor: '#F1F2F4' },
-  skillTagT: { fontSize: 12, color: '#7B838D' },
+  skillTag: { paddingHorizontal: 12, paddingVertical: 2, borderRadius: 4, backgroundColor: '#F8FAFC' },
+  skillTagT: { fontSize: 12, color: '#7B838D', letterSpacing: 0.5, lineHeight: 18 },
   resumeSection: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     marginHorizontal: 16, marginBottom: 12, backgroundColor: '#fff', borderRadius: 16, padding: 16,
     shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.07, shadowRadius: 4, elevation: 2,
   },
   resumeLeft: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  resumeDot: { width: 10, height: 10, borderRadius: 5 },
-  resumeText: { fontSize: 15, fontWeight: '500', color: '#000' },
+  resumePill: { borderRadius: 999, paddingHorizontal: 8, paddingVertical: 1 },
+  resumePillT: { fontSize: 12, letterSpacing: 0.5 },
   resumeReqBtn: { paddingHorizontal: 18, paddingVertical: 8, borderRadius: 8, backgroundColor: '#EBFAF5', borderWidth: 1, borderColor: 'rgba(111,205,174,1)' },
   resumeReqBtnT: { fontSize: 13, fontWeight: '600', color: '#008B68' },
   resumeViewBtn: { paddingHorizontal: 18, paddingVertical: 8, borderRadius: 8, backgroundColor: '#02A87E' },
