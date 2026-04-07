@@ -199,9 +199,9 @@ const s = StyleSheet.create({
 
   // Request resume button
   reqBtn: {
-    backgroundColor: C.btnBg,
+    backgroundColor: C.greenBubble,
     borderRadius: 8,
     paddingHorizontal: 12, paddingVertical: 4,
   },
-  reqBtnT: { fontSize: 14, fontWeight: '600', color: C.btnText, lineHeight: 21 },
+  reqBtnT: { fontSize: 14, fontWeight: '600', color: C.greenText, lineHeight: 21 },
 });
