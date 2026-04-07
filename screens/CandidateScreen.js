@@ -62,11 +62,14 @@ export default function CandidateScreen({ navigation, route }) {
     resumeAction = 'request';
   } else if (c.resumeStatus === 'requested') {
     resumeText = '已请求简历'; resumeDotColor = '#E19D16'; resumeAction = 'waiting';
-  } else if (c.resumeStatus === 'has' || c.resumeStatus === 'authorized') {
+  } else if (c.resumeStatus === 'has') {
     resumeText = '有简历'; resumeDotColor = '#02A87E'; resumeAction = 'view';
-  } else if (c.resumeStatus === 'proactive') {
-    resumeText = c.hasNewResume ? '新简历' : '有简历';
-    resumeDotColor = c.hasNewResume ? '#1690E1' : '#02A87E';
+  } else if (c.resumeStatus === 'authorized' || c.resumeStatus === 'proactive') {
+    if (c.hasNewResume && !c.newResumeRead) {
+      resumeText = '新简历'; resumeDotColor = '#1690E1';
+    } else {
+      resumeText = '有简历'; resumeDotColor = '#02A87E';
+    }
     resumeAction = 'view';
   }
 
