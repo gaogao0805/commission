@@ -148,15 +148,24 @@ export default function CandidateScreen({ navigation, route }) {
           {resumeAction === 'waiting' && <Text style={styles.waitingText}>等待授权中</Text>}
         </View>
 
-        {/* Info */}
+        {/* Work Experience */}
         <View style={styles.section}>
-          <Text style={styles.secTitle}>基本信息</Text>
-          {[['工作年限', c.exp], ['所在城市', c.location], ['求职状态', '积极求职中']].map(([l, v], i) => (
-            <View key={l} style={styles.infoRow}>
-              <Text style={styles.infoLabel}>{l}</Text>
-              <Text style={[styles.infoValue, i === 2 && { color: '#02A87E' }]}>{v}</Text>
+          <View style={styles.expTitleRow}>
+            <View style={styles.expTitleBar} />
+            <Text style={styles.expTitleText}>工作经历</Text>
+          </View>
+          <View style={styles.expItem}>
+            <View style={styles.expItemTop}>
+              <View style={styles.expCompanyLeft}>
+                <View style={styles.expLogo}>
+                  <Text style={styles.expLogoT}>{c.company.charAt(0)}</Text>
+                </View>
+                <Text style={styles.expCompany}>{c.company}</Text>
+              </View>
+              <Text style={styles.expDate}>至今</Text>
             </View>
-          ))}
+            <Text style={styles.expRole}>{c.title}</Text>
+          </View>
         </View>
 
       </ScrollView>
@@ -218,6 +227,17 @@ const styles = StyleSheet.create({
     shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.07, shadowRadius: 4, elevation: 2,
   },
   secTitle: { fontSize: 12, fontWeight: '600', color: '#008B68', marginBottom: 10, letterSpacing: 0.5 },
+  expTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 16 },
+  expTitleBar: { width: 4, borderRadius: 999, backgroundColor: '#6FCDAE', alignSelf: 'stretch' },
+  expTitleText: { fontSize: 16, fontWeight: '600', color: '#000' },
+  expItem: { gap: 4 },
+  expItemTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', height: 21 },
+  expCompanyLeft: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  expLogo: { width: 21, height: 21, borderRadius: 4, backgroundColor: '#F1F2F4', alignItems: 'center', justifyContent: 'center' },
+  expLogoT: { fontSize: 10, fontWeight: '500', color: '#7B838D' },
+  expCompany: { fontSize: 14, fontWeight: '500', color: '#000' },
+  expDate: { fontSize: 12, fontWeight: '300', color: '#78787D' },
+  expRole: { fontSize: 13, color: '#000', letterSpacing: 0.5, lineHeight: 18 },
   aiReasonRow: { flexDirection: 'row', alignItems: 'center' },
   aiReasonIconArea: { position: 'relative', marginRight: 4 },
   aiReasonAvatar: { width: 20, height: 20, borderRadius: 10 },
