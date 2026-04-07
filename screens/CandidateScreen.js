@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, ScrollView, Modal, StyleSheet, SafeAreaView } from 'react-native';
-import Svg, { Path, Rect, Defs, LinearGradient as SvgLinearGradient, Stop } from 'react-native-svg';
+import Svg, { Path, Rect, Defs, LinearGradient as SvgLinearGradient, Stop, Circle } from 'react-native-svg';
 
 
 const GRAD_COLORS = { pass: '#8EF1CD', pending: '#F1D88E', reject: '#F1988E' };
@@ -58,15 +58,6 @@ export default function CandidateScreen({ navigation, route }) {
   const decLabels = { pass: '通过', pending: '待定', reject: '拒绝' };
   const decColors = { pass: '#02A87E', pending: '#E19D16', reject: '#dc2626' };
 
-  // 返回时标记新简历已读
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('beforeRemove', () => {
-      if (c.hasNewResume && !c.newResumeRead) {
-        updateCandidate(c.id, { newResumeRead: true, hasNewResume: false });
-      }
-    });
-    return unsubscribe;
-  }, [navigation, c]);
 
   // tag颜色与CandidateCard pill完全一致：新简历蓝、有简历绿、已请求黄
   let resumeText = null, resumeTagBg = null, resumeTagColor = null, resumeDotColor = '#BBC1C9', resumeAction = null;
@@ -225,13 +216,32 @@ export default function CandidateScreen({ navigation, route }) {
           {dec && <View style={[styles.bottomDot, { backgroundColor: decColors[dec] }]} />}
           <Text style={[styles.bottomText, dec && { color: decColors[dec] }]}>{dec ? decLabels[dec] : '选择决策'}</Text>
         </View>
-        <Text style={styles.bottomArrow}>▲</Text>
+        <View style={styles.bottomArrow}>
+          <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
+            <Circle cx={6} cy={12} r={1.25} fill="#7B838D" stroke="#7B838D" strokeWidth={0.5} />
+            <Circle cx={12} cy={12} r={1.25} fill="#7B838D" stroke="#7B838D" strokeWidth={0.5} />
+            <Circle cx={18} cy={12} r={1.25} fill="#7B838D" stroke="#7B838D" strokeWidth={0.5} />
+          </Svg>
+        </View>
       </TouchableOpacity>
 
       {/* Decision Sheet */}
       <Modal visible={sheetOpen} transparent animationType="slide">
         <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={() => setSheetOpen(false)}>
           <View style={styles.sheet}>
+            {dec && (
+              <View pointerEvents="none" style={styles.sheetGradBg}>
+                <Svg width="100%" height={120} preserveAspectRatio="none">
+                  <Defs>
+                    <SvgLinearGradient id="sheetGrad" x1="0" y1="0" x2="0" y2="1">
+                      <Stop offset="0" stopColor={GRAD_COLORS[dec]} stopOpacity="0.4" />
+                      <Stop offset="1" stopColor="#ffffff" stopOpacity="0" />
+                    </SvgLinearGradient>
+                  </Defs>
+                  <Rect x="0" y="0" width="100%" height="120" fill="url(#sheetGrad)" />
+                </Svg>
+              </View>
+            )}
             <View style={styles.handle} />
             <Text style={styles.sheetTitle}>选择决策</Text>
             {options.map(o => (
@@ -323,9 +333,10 @@ const styles = StyleSheet.create({
   bottomLeft: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   bottomDot: { width: 8, height: 8, borderRadius: 4 },
   bottomText: { fontSize: 16, fontWeight: '600', color: '#000' },
-  bottomArrow: { fontSize: 12, color: '#7B838D', width: 28, height: 28, borderRadius: 14, backgroundColor: '#F1F2F4', textAlign: 'center', lineHeight: 28 },
+  bottomArrow: { width: 28, height: 28, borderRadius: 14, backgroundColor: '#F1F2F4', alignItems: 'center', justifyContent: 'center' },
   overlay: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.5)' },
-  sheet: { backgroundColor: '#fff', borderTopLeftRadius: 16, borderTopRightRadius: 16, paddingHorizontal: 16, paddingBottom: 34 },
+  sheet: { backgroundColor: '#fff', borderTopLeftRadius: 16, borderTopRightRadius: 16, paddingHorizontal: 16, paddingBottom: 34, overflow: 'hidden' },
+  sheetGradBg: { position: 'absolute', top: 0, left: 0, right: 0, height: 120 },
   handle: { width: 36, height: 4, borderRadius: 2, backgroundColor: '#DDE2E8', alignSelf: 'center', marginTop: 10, marginBottom: 4 },
   sheetTitle: { textAlign: 'center', fontSize: 13, color: '#BBC1C9', paddingVertical: 10 },
   option: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 16, borderRadius: 16, marginBottom: 8, borderWidth: 1, borderColor: '#DDE2E8' },

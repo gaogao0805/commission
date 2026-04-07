@@ -100,6 +100,10 @@ export default function CategoryScreen({ navigation, route }) {
   };
 
   const handleCardPress = (c) => {
+    if (c.hasNewResume && !c.newResumeRead) {
+      updateCandidate(c.id, { newResumeRead: true });
+      readIdsRef.current.push({ id: c.id, resumeStatus: c.resumeStatus });
+    }
     navigation.navigate('Candidate', { candidateId: c.id });
   };
 

@@ -23,8 +23,14 @@ export default function Toast({ message, type, visible, onHide }) {
 
   if (!visible) return null;
 
-  const color = type === 'success' ? '#059669' : '#6366f1';
-  const borderColor = type === 'success' ? 'rgba(5,150,105,0.3)' : 'rgba(99,102,241,0.3)';
+  const colorMap = {
+    success: '#02A87E', pass: '#02A87E',
+    pending: '#E19D16',
+    reject: '#dc2626',
+    info: '#6366f1',
+  };
+  const color = colorMap[type] || '#6366f1';
+  const borderColor = color + '4D';
 
   return (
     <Animated.View style={[styles.container, { opacity, transform: [{ translateY }], borderColor }]}>
