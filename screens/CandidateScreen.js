@@ -4,6 +4,19 @@ import Svg, { Path, Rect, Defs, LinearGradient as SvgLinearGradient, Stop } from
 
 const GRAD_COLORS = { pass: '#8EF1CD', pending: '#F1D88E', reject: '#F1988E' };
 
+const COMPANY_DOMAINS = {
+  '字节跳动': 'bytedance.com', '蚂蚁集团': 'antgroup.com', '网易': 'netease.com',
+  '拼多多': 'pinduoduo.com', '阿里巴巴': 'alibaba.com', '美团': 'meituan.com',
+  '腾讯': 'tencent.com', '京东': 'jd.com', '小红书': 'xiaohongshu.com',
+  '快手': 'kuaishou.com', '华为': 'huawei.com', '中兴通讯': 'zte.com.cn',
+  'B站': 'bilibili.com', '米哈游': 'mihoyo.com', '滴滴出行': 'didiglobal.com',
+  '百度': 'baidu.com', '小米': 'mi.com', '广告公司': null, '创业公司': null,
+};
+const getLogoUrl = (company) => {
+  const domain = COMPANY_DOMAINS[company];
+  return domain ? `https://logo.clearbit.com/${domain}` : null;
+};
+
 const BackIcon = () => (
   <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
     <Path d="M14.0713 5L7.15073 11.9206C7.06761 12.0037 7.06761 12.1385 7.15073 12.2216L14.0713 19.1421" stroke="black" strokeWidth={2} strokeLinecap="round" />
@@ -169,7 +182,9 @@ export default function CandidateScreen({ navigation, route }) {
               <View style={styles.expItemTop}>
                 <View style={styles.expCompanyLeft}>
                   <View style={styles.expLogo}>
-                    <Text style={styles.expLogoT}>{w.company.charAt(0)}</Text>
+                    {getLogoUrl(w.company)
+                      ? <Image source={{ uri: getLogoUrl(w.company) }} style={styles.expLogoImg} />
+                      : <Text style={styles.expLogoT}>{w.company.charAt(0)}</Text>}
                   </View>
                   <Text style={styles.expCompany}>{w.company}</Text>
                 </View>
@@ -247,6 +262,7 @@ const styles = StyleSheet.create({
   expItemTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', height: 21 },
   expCompanyLeft: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   expLogo: { width: 21, height: 21, borderRadius: 4, backgroundColor: '#F1F2F4', alignItems: 'center', justifyContent: 'center' },
+  expLogoImg: { width: 21, height: 21, borderRadius: 4 },
   expLogoT: { fontSize: 10, fontWeight: '500', color: '#7B838D' },
   expCompany: { fontSize: 14, fontWeight: '500', color: '#000', lineHeight: 21 },
   expDate: { fontSize: 12, fontWeight: '300', color: '#78787D', lineHeight: 21 },
