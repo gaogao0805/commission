@@ -2,6 +2,16 @@ import React, { useState, useRef, useCallback } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, SafeAreaView, Animated, PanResponder, Dimensions, ScrollView } from 'react-native';
 import Svg, { Path, Rect, Defs, LinearGradient as SvgLinearGradient, Stop } from 'react-native-svg';
 
+const COMPANY_COLORS = {
+  '字节跳动': '#1A1A1A', '蚂蚁集团': '#1677FF', '网易': '#D0021B', '拼多多': '#E02E24',
+  '阿里巴巴': '#FF6A00', '美团': '#FFD100', '腾讯': '#12B7F5', '京东': '#E1251B',
+  '小红书': '#FF2442', '快手': '#FF4906', '华为': '#CF0A2C', '中兴通讯': '#0066CC',
+  'B站': '#FB7299', '米哈游': '#1A73E8', '滴滴出行': '#FF8C00', '百度': '#2932E1',
+  '小米': '#FF6900', '广告公司': '#888', '创业公司': '#888',
+};
+const getCompanyColor = (co) => COMPANY_COLORS[co] || '#7B838D';
+const getCompanyTextColor = (co) => co === '美团' ? '#333' : '#fff';
+
 function QuoteIcon() {
   return (
     <Svg width={14} height={10} viewBox="0 0 14 10" fill="none">
@@ -110,8 +120,30 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onRequestResume, c
           <Text style={styles.reasonText}>{c.aiReason}</Text>
         </View>
         {/* Skills */}
-        <View style={styles.skillsRow}>
+        <View style={[styles.skillsRow, { marginBottom: 20 }]}>
           {c.skills.map(s => <View key={s} style={styles.skillTag}><Text style={styles.skillTagT}>{s}</Text></View>)}
+        </View>
+        {/* Work Experience */}
+        <View style={styles.expSection}>
+          <View style={styles.expTitleRow}>
+            <View style={styles.expTitleBar} />
+            <Text style={styles.expTitleText}>工作经历</Text>
+          </View>
+          {(c.workHistory || [{ company: c.company, title: c.title, period: '至今' }]).flatMap((w, i) => [
+            i > 0 ? <View key={`d${i}`} style={styles.expDivider} /> : null,
+            <View key={i} style={styles.expItem}>
+              <View style={styles.expItemTop}>
+                <View style={styles.expCompanyLeft}>
+                  <View style={[styles.expLogo, { backgroundColor: getCompanyColor(w.company) }]}>
+                    <Text style={[styles.expLogoT, { color: getCompanyTextColor(w.company) }]}>{w.company.charAt(0)}</Text>
+                  </View>
+                  <Text style={styles.expCompany}>{w.company}</Text>
+                </View>
+                <Text style={styles.expDate}>{w.period}</Text>
+              </View>
+              <Text style={styles.expRole}>{w.title}</Text>
+            </View>,
+          ])}
         </View>
       </ScrollView>
     </Animated.View>
@@ -262,6 +294,19 @@ const styles = StyleSheet.create({
   skillsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   skillTag: { paddingHorizontal: 12, paddingVertical: 2, borderRadius: 4, backgroundColor: '#F6F7F9' },
   skillTagT: { fontSize: 12, color: '#7B838D', letterSpacing: 0.5, lineHeight: 18 },
+  expSection: { gap: 16 },
+  expTitleRow: { flexDirection: 'row', alignItems: 'stretch', gap: 8 },
+  expTitleBar: { width: 4, borderRadius: 999, backgroundColor: '#6FCDAE' },
+  expTitleText: { fontSize: 16, fontWeight: '600', color: '#000', lineHeight: 21 },
+  expItem: { gap: 4, paddingLeft: 12 },
+  expItemTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', height: 21 },
+  expCompanyLeft: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  expLogo: { width: 21, height: 21, borderRadius: 4, alignItems: 'center', justifyContent: 'center' },
+  expLogoT: { fontSize: 10, fontWeight: '600' },
+  expCompany: { fontSize: 14, fontWeight: '500', color: '#000', lineHeight: 21 },
+  expDate: { fontSize: 12, fontWeight: '300', color: '#78787D', lineHeight: 21 },
+  expRole: { fontSize: 13, fontWeight: '400', color: '#000', letterSpacing: 0.5, lineHeight: 18, paddingLeft: 29 },
+  expDivider: { height: 0.5, backgroundColor: '#F1F2F4', marginLeft: 12 },
   actions: { flexDirection: 'row', justifyContent: 'center', gap: 32, paddingVertical: 16, paddingBottom: 40 },
   actionWrap: { alignItems: 'center', gap: 8 },
   actionBtn: { width: 56, height: 56, borderRadius: 28, alignItems: 'center', justifyContent: 'center' },
