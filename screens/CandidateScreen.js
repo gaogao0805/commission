@@ -20,11 +20,11 @@ function AnimatedGradientBorder({ color, children, style }) {
         <Svg width="100%" height="100%">
           <Defs>
             <SvgLinearGradient id="capsuleGrad" x1="0" y1="0" x2="0" y2="1">
-              <Stop offset="0" stopColor={color} />
-              <Stop offset="0.42" stopColor={color} />
-              <Stop offset="0.5" stopColor="#ffffff" />
-              <Stop offset="0.58" stopColor={color} />
-              <Stop offset="1" stopColor={color} />
+              <Stop offset="0" stopColor="#ffffff" />
+              <Stop offset="0.42" stopColor="#ffffff" />
+              <Stop offset="0.5" stopColor={color} />
+              <Stop offset="0.58" stopColor="#ffffff" />
+              <Stop offset="1" stopColor="#ffffff" />
             </SvgLinearGradient>
           </Defs>
           <Rect width="100%" height="100%" fill="url(#capsuleGrad)" />
