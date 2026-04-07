@@ -45,7 +45,7 @@ export default function CandidateCard({ candidate, onPress, onRequestResume, hid
   }
 
   const isPass = c.recruiterDecision === 'pass';
-  const showTopBtn = !hideResume && !isPass && c.resumeStatus === 'none';
+  const showTopBtn = !hideResume && !isPass && c.resumeStatus === 'none' && !matchStatus;
 
   return (
     <TouchableOpacity style={s.card} activeOpacity={0.7} onPress={onPress}>
@@ -105,6 +105,30 @@ export default function CandidateCard({ candidate, onPress, onRequestResume, hid
               </View>
             ) : <View />}
             {c.resumeStatus === 'none' && (
+              <TouchableOpacity style={s.reqBtn} onPress={() => onRequestResume?.(c.id)}>
+                <Text style={s.reqBtnT}>请求简历</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+      ) : matchStatus ? (
+        <View style={s.bottomSection}>
+          <View style={s.reasonRow}>
+            <View style={s.reasonIconArea}>
+              <Image source={require('../assets/agent-avatar.png')} style={s.reasonAvatar} />
+              <View style={[s.quoteWrap, reasonLines === 1 && { top: 16 }]}><QuoteIcon /></View>
+            </View>
+            <Text style={s.reasonT} numberOfLines={2} onTextLayout={e => setReasonLines(e.nativeEvent.lines.length)}>
+              {c.aiReason}
+            </Text>
+          </View>
+          <View style={s.divider} />
+          <View style={s.bottomRow}>
+            <View style={s.matchInline}>
+              <View style={[s.matchDot, matchStatus.type === 'orange' && { backgroundColor: C.yellow }, matchStatus.type === 'gray' && { backgroundColor: C.grayMid }]} />
+              <Text style={[s.matchText, matchStatus.type === 'orange' && { color: '#E19D16' }, matchStatus.type === 'gray' && { color: C.grayMid }]}>{matchStatus.text}</Text>
+            </View>
+            {showTopBtn && (
               <TouchableOpacity style={s.reqBtn} onPress={() => onRequestResume?.(c.id)}>
                 <Text style={s.reqBtnT}>请求简历</Text>
               </TouchableOpacity>
