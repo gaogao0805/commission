@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
   nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 9, zIndex: 1 },
   backBtn: { width: 24, height: 24, alignItems: 'center', justifyContent: 'center' },
   navTitle: { fontSize: 16, fontWeight: '600', color: '#171718' },
-  topSection: { flexDirection: 'column', gap: 12, paddingHorizontal: 16, paddingVertical: 16 },
+  topSection: { flexDirection: 'column', gap: 16, paddingHorizontal: 16, paddingVertical: 16 },
   profile: { flexDirection: 'row', alignItems: 'center', gap: 20 },
   avatarLgWrap: {},
   avatarLg: { width: 52, height: 52, borderRadius: 26, backgroundColor: '#e8e8ed', alignItems: 'center', justifyContent: 'center' },
