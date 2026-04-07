@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
   nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 9, zIndex: 1 },
   backBtn: { width: 24, height: 24, alignItems: 'center', justifyContent: 'center' },
   navTitle: { fontSize: 16, fontWeight: '600', color: '#171718' },
-  tabBar: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, gap: 4, marginTop: 0 },
+  tabBar: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, gap: 4, marginTop: 0, zIndex: 1 },
   tabItem: { flex: 1, paddingVertical: 12, alignItems: 'center', justifyContent: 'center' },
   activeTabContent: { alignItems: 'center', position: 'relative' },
   tabText: { fontSize: 14, fontWeight: '400', color: '#656D76', lineHeight: 21 },

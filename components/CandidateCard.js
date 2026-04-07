@@ -90,7 +90,7 @@ export default function CandidateCard({ candidate, onPress, onRequestResume, hid
           <View style={s.reasonRow}>
             <View style={s.reasonIconArea}>
               <Image source={require('../assets/agent-avatar.png')} style={s.reasonAvatar} />
-              <View style={[s.quoteWrap, reasonLines === 1 && { top: 8 }]}><QuoteIcon /></View>
+              <View style={[s.quoteWrap, reasonLines === 1 && { top: 16 }]}><QuoteIcon /></View>
             </View>
             <Text style={s.reasonT} numberOfLines={2} onTextLayout={e => setReasonLines(e.nativeEvent.lines.length)}>
               {c.aiReason}
