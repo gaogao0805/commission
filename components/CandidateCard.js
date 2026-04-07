@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { getResumeStatusLabel, getMatchingStatus } from '../data/candidates';
@@ -35,6 +35,7 @@ export default function CandidateCard({ candidate, onPress, onRequestResume, hid
   const initial = c.name.charAt(0);
   const resumeLabel = getResumeStatusLabel(c);
   const matchStatus = getMatchingStatus(c);
+  const [reasonLines, setReasonLines] = useState(2);
 
   // Resume pill text
   let rText = null;
@@ -89,13 +90,11 @@ export default function CandidateCard({ candidate, onPress, onRequestResume, hid
           <View style={s.reasonRow}>
             <View style={s.reasonIconArea}>
               <Image source={require('../assets/agent-avatar.png')} style={s.reasonAvatar} />
+              <View style={[s.quoteWrap, reasonLines === 1 && { top: 8 }]}><QuoteIcon /></View>
             </View>
-            <View style={{ flex: 1 }}>
-              <Text style={s.reasonT} numberOfLines={2}>
-                {c.aiReason}
-              </Text>
-              <QuoteIcon />
-            </View>
+            <Text style={s.reasonT} numberOfLines={2} onTextLayout={e => setReasonLines(e.nativeEvent.lines.length)}>
+              {c.aiReason}
+            </Text>
           </View>
           <View style={s.divider} />
           <View style={s.bottomRow}>
@@ -169,9 +168,10 @@ const s = StyleSheet.create({
   pillT: { fontSize: 12, color: C.grayMid, letterSpacing: 0.5, lineHeight: 18 },
 
   // AI Reason
-  reasonRow: { flexDirection: 'row', alignItems: 'flex-start' },
-  reasonIconArea: { marginRight: 4 },
+  reasonRow: { flexDirection: 'row', alignItems: 'center' },
+  reasonIconArea: { position: 'relative', marginRight: 4 },
   reasonAvatar: { width: 20, height: 20, borderRadius: 10 },
+  quoteWrap: { position: 'absolute', top: -8, right: -14 },
   reasonT: {
     flex: 1, fontSize: 13, color: C.greenGray,
     letterSpacing: 0.5, lineHeight: 18,
