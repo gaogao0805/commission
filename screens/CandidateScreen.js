@@ -213,7 +213,6 @@ export default function CandidateScreen({ navigation, route }) {
       {/* Bottom Bar */}
       <TouchableOpacity style={styles.bottomBar} onPress={() => setSheetOpen(true)}>
         <View style={styles.bottomLeft}>
-          {dec && <View style={[styles.bottomDot, { backgroundColor: decColors[dec] }]} />}
           <Text style={[styles.bottomText, dec && { color: decColors[dec] }]}>{dec ? decLabels[dec] : '选择决策'}</Text>
         </View>
         <View style={styles.bottomArrow}>
