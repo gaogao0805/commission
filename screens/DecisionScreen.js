@@ -1,16 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Animated, PanResponder, Dimensions, ScrollView } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, SafeAreaView, Animated, PanResponder, Dimensions, ScrollView } from 'react-native';
 import Svg, { Path, Rect, Defs, LinearGradient as SvgLinearGradient, Stop } from 'react-native-svg';
-
-const BackIcon = () => (
-  <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
-    <Path d="M14.0713 5L7.15073 11.9206C7.06761 12.0037 7.06761 12.1385 7.15073 12.2216L14.0713 19.1421" stroke="black" strokeWidth={2} strokeLinecap="round" />
-  </Svg>
-);
-import { useApp } from '../data/AppContext';
-import { Image } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
-import Toast from '../components/Toast';
 
 function QuoteIcon() {
   return (
@@ -20,13 +10,14 @@ function QuoteIcon() {
   );
 }
 
-const RESUME_TAG = {
-  none: null,
-  requested: { text: '已请求简历', bg: '#FFFBF2', color: '#E19D16' },
-  has: { text: '有简历', bg: '#EBFAF5', color: '#008B68' },
-  authorized: { text: '有简历', bg: '#EBFAF5', color: '#008B68' },
-  proactive: { text: '新简历', bg: '#F2FAFF', color: '#1690E1' },
-};
+const BackIcon = () => (
+  <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
+    <Path d="M14.0713 5L7.15073 11.9206C7.06761 12.0037 7.06761 12.1385 7.15073 12.2216L14.0713 19.1421" stroke="black" strokeWidth={2} strokeLinecap="round" />
+  </Svg>
+);
+import { useApp } from '../data/AppContext';
+import { getResumeStatusLabel } from '../data/candidates';
+import Toast from '../components/Toast';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SWIPE_THRESHOLD = 80;
@@ -71,9 +62,16 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onRequestResume, c
   const rotate = pan.x.interpolate({ inputRange: [-200, 0, 200], outputRange: ['-15deg', '0deg', '15deg'] });
   const c = candidate;
   const initial = c.name.charAt(0);
-  const rTag = c.hasNewResume && !c.newResumeRead
-    ? { text: '新简历', bg: '#F2FAFF', color: '#1690E1' }
-    : RESUME_TAG[c.resumeStatus] || null;
+  const isMale = c.gender === 'male';
+  const resumeLabel = getResumeStatusLabel(c);
+
+  let rTag = { text: '暂无简历', color: '#9ca3af', bg: 'rgba(0,0,0,0.04)' };
+  if (c.hasNewResume && !c.newResumeRead) rTag = { text: '新简历', color: '#059669', bg: 'rgba(5,150,105,0.08)' };
+  else if (resumeLabel) {
+    const cm = { new: '#059669', requested: '#3b82f6', has: '#4f46e5' };
+    const bm = { new: 'rgba(5,150,105,0.08)', requested: 'rgba(59,130,246,0.08)', has: 'rgba(99,102,241,0.08)' };
+    rTag = { text: resumeLabel.text, color: cm[resumeLabel.type] || '#4f46e5', bg: bm[resumeLabel.type] || 'rgba(99,102,241,0.08)' };
+  }
 
   return (
     <Animated.View
@@ -98,17 +96,11 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onRequestResume, c
           <View style={styles.swipeAvatar}>
             <Text style={styles.swipeAvatarT}>{initial}</Text>
           </View>
-          <View>
+          <View style={{ flex: 1 }}>
             <Text style={styles.swipeName}>{c.name}</Text>
-            <Text style={styles.swipeTitle}>{c.title} · {c.company}</Text>
+            <Text style={styles.swipeTitle}>{c.company} · {c.title}</Text>
           </View>
         </View>
-
-        {/* Skills */}
-        <View style={styles.skillsRow}>
-          {c.skills.map(s => <View key={s} style={styles.skillTag}><Text style={styles.skillTagT}>{s}</Text></View>)}
-        </View>
-
         {/* AI Reason */}
         <View style={styles.reasonRow}>
           <View style={styles.reasonIconArea}>
@@ -117,19 +109,9 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onRequestResume, c
           </View>
           <Text style={styles.reasonText}>{c.aiReason}</Text>
         </View>
-
-        {/* Resume tag + request button */}
-        <View style={styles.tagsRow}>
-          {rTag && (
-            <View style={[styles.rTag, { backgroundColor: rTag.bg }]}>
-              <Text style={[styles.rTagT, { color: rTag.color }]}>{rTag.text}</Text>
-            </View>
-          )}
-          {c.resumeStatus === 'none' && (
-            <TouchableOpacity style={styles.rBtn} onPress={() => onRequestResume?.(c.id)}>
-              <Text style={styles.rBtnT}>请求简历</Text>
-            </TouchableOpacity>
-          )}
+        {/* Skills */}
+        <View style={styles.skillsRow}>
+          {c.skills.map(s => <View key={s} style={styles.skillTag}><Text style={styles.skillTagT}>{s}</Text></View>)}
         </View>
       </ScrollView>
     </Animated.View>
@@ -272,19 +254,14 @@ const styles = StyleSheet.create({
   swipeAvatarT: { fontSize: 20, fontWeight: '500', color: '#BBC1C9' },
   swipeName: { fontSize: 20, fontWeight: '600', color: '#000', marginBottom: 2 },
   swipeTitle: { fontSize: 13, color: '#7B838D' },
-  skillsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 16 },
-  skillTag: { paddingHorizontal: 12, paddingVertical: 2, borderRadius: 4, backgroundColor: '#F6F7F9' },
-  skillTagT: { fontSize: 12, color: '#7B838D', letterSpacing: 0.5, lineHeight: 18 },
   reasonRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 16 },
   reasonIconArea: { position: 'relative', marginRight: 4 },
   reasonAvatar: { width: 20, height: 20, borderRadius: 10 },
   quoteWrap: { position: 'absolute', top: -8, right: -14 },
   reasonText: { flex: 1, fontSize: 13, color: '#9EB3B3', letterSpacing: 0.5, lineHeight: 18 },
-  tagsRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  rTag: { borderRadius: 999, paddingHorizontal: 8, paddingVertical: 1 },
-  rTagT: { fontSize: 12, letterSpacing: 0.5 },
-  rBtn: { backgroundColor: '#EBFAF5', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 4 },
-  rBtnT: { fontSize: 14, fontWeight: '500', color: '#008B68', lineHeight: 21 },
+  skillsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  skillTag: { paddingHorizontal: 12, paddingVertical: 2, borderRadius: 4, backgroundColor: '#F6F7F9' },
+  skillTagT: { fontSize: 12, color: '#7B838D', letterSpacing: 0.5, lineHeight: 18 },
   actions: { flexDirection: 'row', justifyContent: 'center', gap: 32, paddingVertical: 16, paddingBottom: 40 },
   actionWrap: { alignItems: 'center', gap: 8 },
   actionBtn: { width: 56, height: 56, borderRadius: 28, alignItems: 'center', justifyContent: 'center' },
