@@ -40,7 +40,7 @@ export default function CandidateCard({ candidate, onPress, onRequestResume, hid
   // Resume pill text
   let rText = null;
   if (!hideResume) {
-    if (c.hasNewResume && !c.newResumeRead) { rText = '新简历'; }
+    if (c.hasNewResume) { rText = '新简历'; }
     else if (resumeLabel) { rText = resumeLabel.text; }
   }
 
@@ -61,8 +61,8 @@ export default function CandidateCard({ candidate, onPress, onRequestResume, hid
           <View style={s.nameRow}>
             <Text style={s.name}>{c.name}</Text>
             {rText && (
-              <View style={s.resumePill}>
-                <Text style={s.resumePillT}>{rText}</Text>
+              <View style={[s.resumePill, c.hasNewResume && { backgroundColor: '#F2FAFF' }, c.resumeStatus === 'requested' && { backgroundColor: '#FFFBF2' }]}>
+                <Text style={[s.resumePillT, c.hasNewResume && { color: '#1690E1' }, c.resumeStatus === 'requested' && { color: '#E19D16' }]}>{rText}</Text>
               </View>
             )}
           </View>
@@ -101,7 +101,7 @@ export default function CandidateCard({ candidate, onPress, onRequestResume, hid
             {matchStatus ? (
               <View style={s.matchInline}>
                 <View style={[s.matchDot, matchStatus.type === 'orange' && { backgroundColor: C.yellow }, matchStatus.type === 'gray' && { backgroundColor: C.grayMid }]} />
-                <Text style={[s.matchText, matchStatus.type === 'orange' && { color: '#B17E51' }, matchStatus.type === 'gray' && { color: C.grayMid }]}>{matchStatus.text}</Text>
+                <Text style={[s.matchText, matchStatus.type === 'orange' && { color: '#E19D16' }, matchStatus.type === 'gray' && { color: C.grayMid }]}>{matchStatus.text}</Text>
               </View>
             ) : <View />}
             {c.resumeStatus === 'none' && (
@@ -115,9 +115,9 @@ export default function CandidateCard({ candidate, onPress, onRequestResume, hid
         <View style={s.reasonRow}>
           <View style={s.reasonIconArea}>
             <Image source={require('../assets/agent-avatar.png')} style={s.reasonAvatar} />
-            <View style={s.quoteWrap}><QuoteIcon /></View>
+            <View style={[s.quoteWrap, reasonLines === 1 && { top: 16 }]}><QuoteIcon /></View>
           </View>
-          <Text style={s.reasonT} numberOfLines={2}>
+          <Text style={s.reasonT} numberOfLines={2} onTextLayout={e => setReasonLines(e.nativeEvent.lines.length)}>
             {c.aiReason}
           </Text>
         </View>

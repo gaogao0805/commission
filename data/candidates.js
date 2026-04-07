@@ -49,15 +49,21 @@ export function getResumeStatusLabel(c) {
   switch (c.resumeStatus) {
     case 'has': return { text: '有简历', type: 'has' };
     case 'requested': return { text: '已请求简历', type: 'requested' };
-    case 'authorized': return { text: '新简历', type: 'new' };
+    case 'authorized': return { text: '有简历', type: 'has' };
     case 'proactive': return { text: '候选人发送简历', type: 'new' };
     default: return null;
   }
 }
 
 export function getMatchingStatus(c) {
-  if (c.recruiterDecision !== 'pass') return null;
-  if (c.seekerIntent === 'connect') return { text: '双方均已通过', type: 'green' };
+  if (c.recruiterDecision === 'pass') {
+    if (c.seekerIntent === 'connect') return { text: '双方均已通过', type: 'green' };
+    if (c.seekerIntent === 'reject') return { text: '对方暂无意向', type: 'gray' };
+    return { text: '等待候选人确认', type: 'orange' };
+  }
+  // 待定/拒绝卡片也展示对方状态
+  if (c.seekerIntent === 'connect') return { text: '对方有意向', type: 'green' };
   if (c.seekerIntent === 'reject') return { text: '对方暂无意向', type: 'gray' };
-  return { text: '等待候选人确认', type: 'orange' };
+  if (c.seekerIntent === 'later') return { text: '等待候选人确认', type: 'orange' };
+  return null;
 }

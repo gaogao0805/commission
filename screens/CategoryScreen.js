@@ -69,6 +69,7 @@ export default function CategoryScreen({ navigation, route }) {
   const { getPassed, getPending, getRejected, updateCandidate } = useApp();
   const [activeTab, setActiveTab] = useState(route.params?.initialTab || 'pass');
   const [toast, setToast] = useState({ visible: false, message: '', type: '' });
+  const readIdsRef = useRef([]);
 
   const getList = () => {
     let list;
@@ -91,11 +92,25 @@ export default function CategoryScreen({ navigation, route }) {
     reject: getRejected().some(c => c.hasNewResume && !c.newResumeRead),
   };
 
+  const flushReadResumes = () => {
+    if (readIdsRef.current.length === 0) return;
+    readIdsRef.current.forEach(({ id, resumeStatus }) => {
+      updateCandidate(id, { hasNewResume: false, resumeStatus: resumeStatus === 'proactive' ? 'authorized' : resumeStatus });
+    });
+    readIdsRef.current = [];
+  };
+
   const handleCardPress = (c) => {
     if (c.hasNewResume && !c.newResumeRead) {
-      updateCandidate(c.id, { newResumeRead: true, hasNewResume: false, resumeStatus: c.resumeStatus === 'proactive' ? 'authorized' : c.resumeStatus });
+      updateCandidate(c.id, { newResumeRead: true });
+      readIdsRef.current.push({ id: c.id, resumeStatus: c.resumeStatus });
     }
     navigation.navigate('Candidate', { candidateId: c.id });
+  };
+
+  const handleTabChange = (tab) => {
+    flushReadResumes();
+    setActiveTab(tab);
   };
 
   const handleRequestResume = (id) => {
@@ -113,7 +128,7 @@ export default function CategoryScreen({ navigation, route }) {
     <SafeAreaView style={styles.safe}>
       <Toast {...toast} onHide={() => setToast(t => ({ ...t, visible: false }))} />
       <View style={styles.nav}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+        <TouchableOpacity style={styles.backBtn} onPress={() => { flushReadResumes(); navigation.goBack(); }}>
           <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
             <Path d="M14.0713 5L7.15073 11.9206C7.06761 12.0037 7.06761 12.1385 7.15073 12.2216L14.0713 19.1421" stroke="black" strokeWidth={2} strokeLinecap="round" />
           </Svg>
@@ -127,7 +142,7 @@ export default function CategoryScreen({ navigation, route }) {
         {TABS.map(tab => {
           const active = activeTab === tab.key;
           return (
-            <TouchableOpacity key={tab.key} style={styles.tabItem} onPress={() => setActiveTab(tab.key)}>
+            <TouchableOpacity key={tab.key} style={styles.tabItem} onPress={() => handleTabChange(tab.key)}>
               {active ? (
                 <View style={styles.activeTabContent}>
                   <TabDecor tabKey={tab.key} />
