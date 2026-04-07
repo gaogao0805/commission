@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, ScrollView, Modal, StyleSheet, SafeAreaView } from 'react-native';
 import Svg, { Path, Rect, Defs, LinearGradient as SvgLinearGradient, Stop } from 'react-native-svg';
 
@@ -40,16 +40,6 @@ export default function CandidateScreen({ navigation, route }) {
   const c = getById(route.params.candidateId);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [toast, setToast] = useState({ visible: false, message: '', type: '' });
-
-  // 进入详情页后标记新简历已读（延迟执行让详情页先渲染出新简历状态）
-  useEffect(() => {
-    if (c && c.hasNewResume && !c.newResumeRead) {
-      const timer = setTimeout(() => {
-        updateCandidate(c.id, { newResumeRead: true, hasNewResume: false });
-      }, 800);
-      return () => clearTimeout(timer);
-    }
-  }, []);
 
   if (!c) return null;
 
