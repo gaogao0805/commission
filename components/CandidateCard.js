@@ -203,5 +203,5 @@ const s = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 12, paddingVertical: 4,
   },
-  reqBtnT: { fontSize: 14, fontWeight: '600', color: C.greenText, lineHeight: 21 },
+  reqBtnT: { fontSize: 14, fontWeight: '500', color: C.greenText, lineHeight: 21 },
 });
