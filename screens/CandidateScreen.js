@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
   resumeMatchDot: { width: 4, height: 4, borderRadius: 2 },
   resumeMatchT: { fontSize: 13, fontWeight: '500', letterSpacing: 0.5 },
   resumeActionBtn: { backgroundColor: '#EBFAF5', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 4 },
-  resumeActionBtnT: { fontSize: 14, fontWeight: '600', color: '#009688', lineHeight: 21 },
+  resumeActionBtnT: { fontSize: 14, fontWeight: '500', color: '#008B68', lineHeight: 21 },
   resumeWaitingT: { fontSize: 13, color: '#BBC1C9' },
   waitingText: { fontSize: 13, color: '#BBC1C9' },
   infoRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8 },
