@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, ScrollView, Modal, StyleSheet, SafeAreaView } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
+import Svg, { Path, Rect, Defs, LinearGradient as SvgLinearGradient, Stop } from 'react-native-svg';
+
+const GRAD_COLORS = { pass: '#8EF1CD', pending: '#F1D88E', reject: '#F1988E' };
 
 const BackIcon = () => (
   <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -62,9 +64,24 @@ export default function CandidateScreen({ navigation, route }) {
     { key: 'reject', label: '拒绝', color: '#dc2626', bg: 'rgba(220,38,38,0.08)', border: 'rgba(220,38,38,0.2)' },
   ];
 
+  const gradColor = dec ? GRAD_COLORS[dec] : null;
+
   return (
     <SafeAreaView style={styles.safe}>
       <Toast {...toast} onHide={() => setToast(t => ({ ...t, visible: false }))} />
+      {gradColor && (
+        <View pointerEvents="none" style={styles.gradBg}>
+          <Svg width="100%" height={275} preserveAspectRatio="none">
+            <Defs>
+              <SvgLinearGradient id="candGrad" x1="0" y1="0" x2="0" y2="1">
+                <Stop offset="0" stopColor={gradColor} stopOpacity="0.5" />
+                <Stop offset="1" stopColor="#ffffff" stopOpacity="0" />
+              </SvgLinearGradient>
+            </Defs>
+            <Rect x="0" y="0" width="100%" height="275" fill="url(#candGrad)" />
+          </Svg>
+        </View>
+      )}
 
       <View style={styles.nav}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
@@ -170,7 +187,8 @@ export default function CandidateScreen({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#FBFBFB' },
+  safe: { flex: 1, backgroundColor: '#FBFBFB', position: 'relative' },
+  gradBg: { position: 'absolute', top: 0, left: 0, right: 0, height: 275, zIndex: 0 },
   nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 9, zIndex: 1 },
   backBtn: { width: 24, height: 24, alignItems: 'center', justifyContent: 'center' },
   navTitle: { fontSize: 16, fontWeight: '600', color: '#171718' },
