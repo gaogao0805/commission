@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
   skillTagT: { fontSize: 12, color: '#7B838D', letterSpacing: 0.5, lineHeight: 18 },
   resumeSection: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    marginHorizontal: 16, marginBottom: 12, backgroundColor: '#fff', borderRadius: 16, padding: 16,
+    marginHorizontal: 16, marginVertical: 20, backgroundColor: '#fff', borderRadius: 16, padding: 16,
     shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.07, shadowRadius: 4, elevation: 2,
   },
   resumeLeft: { flexDirection: 'row', alignItems: 'center', gap: 8 },
