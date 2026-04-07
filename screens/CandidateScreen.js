@@ -96,20 +96,34 @@ export default function CandidateScreen({ navigation, route }) {
       </View>
 
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 100 }}>
-        {/* Profile */}
-        <View style={styles.profile}>
-          <View style={styles.avatarLg}>
-            <Text style={styles.avatarLgT}>{initial}</Text>
+        {/* Top section: Profile + AI Reason + Skills, gap:12 */}
+        <View style={styles.topSection}>
+          {/* Profile */}
+          <View style={styles.profile}>
+            <View style={styles.avatarLgWrap}>
+              <View style={styles.avatarLg}>
+                <Text style={styles.avatarLgT}>{initial}</Text>
+              </View>
+            </View>
+            <View>
+              <Text style={styles.nameLg}>{c.name}</Text>
+              <Text style={styles.titleLg}>{c.title} · {c.company}</Text>
+            </View>
           </View>
-          <View>
-            <Text style={styles.nameLg}>{c.name}</Text>
-            <Text style={styles.titleLg}>{c.title} · {c.company}</Text>
-          </View>
-        </View>
 
-        {/* Skills */}
-        <View style={styles.skillsRow}>
-          {c.skills.map(s => <View key={s} style={styles.skillTag}><Text style={styles.skillTagT}>{s}</Text></View>)}
+          {/* AI Reason */}
+          <View style={styles.aiReasonRow}>
+            <View style={styles.aiReasonIconArea}>
+              <Image source={require('../assets/agent-avatar.png')} style={styles.aiReasonAvatar} />
+              <View style={styles.aiQuoteWrap}><QuoteIcon /></View>
+            </View>
+            <Text style={styles.aiReasonText}>{c.aiReason}</Text>
+          </View>
+
+          {/* Skills */}
+          <View style={styles.skillsRow}>
+            {c.skills.map(s => <View key={s} style={styles.skillTag}><Text style={styles.skillTagT}>{s}</Text></View>)}
+          </View>
         </View>
 
         {/* Resume */}
@@ -145,14 +159,6 @@ export default function CandidateScreen({ navigation, route }) {
           ))}
         </View>
 
-        {/* AI Reason */}
-        <View style={styles.aiReasonRow}>
-          <View style={styles.aiReasonIconArea}>
-            <Image source={require('../assets/agent-avatar.png')} style={styles.aiReasonAvatar} />
-            <View style={styles.aiQuoteWrap}><QuoteIcon /></View>
-          </View>
-          <Text style={styles.aiReasonText}>{c.aiReason}</Text>
-        </View>
       </ScrollView>
 
       {/* Bottom Bar */}
@@ -199,9 +205,11 @@ const styles = StyleSheet.create({
   nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 9, zIndex: 1 },
   backBtn: { width: 24, height: 24, alignItems: 'center', justifyContent: 'center' },
   navTitle: { fontSize: 16, fontWeight: '600', color: '#171718' },
-  profile: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 16, paddingVertical: 16 },
-  avatarLg: { width: 60, height: 60, borderRadius: 30, backgroundColor: '#e8e8ed', alignItems: 'center', justifyContent: 'center' },
-  avatarLgT: { fontSize: 24, fontWeight: '500', color: '#BBC1C9' },
+  topSection: { flexDirection: 'column', gap: 12, paddingHorizontal: 16, paddingVertical: 16 },
+  profile: { flexDirection: 'row', alignItems: 'center', gap: 20 },
+  avatarLgWrap: { borderRadius: 30, borderWidth: 1.3, borderColor: '#E7FCD0', padding: 2.8 },
+  avatarLg: { width: 52, height: 52, borderRadius: 26, backgroundColor: '#e8e8ed', alignItems: 'center', justifyContent: 'center' },
+  avatarLgT: { fontSize: 20, fontWeight: '500', color: '#BBC1C9' },
   nameLg: { fontSize: 20, fontWeight: '600', color: '#000', marginBottom: 2 },
   titleLg: { fontSize: 13, color: '#7B838D' },
   expLg: { fontSize: 12, color: '#BBC1C9', marginTop: 2 },
@@ -210,12 +218,12 @@ const styles = StyleSheet.create({
     shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.07, shadowRadius: 4, elevation: 2,
   },
   secTitle: { fontSize: 12, fontWeight: '600', color: '#008B68', marginBottom: 10, letterSpacing: 0.5 },
-  aiReasonRow: { flexDirection: 'row', alignItems: 'center', marginHorizontal: 16, marginBottom: 12 },
+  aiReasonRow: { flexDirection: 'row', alignItems: 'center' },
   aiReasonIconArea: { position: 'relative', marginRight: 4 },
   aiReasonAvatar: { width: 20, height: 20, borderRadius: 10 },
   aiQuoteWrap: { position: 'absolute', top: -8, right: -14 },
   aiReasonText: { flex: 1, fontSize: 13, color: '#9EB3B3', letterSpacing: 0.5, lineHeight: 18 },
-  skillsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginHorizontal: 16, marginBottom: 12 },
+  skillsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   skillTag: { paddingHorizontal: 12, paddingVertical: 2, borderRadius: 4, backgroundColor: '#F6F7F9' },
   skillTagT: { fontSize: 12, color: '#7B838D', letterSpacing: 0.5, lineHeight: 18 },
   resumeSection: {
