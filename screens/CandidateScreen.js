@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.07, shadowRadius: 4, elevation: 2,
   },
   secTitle: { fontSize: 12, fontWeight: '600', color: '#008B68', marginBottom: 10, letterSpacing: 0.5 },
-  aiReasonRow: { flexDirection: 'row', alignItems: 'flex-start' },
+  aiReasonRow: { flexDirection: 'row', alignItems: 'center' },
   aiReasonIconArea: { position: 'relative', marginRight: 4 },
   aiReasonAvatar: { width: 20, height: 20, borderRadius: 10 },
   aiQuoteWrap: { position: 'absolute', top: -8, right: -14 },
