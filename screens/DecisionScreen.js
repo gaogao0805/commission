@@ -106,13 +106,17 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onRequestResume, c
   );
 }
 
-export default function DecisionScreen({ navigation }) {
-  const { getNew, updateCandidate } = useApp();
-  const [index, setIndex] = useState(0);
-  const [toast, setToast] = useState({ visible: false, message: '', type: '' });
+export default function DecisionScreen({ navigation, route }) {
+  const { getNew, getById, updateCandidate } = useApp();
+  const candidateId = route.params?.candidateId;
   const cardRef = useRef();
   const passProgress = useRef(new Animated.Value(0)).current;
-  const newList = getNew();
+  const [toast, setToast] = useState({ visible: false, message: '', type: '' });
+  const [done, setDone] = useState(false);
+
+  // Single candidate mode (from list) or legacy all-new mode
+  const newList = candidateId ? [getById(candidateId)].filter(Boolean) : getNew();
+  const [index, setIndex] = useState(0);
 
   const handleSwipe = useCallback((decision) => {
     const c = newList[index];
@@ -121,13 +125,18 @@ export default function DecisionScreen({ navigation }) {
     const labels = { pass: '已通过', pending: '已待定', reject: '已拒绝' };
     setToast({ visible: true, message: `${labels[decision]} · ${c.name}`, type: decision === 'pass' ? 'success' : 'info' });
     setTimeout(() => {
-      setIndex(prev => {
-        const next = prev + 1;
-        if (next >= newList.length) setTimeout(() => navigation.goBack(), 1500);
-        return next;
-      });
+      if (candidateId) {
+        setDone(true);
+        setTimeout(() => navigation.goBack(), 1200);
+      } else {
+        setIndex(prev => {
+          const next = prev + 1;
+          if (next >= newList.length) setTimeout(() => navigation.goBack(), 1500);
+          return next;
+        });
+      }
     }, 100);
-  }, [index, newList]);
+  }, [index, newList, candidateId]);
 
   const handleButton = (decision) => cardRef.current?.animateOut(decision);
 
@@ -136,12 +145,12 @@ export default function DecisionScreen({ navigation }) {
     setToast({ visible: true, message: '已发送简历请求', type: 'info' });
   };
 
-  if (index >= newList.length) {
+  if (done || index >= newList.length) {
     return (
       <SafeAreaView style={styles.safe}>
         <View style={styles.allDone}>
           <View style={styles.doneIcon}><Text style={{ fontSize: 36 }}>✓</Text></View>
-          <Text style={styles.doneText}>全部处理完成</Text>
+          <Text style={styles.doneText}>{candidateId ? '已处理' : '全部处理完成'}</Text>
           <Text style={styles.doneSub}>候选人已分配到对应分类</Text>
         </View>
       </SafeAreaView>
@@ -156,7 +165,8 @@ export default function DecisionScreen({ navigation }) {
           <Text style={styles.backArrow}>‹</Text>
         </TouchableOpacity>
         <Text style={styles.navTitle}>待处理</Text>
-        <Text style={styles.counter}>{index + 1}/{newList.length}</Text>
+        {!candidateId && <Text style={styles.counter}>{index + 1}/{newList.length}</Text>}
+        {candidateId && <View style={{ width: 36 }} />}
       </View>
 
       <View style={styles.swipeContainer}>

@@ -35,7 +35,7 @@ export default function DetailScreen({ navigation }) {
         <TouchableOpacity
           style={[styles.pendingAction, newCount === 0 && styles.pendingDisabled]}
           activeOpacity={0.8}
-          onPress={() => newCount > 0 && navigation.navigate('Decision')}
+          onPress={() => newCount > 0 && navigation.navigate('NewCandidates')}
           disabled={newCount === 0}
         >
           <View style={styles.pendingAccent} />

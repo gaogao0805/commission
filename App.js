@@ -6,6 +6,7 @@ import { AppProvider } from './data/AppContext';
 
 import HomeScreen from './screens/HomeScreen';
 import DetailScreen from './screens/DetailScreen';
+import NewCandidatesScreen from './screens/NewCandidatesScreen';
 import DecisionScreen from './screens/DecisionScreen';
 import CategoryScreen from './screens/CategoryScreen';
 import CandidateScreen from './screens/CandidateScreen';
@@ -19,6 +20,7 @@ export default function App() {
         <Stack.Navigator screenOptions={{ headerShown: false, cardStyle: { backgroundColor: '#f2f2f7' } }}>
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Detail" component={DetailScreen} />
+          <Stack.Screen name="NewCandidates" component={NewCandidatesScreen} />
           <Stack.Screen name="Decision" component={DecisionScreen} />
           <Stack.Screen name="Category" component={CategoryScreen} />
           <Stack.Screen name="Candidate" component={CandidateScreen} />
