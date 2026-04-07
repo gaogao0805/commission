@@ -163,23 +163,21 @@ export default function CandidateScreen({ navigation, route }) {
             <View style={styles.expTitleBar} />
             <Text style={styles.expTitleText}>工作经历</Text>
           </View>
-          {(c.workHistory || [{ company: c.company, title: c.title, period: '至今' }]).map((w, i) => (
-            <View key={i}>
-              {i > 0 && <View style={styles.expDivider} />}
-              <View style={styles.expItem}>
-                <View style={styles.expItemTop}>
-                  <View style={styles.expCompanyLeft}>
-                    <View style={styles.expLogo}>
-                      <Text style={styles.expLogoT}>{w.company.charAt(0)}</Text>
-                    </View>
-                    <Text style={styles.expCompany}>{w.company}</Text>
+          {(c.workHistory || [{ company: c.company, title: c.title, period: '至今' }]).flatMap((w, i) => [
+            i > 0 ? <View key={`d${i}`} style={styles.expDivider} /> : null,
+            <View key={i} style={styles.expItem}>
+              <View style={styles.expItemTop}>
+                <View style={styles.expCompanyLeft}>
+                  <View style={styles.expLogo}>
+                    <Text style={styles.expLogoT}>{w.company.charAt(0)}</Text>
                   </View>
-                  <Text style={styles.expDate}>{w.period}</Text>
+                  <Text style={styles.expCompany}>{w.company}</Text>
                 </View>
-                <Text style={styles.expRole}>{w.title}</Text>
+                <Text style={styles.expDate}>{w.period}</Text>
               </View>
-            </View>
-          ))}
+              <Text style={styles.expRole}>{w.title}</Text>
+            </View>,
+          ])}
         </View>
 
       </ScrollView>
@@ -253,7 +251,7 @@ const styles = StyleSheet.create({
   expCompany: { fontSize: 14, fontWeight: '500', color: '#000', lineHeight: 21 },
   expDate: { fontSize: 12, fontWeight: '300', color: '#78787D', lineHeight: 21 },
   expRole: { fontSize: 13, fontWeight: '400', color: '#000', letterSpacing: 0.5, lineHeight: 18, paddingLeft: 29 },
-  expDivider: { height: 0.5, backgroundColor: '#F1F2F4', marginVertical: 12 },
+  expDivider: { height: 0.5, backgroundColor: '#F1F2F4' },
   aiReasonRow: { flexDirection: 'row', alignItems: 'center' },
   aiReasonIconArea: { position: 'relative', marginRight: 4 },
   aiReasonAvatar: { width: 20, height: 20, borderRadius: 10 },
