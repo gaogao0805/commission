@@ -91,15 +91,6 @@ export default function CandidateScreen({ navigation, route }) {
           {c.skills.map(s => <View key={s} style={styles.skillTag}><Text style={styles.skillTagT}>{s}</Text></View>)}
         </View>
 
-        {/* AI Reason */}
-        <View style={styles.aiReasonRow}>
-          <View style={styles.aiReasonIconArea}>
-            <Image source={require('../assets/agent-avatar.png')} style={styles.aiReasonAvatar} />
-            <View style={styles.aiQuoteWrap}><QuoteIcon /></View>
-          </View>
-          <Text style={styles.aiReasonText}>{c.aiReason}</Text>
-        </View>
-
         {/* Resume */}
         <View style={styles.resumeSection}>
           <View style={styles.resumeLeft}>
@@ -128,6 +119,15 @@ export default function CandidateScreen({ navigation, route }) {
               <Text style={[styles.infoValue, i === 2 && { color: '#02A87E' }]}>{v}</Text>
             </View>
           ))}
+        </View>
+
+        {/* AI Reason */}
+        <View style={styles.aiReasonRow}>
+          <View style={styles.aiReasonIconArea}>
+            <Image source={require('../assets/agent-avatar.png')} style={styles.aiReasonAvatar} />
+            <View style={styles.aiQuoteWrap}><QuoteIcon /></View>
+          </View>
+          <Text style={styles.aiReasonText}>{c.aiReason}</Text>
         </View>
       </ScrollView>
 
