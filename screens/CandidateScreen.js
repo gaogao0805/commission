@@ -179,16 +179,6 @@ export default function CandidateScreen({ navigation, route }) {
           </View>
 
           {/* Skills */}
-          <View style={styles.expSection}>
-            <View style={styles.expTitleRow}>
-              <View style={styles.expTitleBar} />
-              <Text style={styles.expTitleText}>核心技能</Text>
-            </View>
-            <View style={styles.skillsRow}>
-              {c.skills.map(s => <View key={s} style={styles.skillTag}><Text style={styles.skillTagT}>{s}</Text></View>)}
-            </View>
-          </View>
-
           {/* Education */}
           <View style={styles.expSection}>
             <View style={styles.expTitleRow}>
@@ -206,6 +196,19 @@ export default function CandidateScreen({ navigation, route }) {
                 <Text style={styles.expDate}>2016-2020</Text>
               </View>
               <Text style={styles.expRole}>北京大学</Text>
+            </View>
+          </View>
+
+          {/* Certificates */}
+          <View style={styles.expSection}>
+            <View style={styles.expTitleRow}>
+              <View style={styles.expTitleBar} />
+              <Text style={styles.expTitleText}>资格证书</Text>
+            </View>
+            <View style={styles.skillsRow}>
+              {['CET-6', '软件设计师', 'AWS 架构师'].map(cert => (
+                <View key={cert} style={styles.skillTag}><Text style={styles.skillTagT}>{cert}</Text></View>
+              ))}
             </View>
           </View>
 
@@ -337,7 +340,7 @@ const styles = StyleSheet.create({
   skillTag: { paddingHorizontal: 12, paddingVertical: 2, borderRadius: 4, backgroundColor: '#F6F7F9' },
   skillTagT: { fontSize: 12, color: '#7B838D', letterSpacing: 0.5, lineHeight: 18 },
   bottomCard: {
-    paddingHorizontal: 16, gap: 16, marginTop: 20,
+    paddingHorizontal: 16, gap: 28, marginTop: 20,
     flexGrow: 1, paddingBottom: 40,
   },
   resumeRow: {

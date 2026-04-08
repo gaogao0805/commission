@@ -192,14 +192,16 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
           </View>
         </View>
 
-        {/* 核心技能 */}
+        {/* 资格证书 */}
         <View style={[styles.expSection, styles.sectionPad]}>
           <View style={styles.expTitleRow}>
             <View style={styles.expTitleBar} />
-            <Text style={styles.expTitleText}>核心技能</Text>
+            <Text style={styles.expTitleText}>资格证书</Text>
           </View>
           <View style={styles.skillsRow}>
-            {c.skills.map(s => <View key={s} style={styles.skillTag}><Text style={styles.skillTagT}>{s}</Text></View>)}
+            {['CET-6', '软件设计师', 'AWS 架构师'].map(cert => (
+              <View key={cert} style={styles.skillTag}><Text style={styles.skillTagT}>{cert}</Text></View>
+            ))}
           </View>
         </View>
 
