@@ -261,7 +261,6 @@ export default function CandidateScreen({ navigation, route }) {
       <Modal visible={sheetOpen} transparent animationType="slide">
         <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={() => setSheetOpen(false)}>
           <View style={styles.sheet}>
-            <View style={styles.handle} />
             <Text style={styles.sheetTitle}>选择决策</Text>
             {options.map(o => (
               <TouchableOpacity
