@@ -315,7 +315,7 @@ const styles = StyleSheet.create({
   skillTag: { paddingHorizontal: 12, paddingVertical: 2, borderRadius: 4, backgroundColor: '#F6F7F9' },
   skillTagT: { fontSize: 12, color: '#7B838D', letterSpacing: 0.5, lineHeight: 18 },
   bottomCard: {
-    paddingTop: 16, paddingHorizontal: 16, gap: 16, marginTop: 20,
+    paddingHorizontal: 16, gap: 16, marginTop: 20,
     flexGrow: 1, paddingBottom: 40,
   },
   resumeRow: {
