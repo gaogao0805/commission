@@ -416,7 +416,7 @@ const styles = StyleSheet.create({
   expCompany: { fontSize: 14, fontWeight: '500', color: '#000', lineHeight: 21 },
   expDate: { fontSize: 12, fontWeight: '300', color: '#78787D', lineHeight: 21 },
   expRole: { fontSize: 13, fontWeight: '400', color: '#000', letterSpacing: 0.5, lineHeight: 18, paddingLeft: 29 },
-  expDivider: { height: 0.5, backgroundColor: '#F1F2F4', marginLeft: 12 },
+  expDivider: { height: 0.5, backgroundColor: '#F1F2F4', marginLeft: 12, marginVertical: 12 },
   agentRow: { flexDirection: 'row', alignItems: 'center' },
   agentIconArea: { position: 'relative', marginRight: 4 },
   agentAvatar: { width: 20, height: 20, borderRadius: 10 },
