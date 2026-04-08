@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
   swipeCard: {
     position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
     backgroundColor: '#fff', borderRadius: 16,
-    shadowColor: '#000', shadowOffset: { width: 1, height: 1 }, shadowOpacity: 0.07, shadowRadius: 5, elevation: 2, overflow: 'hidden',
+    shadowColor: '#8a8a8a', shadowOffset: { width: 1, height: 1 }, shadowOpacity: 0.15, shadowRadius: 8, elevation: 3,
   },
   ind: { position: 'absolute', paddingHorizontal: 20, paddingVertical: 8, borderRadius: 8, borderWidth: 3, zIndex: 20 },
   indPass: { top: 20, right: 20, borderColor: '#059669', backgroundColor: 'rgba(5,150,105,0.1)', transform: [{ rotate: '-15deg' }] },
