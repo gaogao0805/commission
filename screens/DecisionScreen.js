@@ -26,7 +26,7 @@ const BackIcon = () => (
   </Svg>
 );
 import { useApp } from '../data/AppContext';
-import { getResumeStatusLabel } from '../data/candidates';
+import { getResumeStatusLabel, getMatchingStatus } from '../data/candidates';
 import Toast from '../components/Toast';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -85,14 +85,24 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
   const c = candidate;
   const initial = c.name.charAt(0);
   const isMale = c.gender === 'male';
-  const resumeLabel = getResumeStatusLabel(c);
 
-  let rTag = { text: '暂无简历', color: '#BBC1C9' };
-  if (c.hasNewResume && !c.newResumeRead) rTag = { text: '新简历', color: '#1690E1' };
-  else if (resumeLabel) {
-    const cm = { new: '#1690E1', requested: '#E19D16', has: '#02A87E' };
-    rTag = { text: resumeLabel.text, color: cm[resumeLabel.type] || '#02A87E' };
+  // 简历状态 - 与CandidateScreen完全一致
+  let resumeText = null, resumeTagBg = null, resumeTagColor = null, resumeDotColor = '#BBC1C9', resumeAction = null;
+  if (c.resumeStatus === 'none') {
+    resumeAction = 'request';
+  } else if (c.resumeStatus === 'requested') {
+    resumeText = '已请求简历'; resumeTagBg = '#FFFBF2'; resumeTagColor = '#E19D16'; resumeDotColor = '#E19D16'; resumeAction = 'waiting';
+  } else if (c.resumeStatus === 'has') {
+    resumeText = '有简历'; resumeTagBg = '#EBFAF5'; resumeTagColor = '#008B68'; resumeDotColor = '#02A87E'; resumeAction = 'view';
+  } else if (c.resumeStatus === 'authorized' || c.resumeStatus === 'proactive') {
+    if (c.hasNewResume && !c.newResumeRead) {
+      resumeText = '新简历'; resumeTagBg = '#F2FAFF'; resumeTagColor = '#1690E1'; resumeDotColor = '#1690E1';
+    } else {
+      resumeText = '有简历'; resumeTagBg = '#EBFAF5'; resumeTagColor = '#008B68'; resumeDotColor = '#02A87E';
+    }
+    resumeAction = 'view';
   }
+  const matchStatus = getMatchingStatus(c);
 
   return (
     <Animated.View
@@ -141,16 +151,33 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
           <Text style={styles.agentText}>{c.aiReason}</Text>
         </View>
 
-        {/* Resume status row */}
+        {/* Resume status row - 与CandidateScreen一致 */}
         <View style={styles.resumeStatusRow}>
-          <View style={styles.resumeStatusLeft}>
-            {rTag.text !== '暂无简历' && <View style={[styles.rTagDot, { backgroundColor: rTag.color }]} />}
-            <Text style={[styles.rTagText, { color: rTag.color }]}>{rTag.text}</Text>
+          <View style={styles.resumeLeftCol}>
+            {resumeText && (
+              <View style={[styles.resumeTag, { backgroundColor: resumeTagBg }]}>
+                <Text style={[styles.resumeTagT, { color: resumeTagColor }]}>{resumeText}</Text>
+              </View>
+            )}
+            {matchStatus && (
+              <View style={styles.resumeMatchRow}>
+                <View style={[styles.resumeMatchDot, { backgroundColor: matchStatus.type === 'green' ? '#02A87E' : matchStatus.type === 'orange' ? '#E19D16' : '#7B838D' }]} />
+                <Text style={[styles.resumeMatchT, { color: matchStatus.type === 'green' ? '#02A87E' : matchStatus.type === 'orange' ? '#E19D16' : '#7B838D' }]}>{matchStatus.text}</Text>
+              </View>
+            )}
           </View>
-          {c.resumeStatus === 'none' && (
+          {resumeAction === 'request' && (
             <TouchableOpacity style={styles.rBtn} onPress={() => onRequestResume?.(c.id)}>
               <Text style={styles.rBtnT}>请求简历</Text>
             </TouchableOpacity>
+          )}
+          {resumeAction === 'view' && (
+            <TouchableOpacity style={styles.rBtn}>
+              <Text style={styles.rBtnT}>查看简历</Text>
+            </TouchableOpacity>
+          )}
+          {resumeAction === 'waiting' && (
+            <Text style={{ fontSize: 13, color: '#BBC1C9' }}>等待授权中</Text>
           )}
         </View>
 
@@ -343,9 +370,12 @@ const styles = StyleSheet.create({
   statVal: { fontSize: 14, fontWeight: '600', color: '#000', lineHeight: 21 },
   statLabel: { fontSize: 12, color: '#9EA7B3', letterSpacing: 0.5 },
   resumeStatusRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, marginTop: 20 },
-  resumeStatusLeft: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  rTagDot: { width: 4, height: 4, borderRadius: 2 },
-  rTagText: { fontSize: 13, fontWeight: '500', letterSpacing: 0.5 },
+  resumeLeftCol: { flexDirection: 'column', gap: 3 },
+  resumeTag: { borderRadius: 999, paddingHorizontal: 8, paddingVertical: 1, alignSelf: 'flex-start' },
+  resumeTagT: { fontSize: 10, letterSpacing: 0.5 },
+  resumeMatchRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  resumeMatchDot: { width: 4, height: 4, borderRadius: 2 },
+  resumeMatchT: { fontSize: 13, fontWeight: '500', letterSpacing: 0.5 },
   rBtn: { backgroundColor: '#EBFAF5', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 4 },
   rBtnT: { fontSize: 14, fontWeight: '500', color: '#009688', lineHeight: 21 },
   skillsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
