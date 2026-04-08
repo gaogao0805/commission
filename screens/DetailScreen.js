@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 9 },
   backBtn: { width: 24, height: 24, alignItems: 'center', justifyContent: 'center' },
   navTitle: { fontSize: 16, fontWeight: '600', color: '#171718' },
-  content: { paddingHorizontal: 16, paddingBottom: 40, gap: 16 },
+  content: { paddingHorizontal: 16, paddingBottom: 40, paddingTop: 12, gap: 16 },
 
   // AI status
   aiStatus: { fontSize: 13, color: '#A48341', letterSpacing: 0.5, fontStyle: 'italic' },
