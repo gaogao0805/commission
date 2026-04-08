@@ -120,20 +120,20 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
       {isFront && (
         <Animated.View style={[styles.ind, styles.indPend, { opacity: pendOp }]}><Text style={styles.indPendT}>待定</Text></Animated.View>
       )}
-      <ScrollView showsVerticalScrollIndicator={false} scrollEnabled={isFront} contentContainerStyle={{ paddingVertical: 20 }}>
-        {/* Profile */}
-        <View style={[styles.swipeHeader, styles.sectionPad]}>
+      <ScrollView showsVerticalScrollIndicator={false} scrollEnabled={isFront} contentContainerStyle={styles.cardContent}>
+        {/* Profile: centered */}
+        <View style={styles.swipeProfile}>
           <View style={styles.swipeAvatar}>
             <Text style={styles.swipeAvatarT}>{initial}</Text>
           </View>
-          <View style={{ flex: 1, gap: 4 }}>
-            <Text style={styles.swipeName}>{c.name}</Text>
-            <Text style={styles.swipeTitle}>{c.company} · {c.title}</Text>
+          <Text style={styles.swipeName}>{c.name}</Text>
+          <View style={styles.swipeContactRow}>
+            <Text style={styles.swipeContact}>158***9271</Text>
+            <Text style={styles.swipeContact}>ink***@outlook.com</Text>
           </View>
         </View>
 
-
-        {/* Agent語 */}
+        {/* Agent语 */}
         <View style={[styles.agentRow, styles.sectionPad]}>
           <View style={styles.agentIconArea}>
             <Image source={require('../assets/agent-avatar.png')} style={styles.agentAvatar} />
@@ -142,14 +142,9 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
           <Text style={styles.agentText}>{c.aiReason}</Text>
         </View>
 
-        {/* Resume status row - 与CandidateScreen一致 */}
+        {/* Resume status row */}
         <View style={styles.resumeStatusRow}>
           <View style={styles.resumeLeftCol}>
-            {resumeText && (
-              <View style={[styles.resumeTag, { backgroundColor: resumeTagBg }]}>
-                <Text style={[styles.resumeTagT, { color: resumeTagColor }]}>{resumeText}</Text>
-              </View>
-            )}
             {matchStatus && (
               <View style={styles.resumeMatchRow}>
                 <View style={[styles.resumeMatchDot, { backgroundColor: matchStatus.type === 'green' ? '#02A87E' : matchStatus.type === 'orange' ? '#E19D16' : '#7B838D' }]} />
@@ -172,26 +167,6 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
           )}
         </View>
 
-        {/* 教育背景 */}
-        <View style={[styles.expSection, styles.sectionPad]}>
-          <View style={styles.expTitleRow}>
-            <View style={styles.expTitleBar} />
-            <Text style={styles.expTitleText}>教育背景</Text>
-          </View>
-          <View style={styles.expItem}>
-            <View style={styles.expItemTop}>
-              <View style={styles.expCompanyLeft}>
-                <View style={[styles.expLogo, { backgroundColor: '#1677FF' }]}>
-                  <Text style={[styles.expLogoT, { color: '#fff' }]}>北</Text>
-                </View>
-                <Text style={styles.expCompany}>{c.edu || '本科'} · 计算机科学</Text>
-              </View>
-              <Text style={styles.expDate}>2016-2020</Text>
-            </View>
-            <Text style={styles.expRole}>北京大学</Text>
-          </View>
-        </View>
-
         {/* 资格证书 */}
         <View style={[styles.expSection, styles.sectionPad]}>
           <View style={styles.expTitleRow}>
@@ -205,6 +180,29 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
           </View>
         </View>
 
+        {/* 教育背景 */}
+        <View style={[styles.expSection, styles.sectionPad]}>
+          <View style={styles.expTitleRow}>
+            <View style={styles.expTitleBar} />
+            <Text style={styles.expTitleText}>教育背景</Text>
+          </View>
+          <View style={styles.expItemSimple}>
+            <View style={styles.expItemTop}>
+              <Text style={styles.expCompany}>国内特色211高校</Text>
+              <Text style={styles.expDate}>2020.9-2024.6</Text>
+            </View>
+            <Text style={styles.expRoleGray}>研究生 · 传播学</Text>
+          </View>
+          <View style={styles.expDivider} />
+          <View style={styles.expItemSimple}>
+            <View style={styles.expItemTop}>
+              <Text style={styles.expCompany}>国内本科院校</Text>
+              <Text style={styles.expDate}>2016.9-2020.6</Text>
+            </View>
+            <Text style={styles.expRoleGray}>本科 · 传播学</Text>
+          </View>
+        </View>
+
         {/* 工作经验 */}
         <View style={[styles.expSection, styles.sectionPad]}>
           <View style={styles.expTitleRow}>
@@ -213,17 +211,12 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
           </View>
           {(c.workHistory || [{ company: c.company, title: c.title, period: '至今' }]).flatMap((w, i) => [
             i > 0 ? <View key={`d${i}`} style={styles.expDivider} /> : null,
-            <View key={i} style={styles.expItem}>
+            <View key={i} style={styles.expItemSimple}>
               <View style={styles.expItemTop}>
-                <View style={styles.expCompanyLeft}>
-                  <View style={[styles.expLogo, { backgroundColor: getCompanyColor(w.company) }]}>
-                    <Text style={[styles.expLogoT, { color: getCompanyTextColor(w.company) }]}>{w.company.charAt(0)}</Text>
-                  </View>
-                  <Text style={styles.expCompany}>{w.company}</Text>
-                </View>
+                <Text style={styles.expCompany}>{w.company}</Text>
                 <Text style={styles.expDate}>{w.period}</Text>
               </View>
-              <Text style={styles.expRole}>{w.title}</Text>
+              <Text style={styles.expRoleGray}>{w.title}</Text>
             </View>,
           ])}
         </View>
@@ -383,11 +376,15 @@ const styles = StyleSheet.create({
   indRejectT: { fontSize: 18, fontWeight: '700', color: '#dc2626' },
   indPend: { bottom: 20, alignSelf: 'center', left: '35%', borderColor: '#d97706', backgroundColor: 'rgba(217,119,6,0.1)' },
   indPendT: { fontSize: 18, fontWeight: '700', color: '#d97706' },
-  swipeHeader: { flexDirection: 'row', alignItems: 'center', gap: 16, marginBottom: 20 },
-  swipeAvatar: { width: 46, height: 46, borderRadius: 23, backgroundColor: '#e8e8ed', alignItems: 'center', justifyContent: 'center' },
-  swipeAvatarT: { fontSize: 18, fontWeight: '500', color: '#BBC1C9' },
-  swipeName: { fontSize: 20, fontWeight: '500', color: '#000', letterSpacing: 0.5, lineHeight: 24 },
-  swipeTitle: { fontSize: 13, fontWeight: '400', color: '#656D76', letterSpacing: 0.5 },
+  cardContent: { gap: 20, paddingVertical: 20 },
+  swipeProfile: { alignItems: 'center', gap: 8 },
+  swipeAvatar: { width: 52, height: 52, borderRadius: 26, backgroundColor: '#e8e8ed', alignItems: 'center', justifyContent: 'center' },
+  swipeAvatarT: { fontSize: 20, fontWeight: '500', color: '#BBC1C9' },
+  swipeName: { fontSize: 20, fontWeight: '600', color: '#000', letterSpacing: 0.5, lineHeight: 24 },
+  swipeContactRow: { flexDirection: 'row', gap: 12 },
+  swipeContact: { fontSize: 12, color: '#7B838D', letterSpacing: 0.5 },
+  expItemSimple: { gap: 4, paddingLeft: 12 },
+  expRoleGray: { fontSize: 13, color: '#656D76', letterSpacing: 0.5, lineHeight: 18 },
   sectionPad: { paddingHorizontal: 20 },
   statsRow: { flexDirection: 'row', backgroundColor: '#FDFDFD', paddingHorizontal: 15, paddingVertical: 8 },
   statCol: { flex: 1, alignItems: 'center', gap: 2 },
