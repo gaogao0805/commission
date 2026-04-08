@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
   nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 9, zIndex: 1 },
   backBtn: { width: 24, height: 24, alignItems: 'center', justifyContent: 'center' },
   navTitle: { fontSize: 16, fontWeight: '600', color: '#171718' },
-  topSection: { flexDirection: 'column', gap: 16, paddingHorizontal: 16, paddingTop: 16 },
+  topSection: { flexDirection: 'column', gap: 20, paddingHorizontal: 16, paddingTop: 16 },
   profile: { flexDirection: 'row', alignItems: 'center', gap: 16 },
   avatarLg: { width: 46, height: 46, borderRadius: 23, backgroundColor: '#e8e8ed', alignItems: 'center', justifyContent: 'center' },
   avatarLgT: { fontSize: 18, fontWeight: '500', color: '#BBC1C9' },
@@ -315,7 +315,6 @@ const styles = StyleSheet.create({
   skillTag: { paddingHorizontal: 12, paddingVertical: 2, borderRadius: 4, backgroundColor: '#F6F7F9' },
   skillTagT: { fontSize: 12, color: '#7B838D', letterSpacing: 0.5, lineHeight: 18 },
   bottomCard: {
-    backgroundColor: '#fff', borderTopLeftRadius: 20, borderTopRightRadius: 20,
     paddingTop: 16, paddingHorizontal: 16, gap: 16, marginTop: 20,
     flexGrow: 1, paddingBottom: 40,
   },

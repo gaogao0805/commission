@@ -322,7 +322,7 @@ const styles = StyleSheet.create({
   statCol: { flex: 1, alignItems: 'center', gap: 2 },
   statVal: { fontSize: 14, fontWeight: '600', color: '#000', lineHeight: 21 },
   statLabel: { fontSize: 12, color: '#9EA7B3', letterSpacing: 0.5 },
-  resumeStatusRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, marginTop: 4 },
+  resumeStatusRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, marginTop: 20 },
   resumeStatusLeft: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   rTagDot: { width: 4, height: 4, borderRadius: 2 },
   rTagText: { fontSize: 13, fontWeight: '500', letterSpacing: 0.5 },
