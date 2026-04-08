@@ -186,6 +186,7 @@ export default function CategoryScreen({ navigation, route }) {
           keyExtractor={item => item.id}
           style={{ flex: 1 }}
           contentContainerStyle={styles.listContent}
+          showsVerticalScrollIndicator={false}
           renderItem={({ item, index }) => (
             <AnimatedCard index={index}>
               <CandidateCard

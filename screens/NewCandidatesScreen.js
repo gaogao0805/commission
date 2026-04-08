@@ -35,6 +35,7 @@ export default function NewCandidatesScreen({ navigation }) {
           keyExtractor={item => item.id}
           style={{ flex: 1 }}
           contentContainerStyle={styles.listContent}
+          showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
             <CandidateCard
               candidate={item}

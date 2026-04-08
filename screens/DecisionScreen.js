@@ -388,7 +388,7 @@ const styles = StyleSheet.create({
   resumeMatchDot: { width: 4, height: 4, borderRadius: 2 },
   resumeMatchT: { fontSize: 13, fontWeight: '500', letterSpacing: 0.5 },
   rBtn: { backgroundColor: '#EBFAF5', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 4 },
-  rBtnT: { fontSize: 14, fontWeight: '500', color: '#009688', lineHeight: 21 },
+  rBtnT: { fontSize: 14, fontWeight: '500', color: '#008B68', lineHeight: 21 },
   skillsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   skillTag: { paddingHorizontal: 12, paddingVertical: 4, borderRadius: 4, backgroundColor: '#F8FAFC' },
   skillTagT: { fontSize: 13, color: '#000', lineHeight: 21 },

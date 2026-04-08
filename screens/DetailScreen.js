@@ -31,7 +31,7 @@ export default function DetailScreen({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Agent mini */}
         <View style={styles.agentMini}>
           <View style={styles.miniDot} />
