@@ -237,14 +237,19 @@ export default function DecisionScreen({ navigation, route }) {
     updateCandidate(c.id, { recruiterDecision: decision === 'pass' ? 'pass' : decision === 'reject' ? 'reject' : 'pending' });
     const labels = { pass: '已通过', pending: '已待定', reject: '已拒绝' };
     setToast({ visible: true, message: `${labels[decision]} · ${c.name}`, type: decision });
+    // 决策后该卡从newList移除，index保持不动即可显示下一张
+    // 只有当列表全部处理完才结束
     setTimeout(() => {
       setIndex(prev => {
-        const next = prev + 1;
-        if (next >= newList.length) setTimeout(() => navigation.goBack(), 1500);
-        return next;
+        const remaining = newList.length - 1; // 决策后剩余数量
+        if (remaining <= 0) {
+          setTimeout(() => navigation.goBack(), 1500);
+          return 0;
+        }
+        return Math.min(prev, remaining - 1);
       });
     }, 100);
-  }, [index, newList, candidateId]);
+  }, [index, newList]);
 
   const handleButton = (decision) => cardRef.current?.animateOut(decision);
 
@@ -261,7 +266,7 @@ export default function DecisionScreen({ navigation, route }) {
     setToast({ visible: true, message: '已发送简历请求', type: 'info' });
   };
 
-  if (index >= newList.length) {
+  if (newList.length === 0) {
     return (
       <SafeAreaView style={styles.safe}>
         <View style={styles.allDone}>
