@@ -33,7 +33,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const SWIPE_THRESHOLD = 80;
 const SWIPE_DOWN_THRESHOLD = 100;
 
-function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequestResume, cardRef, passProgress, isFirst }) {
+function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequestResume, cardRef, passProgress, isFirst, isLast }) {
   const pan = useRef(new Animated.ValueXY()).current;
   const pendOp = useRef(new Animated.Value(0)).current;
 
@@ -67,17 +67,14 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
     onStartShouldSetPanResponder: () => isFrontRef.current,
     onMoveShouldSetPanResponder: (_, g) => isFrontRef.current && (Math.abs(g.dx) > 8 || Math.abs(g.dy) > 8),
     onPanResponderMove: (_, g) => {
-      pan.setValue({ x: g.dx, y: Math.max(0, g.dy) });
+      pan.setValue({ x: g.dx, y: 0 });
       if (passProgress) passProgress.setValue(0);
-      pendOp.setValue(Math.min(Math.max(g.dy / SWIPE_DOWN_THRESHOLD, 0), 1) * Math.max(0, 1 - Math.abs(g.dx) / 200));
     },
     onPanResponderRelease: (_, g) => {
       if (g.dx > SWIPE_THRESHOLD && !isFirstRef.current) animateNavigate('prev');
       else if (g.dx < -SWIPE_THRESHOLD) animateNavigate('next');
-      else if (g.dy > SWIPE_DOWN_THRESHOLD && Math.abs(g.dx) < 50) animateOut('pending');
       else {
         Animated.spring(pan, { toValue: { x: 0, y: 0 }, useNativeDriver: false, friction: 5 }).start();
-        pendOp.setValue(0);
       }
     },
   })).current;
