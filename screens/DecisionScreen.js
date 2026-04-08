@@ -75,12 +75,11 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onRequestResume, c
   const isMale = c.gender === 'male';
   const resumeLabel = getResumeStatusLabel(c);
 
-  let rTag = { text: '暂无简历', color: '#9ca3af', bg: 'rgba(0,0,0,0.04)' };
-  if (c.hasNewResume && !c.newResumeRead) rTag = { text: '新简历', color: '#059669', bg: 'rgba(5,150,105,0.08)' };
+  let rTag = { text: '暂无简历', color: '#BBC1C9' };
+  if (c.hasNewResume && !c.newResumeRead) rTag = { text: '新简历', color: '#1690E1' };
   else if (resumeLabel) {
-    const cm = { new: '#059669', requested: '#3b82f6', has: '#4f46e5' };
-    const bm = { new: 'rgba(5,150,105,0.08)', requested: 'rgba(59,130,246,0.08)', has: 'rgba(99,102,241,0.08)' };
-    rTag = { text: resumeLabel.text, color: cm[resumeLabel.type] || '#4f46e5', bg: bm[resumeLabel.type] || 'rgba(99,102,241,0.08)' };
+    const cm = { new: '#1690E1', requested: '#E19D16', has: '#02A87E' };
+    rTag = { text: resumeLabel.text, color: cm[resumeLabel.type] || '#02A87E' };
   }
 
   return (
@@ -100,34 +99,57 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onRequestResume, c
           <Animated.View style={[styles.ind, styles.indPend, { opacity: pendOp }]}><Text style={styles.indPendT}>待定</Text></Animated.View>
         </>
       )}
-      <ScrollView showsVerticalScrollIndicator={false} scrollEnabled={isFront}>
-        {/* Profile */}
+      <ScrollView showsVerticalScrollIndicator={false} scrollEnabled={isFront} contentContainerStyle={{ gap: 20, paddingBottom: 8 }}>
+        {/* Profile: avatar + name + title */}
         <View style={styles.swipeHeader}>
           <View style={styles.swipeAvatar}>
             <Text style={styles.swipeAvatarT}>{initial}</Text>
           </View>
           <View style={{ flex: 1 }}>
             <Text style={styles.swipeName}>{c.name}</Text>
-            <Text style={styles.swipeTitle}>{c.company} · {c.title}</Text>
+            <Text style={styles.swipeTitle}>{c.title}</Text>
           </View>
         </View>
-        {/* AI Reason */}
-        <View style={styles.reasonRow}>
-          <View style={styles.reasonIconArea}>
-            <Image source={require('../assets/agent-avatar.png')} style={styles.reasonAvatar} />
-            <View style={styles.quoteWrap}><QuoteIcon /></View>
+
+        {/* Stats row: 经验 / 学历 / 薪资 */}
+        <View style={styles.statsRow}>
+          {[['工作经验', c.exp], ['学历', c.edu || '本科'], ['薪资要求', c.expectedSalary || '面议']].map(([label, val]) => (
+            <View key={label} style={styles.statCol}>
+              <Text style={styles.statVal}>{val}</Text>
+              <Text style={styles.statLabel}>{label}</Text>
+            </View>
+          ))}
+        </View>
+
+        {/* Resume status row */}
+        <View style={styles.resumeStatusRow}>
+          <View style={styles.resumeStatusLeft}>
+            {rTag.text !== '暂无简历' && <View style={[styles.rTagDot, { backgroundColor: rTag.color }]} />}
+            <Text style={[styles.rTagText, { color: rTag.color }]}>{rTag.text}</Text>
           </View>
-          <Text style={styles.reasonText}>{c.aiReason}</Text>
+          {c.resumeStatus === 'none' && (
+            <TouchableOpacity style={styles.rBtn} onPress={() => onRequestResume?.(c.id)}>
+              <Text style={styles.rBtnT}>请求简历</Text>
+            </TouchableOpacity>
+          )}
         </View>
-        {/* Skills */}
-        <View style={[styles.skillsRow, { marginBottom: 20 }]}>
-          {c.skills.map(s => <View key={s} style={styles.skillTag}><Text style={styles.skillTagT}>{s}</Text></View>)}
-        </View>
-        {/* Work Experience */}
+
+        {/* 核心技能 */}
         <View style={styles.expSection}>
           <View style={styles.expTitleRow}>
             <View style={styles.expTitleBar} />
-            <Text style={styles.expTitleText}>工作经历</Text>
+            <Text style={styles.expTitleText}>核心技能</Text>
+          </View>
+          <View style={styles.skillsRow}>
+            {c.skills.map(s => <View key={s} style={styles.skillTag}><Text style={styles.skillTagT}>{s}</Text></View>)}
+          </View>
+        </View>
+
+        {/* 工作经验 */}
+        <View style={styles.expSection}>
+          <View style={styles.expTitleRow}>
+            <View style={styles.expTitleBar} />
+            <Text style={styles.expTitleText}>工作经验</Text>
           </View>
           {(c.workHistory || [{ company: c.company, title: c.title, period: '至今' }]).flatMap((w, i) => [
             i > 0 ? <View key={`d${i}`} style={styles.expDivider} /> : null,
@@ -281,19 +303,24 @@ const styles = StyleSheet.create({
   indRejectT: { fontSize: 18, fontWeight: '700', color: '#dc2626' },
   indPend: { bottom: 20, alignSelf: 'center', left: '35%', borderColor: '#d97706', backgroundColor: 'rgba(217,119,6,0.1)' },
   indPendT: { fontSize: 18, fontWeight: '700', color: '#d97706' },
-  swipeHeader: { flexDirection: 'row', alignItems: 'center', gap: 20, marginBottom: 16 },
-  swipeAvatar: { width: 52, height: 52, borderRadius: 26, backgroundColor: '#e8e8ed', alignItems: 'center', justifyContent: 'center' },
-  swipeAvatarT: { fontSize: 20, fontWeight: '500', color: '#BBC1C9' },
-  swipeName: { fontSize: 20, fontWeight: '600', color: '#000', marginBottom: 2 },
-  swipeTitle: { fontSize: 13, color: '#7B838D' },
-  reasonRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 16 },
-  reasonIconArea: { position: 'relative', marginRight: 4 },
-  reasonAvatar: { width: 20, height: 20, borderRadius: 10 },
-  quoteWrap: { position: 'absolute', top: -8, right: -14 },
-  reasonText: { flex: 1, fontSize: 13, color: '#9EB3B3', letterSpacing: 0.5, lineHeight: 18 },
+  swipeHeader: { flexDirection: 'row', alignItems: 'center', gap: 16 },
+  swipeAvatar: { width: 46, height: 46, borderRadius: 23, backgroundColor: '#e8e8ed', alignItems: 'center', justifyContent: 'center' },
+  swipeAvatarT: { fontSize: 18, fontWeight: '500', color: '#BBC1C9' },
+  swipeName: { fontSize: 20, fontWeight: '500', color: '#000', letterSpacing: 0.5, lineHeight: 24 },
+  swipeTitle: { fontSize: 16, fontWeight: '400', color: '#000', letterSpacing: 0.5, lineHeight: 24 },
+  statsRow: { flexDirection: 'row', backgroundColor: '#FDFDFD', paddingHorizontal: 15, paddingVertical: 8 },
+  statCol: { flex: 1, alignItems: 'center', gap: 2 },
+  statVal: { fontSize: 14, fontWeight: '600', color: '#000', lineHeight: 21 },
+  statLabel: { fontSize: 12, color: '#9EA7B3', letterSpacing: 0.5 },
+  resumeStatusRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 4 },
+  resumeStatusLeft: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  rTagDot: { width: 4, height: 4, borderRadius: 2 },
+  rTagText: { fontSize: 13, fontWeight: '500', letterSpacing: 0.5 },
+  rBtn: { backgroundColor: '#EBFAF5', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 4 },
+  rBtnT: { fontSize: 14, fontWeight: '500', color: '#009688', lineHeight: 21 },
   skillsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  skillTag: { paddingHorizontal: 12, paddingVertical: 2, borderRadius: 4, backgroundColor: '#F6F7F9' },
-  skillTagT: { fontSize: 12, color: '#7B838D', letterSpacing: 0.5, lineHeight: 18 },
+  skillTag: { paddingHorizontal: 12, paddingVertical: 4, borderRadius: 4, backgroundColor: '#F8FAFC' },
+  skillTagT: { fontSize: 13, color: '#000', lineHeight: 21 },
   expSection: { gap: 16 },
   expTitleRow: { flexDirection: 'row', alignItems: 'stretch', gap: 8 },
   expTitleBar: { width: 4, borderRadius: 999, backgroundColor: '#6FCDAE' },
