@@ -110,6 +110,13 @@ export default function SwipeCard({ candidate, isFront, behind, onSwipe, onReque
           </View>
         </View>
 
+        {/* Contact */}
+        <View style={styles.contactRow}>
+          <Text style={styles.contactText}>{c.phone}</Text>
+          <View style={styles.contactDivider} />
+          <Text style={styles.contactText}>{c.email}</Text>
+        </View>
+
         {/* AI Reason */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>AI 推荐理由</Text>
@@ -166,6 +173,9 @@ const styles = StyleSheet.create({
   name: { fontSize: 20, fontWeight: '700', color: '#1a1a2e', marginBottom: 2 },
   title: { fontSize: 13, color: '#6b7280' },
   exp: { fontSize: 12, color: '#9ca3af', marginTop: 2 },
+  contactRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 16 },
+  contactText: { fontSize: 13, color: '#9ca3af' },
+  contactDivider: { width: 1, height: 12, backgroundColor: '#F1F2F4', marginHorizontal: 10 },
   section: { marginBottom: 14 },
   sectionTitle: { fontSize: 11, fontWeight: '600', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 },
   reasonBox: { padding: 12, backgroundColor: 'rgba(99,102,241,0.04)', borderRadius: 6, borderLeftWidth: 3, borderLeftColor: '#6366f1' },

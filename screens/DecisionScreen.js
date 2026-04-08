@@ -128,8 +128,9 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
           </View>
           <Text style={styles.swipeName}>{c.name}</Text>
           <View style={styles.swipeContactRow}>
-            <Text style={styles.swipeContact}>158***9271</Text>
-            <Text style={styles.swipeContact}>ink***@outlook.com</Text>
+            <Text style={styles.swipeContact}>{c.phone}</Text>
+            <View style={styles.swipeContactDivider} />
+            <Text style={styles.swipeContact}>{c.email}</Text>
           </View>
         </View>
 
@@ -381,8 +382,9 @@ const styles = StyleSheet.create({
   swipeAvatar: { width: 52, height: 52, borderRadius: 26, backgroundColor: '#e8e8ed', alignItems: 'center', justifyContent: 'center' },
   swipeAvatarT: { fontSize: 20, fontWeight: '500', color: '#BBC1C9' },
   swipeName: { fontSize: 20, fontWeight: '600', color: '#000', letterSpacing: 0.5, lineHeight: 24 },
-  swipeContactRow: { flexDirection: 'row', gap: 12 },
+  swipeContactRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   swipeContact: { fontSize: 12, color: '#7B838D', letterSpacing: 0.5 },
+  swipeContactDivider: { width: 1, height: 12, backgroundColor: '#F1F2F4' },
   expItemSimple: { gap: 4, paddingLeft: 12 },
   expRoleGray: { fontSize: 13, color: '#656D76', letterSpacing: 0.5, lineHeight: 18 },
   sectionPad: { paddingHorizontal: 20 },

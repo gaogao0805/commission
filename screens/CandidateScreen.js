@@ -127,9 +127,11 @@ export default function CandidateScreen({ navigation, route }) {
           <View style={styles.avatarLg}>
             <Text style={styles.avatarLgT}>{initial}</Text>
           </View>
-          <View style={{ gap: 4 }}>
-            <Text style={styles.nameLg}>{c.name}</Text>
-            <Text style={styles.titleLg}>{c.company} · {c.title}</Text>
+          <Text style={styles.nameLg}>{c.name}</Text>
+          <View style={styles.contactRow}>
+            <Text style={styles.contactText}>{c.phone}</Text>
+            <View style={styles.contactDivider} />
+            <Text style={styles.contactText}>{c.email}</Text>
           </View>
         </View>
 
@@ -145,6 +147,11 @@ export default function CandidateScreen({ navigation, route }) {
         {/* Resume row */}
         <View style={styles.resumeRow}>
           <View style={styles.resumeLeftCol}>
+            {resumeText && (
+              <View style={[styles.resumeTag, { backgroundColor: resumeTagBg }]}>
+                <Text style={[styles.resumeTagT, { color: resumeTagColor }]}>{resumeText}</Text>
+              </View>
+            )}
             {matchStatus && (
               <View style={styles.resumeMatchRow}>
                 <View style={[styles.resumeMatchDot, { backgroundColor: matchStatus.type === 'green' ? '#02A87E' : matchStatus.type === 'orange' ? '#E19D16' : '#7B838D' }]} />
@@ -285,7 +292,11 @@ const styles = StyleSheet.create({
   backBtn: { width: 24, height: 24, alignItems: 'center', justifyContent: 'center' },
   navTitle: { fontSize: 16, fontWeight: '600', color: '#171718' },
   scrollContent: { gap: 20, paddingHorizontal: 16, paddingTop: 16, paddingBottom: 40, flexGrow: 1 },
-  profile: { flexDirection: 'row', alignItems: 'center', gap: 16 },
+  profile: { alignItems: 'center', gap: 8 },
+  contactRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  contactText: { fontSize: 12, color: '#7B838D', letterSpacing: 0.5 },
+  contactSep: { fontSize: 12, color: '#DDE2E8' },
+  contactDivider: { width: 1, height: 12, backgroundColor: '#F1F2F4' },
   avatarLg: { width: 46, height: 46, borderRadius: 23, backgroundColor: '#e8e8ed', alignItems: 'center', justifyContent: 'center' },
   avatarLgT: { fontSize: 18, fontWeight: '500', color: '#BBC1C9' },
   nameLg: { fontSize: 20, fontWeight: '500', color: '#000', letterSpacing: 0.5 },
