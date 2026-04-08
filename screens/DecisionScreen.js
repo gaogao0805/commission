@@ -42,6 +42,8 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
   isFrontRef.current = isFront;
   const isFirstRef = useRef(isFirst);
   isFirstRef.current = isFirst;
+  const isLastRef = useRef(isLast);
+  isLastRef.current = isLast;
   const onSwipeRef = useRef(onSwipe);
   onSwipeRef.current = onSwipe;
   const onNavigateRef = useRef(onNavigate);
@@ -72,7 +74,7 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
     },
     onPanResponderRelease: (_, g) => {
       if (g.dx > SWIPE_THRESHOLD && !isFirstRef.current) animateNavigate('prev');
-      else if (g.dx < -SWIPE_THRESHOLD) animateNavigate('next');
+      else if (g.dx < -SWIPE_THRESHOLD && !isLastRef.current) animateNavigate('next');
       else {
         Animated.spring(pan, { toValue: { x: 0, y: 0 }, useNativeDriver: false, friction: 5 }).start();
       }
@@ -281,6 +283,7 @@ export default function DecisionScreen({ navigation, route }) {
                   key={`${c.id}-${pos}`} candidate={c}
                   isFront={pos === 0} behind={pos}
                   isFirst={index === 0}
+                  isLast={index === newList.length - 1}
                   onSwipe={handleSwipe}
                   onNavigate={handleNavigate}
                   onRequestResume={handleRequestResume}
