@@ -115,9 +115,9 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
           <View style={styles.swipeAvatar}>
             <Text style={styles.swipeAvatarT}>{initial}</Text>
           </View>
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, gap: 4 }}>
             <Text style={styles.swipeName}>{c.name}</Text>
-            <Text style={styles.swipeTitle}>{c.title}</Text>
+            <Text style={styles.swipeTitle}>{c.company} · {c.title}</Text>
           </View>
         </View>
 
@@ -326,7 +326,7 @@ const styles = StyleSheet.create({
   swipeAvatar: { width: 46, height: 46, borderRadius: 23, backgroundColor: '#e8e8ed', alignItems: 'center', justifyContent: 'center' },
   swipeAvatarT: { fontSize: 18, fontWeight: '500', color: '#BBC1C9' },
   swipeName: { fontSize: 20, fontWeight: '500', color: '#000', letterSpacing: 0.5, lineHeight: 24 },
-  swipeTitle: { fontSize: 16, fontWeight: '400', color: '#000', letterSpacing: 0.5, lineHeight: 24 },
+  swipeTitle: { fontSize: 13, fontWeight: '400', color: '#656D76', letterSpacing: 0.5 },
   sectionPad: { paddingHorizontal: 20 },
   statsRow: { flexDirection: 'row', backgroundColor: '#FDFDFD', paddingHorizontal: 15, paddingVertical: 8 },
   statCol: { flex: 1, alignItems: 'center', gap: 2 },
