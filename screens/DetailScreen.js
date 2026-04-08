@@ -28,6 +28,10 @@ export default function DetailScreen({ navigation }) {
         <View style={{ width: 24 }} />
       </View>
 
+      {/* Background blobs */}
+      <View pointerEvents="none" style={styles.blob1} />
+      <View pointerEvents="none" style={styles.blob2} />
+
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
         {/* AI status */}
         <Text style={styles.aiStatus}>AI持续为您匹配优质候选人中……</Text>
@@ -88,7 +92,17 @@ export default function DetailScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#FBFBFB' },
+  safe: { flex: 1, backgroundColor: '#FBFBFB', position: 'relative' },
+  blob1: {
+    position: 'absolute', width: 408, height: 408, borderRadius: 204,
+    backgroundColor: '#FFFCF0', opacity: 0.9,
+    top: 630 - 204, left: 341 - 204,
+  },
+  blob2: {
+    position: 'absolute', width: 408, height: 408, borderRadius: 204,
+    backgroundColor: '#FFF7F0', opacity: 0.9,
+    top: 265 - 204, left: 129 - 204,
+  },
   nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 9 },
   backBtn: { width: 24, height: 24, alignItems: 'center', justifyContent: 'center' },
   navTitle: { fontSize: 16, fontWeight: '600', color: '#171718' },
