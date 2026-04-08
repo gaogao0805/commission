@@ -48,16 +48,16 @@ export default function DetailScreen({ navigation }) {
         <View style={{ width: 24 }} />
       </View>
 
-      {/* Gradient strip: left:125 width:125 height:345, transparent→#FFEEDE */}
+      {/* Gradient strip: width=screenW/3, centered, height:345 */}
       <View pointerEvents="none" style={styles.gradStrip}>
-        <Svg width={125} height={345} viewBox="0 0 125 345">
+        <Svg width="100%" height={345} viewBox="0 0 100 345" preserveAspectRatio="none">
           <Defs>
             <SvgLG id="gstrip" x1="0" y1="0" x2="0" y2="1">
               <Stop offset="0" stopColor="#ffffff" stopOpacity="0" />
               <Stop offset="1" stopColor="#FFEEDE" stopOpacity="1" />
             </SvgLG>
           </Defs>
-          <Rect x="0" y="0" width="125" height="345" fill="url(#gstrip)" />
+          <Rect x="0" y="0" width="100" height="345" fill="url(#gstrip)" />
         </Svg>
       </View>
 
@@ -98,9 +98,11 @@ export default function DetailScreen({ navigation }) {
         </View>
       </View>
 
-      {/* Bottom white card */}
-      <View style={styles.bottomCard}>
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 40 }}>
+      {/* White rounded bg — decorative only, no clipping */}
+      <View style={styles.bottomBg} pointerEvents="none" />
+
+      {/* ScrollView on top, no parent clipping */}
+      <ScrollView style={styles.bottomCard} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 20, paddingBottom: 40 }}>
           {/* 招聘偏好 */}
           <View style={styles.prefCard}>
             <View style={styles.prefHeader}>
@@ -116,15 +118,14 @@ export default function DetailScreen({ navigation }) {
               ))}
             </View>
           </View>
-        </ScrollView>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: '#FFF7F0', position: 'relative' },
-  gradStrip: { position: 'absolute', left: 125, top: 0, width: 125, height: 345, zIndex: 0 },
+  gradStrip: { position: 'absolute', left: '33.33%', top: 0, width: '33.33%', height: 345, zIndex: 0 },
   nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 9 },
   backBtn: { width: 24, height: 24, alignItems: 'center', justifyContent: 'center' },
   navTitle: { fontSize: 16, fontWeight: '600', color: '#171718' },
@@ -144,10 +145,11 @@ const styles = StyleSheet.create({
   statNum: { fontSize: 22, fontWeight: '600', color: '#656D76', textAlign: 'center', letterSpacing: 0.5 },
   statLabel: { fontSize: 12, color: '#9EA7B3', letterSpacing: 0.5 },
 
-  // Bottom white rounded card
-  bottomCard: {
-    flex: 1, paddingTop: 20,
+  bottomBg: {
+    position: 'absolute', bottom: 0, left: 0, right: 0, top: '55%',
+    backgroundColor: '#fff', borderTopLeftRadius: 20, borderTopRightRadius: 20,
   },
+  bottomCard: { flex: 1 },
 
   prefCard: {
     backgroundColor: '#fff', borderRadius: 12, borderWidth: 1,
