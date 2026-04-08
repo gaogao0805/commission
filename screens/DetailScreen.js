@@ -53,19 +53,21 @@ export default function DetailScreen({ navigation }) {
         {/* AI status */}
         <Text style={styles.aiStatus}>AI持续为您匹配优质候选人中……</Text>
 
-        {/* 待处理 */}
-        <TouchableOpacity
-          style={styles.pendRow}
-          activeOpacity={0.8}
-          onPress={() => newCount > 0 && navigation.navigate('NewCandidates')}
-        >
-          <Text style={styles.pendLabel}>待处理</Text>
-          <Text style={styles.pendCount}>{newCount}</Text>
-        </TouchableOpacity>
-
-        {/* Wave decoration */}
-        <View style={styles.waveWrap}>
-          <WaveDecoration />
+        {/* 待处理 + wave as background */}
+        <View style={styles.pendSection}>
+          {/* Wave: absolute background */}
+          <View style={styles.waveWrap} pointerEvents="none">
+            <WaveDecoration />
+          </View>
+          {/* Text on top */}
+          <TouchableOpacity
+            style={styles.pendRow}
+            activeOpacity={0.8}
+            onPress={() => newCount > 0 && navigation.navigate('NewCandidates')}
+          >
+            <Text style={styles.pendLabel}>待处理</Text>
+            <Text style={styles.pendCount}>{newCount}</Text>
+          </TouchableOpacity>
         </View>
 
         {/* Stats */}
@@ -85,7 +87,7 @@ export default function DetailScreen({ navigation }) {
 
       {/* Bottom white card */}
       <View style={styles.bottomCard}>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 40 }}>
           {/* 招聘偏好 */}
           <View style={styles.prefCard}>
             <View style={styles.prefHeader}>
@@ -117,8 +119,9 @@ const styles = StyleSheet.create({
 
   aiStatus: { fontSize: 13, color: '#A48341', letterSpacing: 0.5, fontStyle: 'italic', marginBottom: 48 },
 
-  pendRow: { flexDirection: 'row', alignItems: 'center', gap: 16, marginBottom: 0 },
-  waveWrap: { marginHorizontal: -16, marginBottom: 0 },
+  pendSection: { position: 'relative', height: 89, justifyContent: 'center', marginHorizontal: -16 },
+  waveWrap: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },
+  pendRow: { flexDirection: 'row', alignItems: 'center', gap: 16, paddingHorizontal: 16, zIndex: 1 },
   pendLabel: { fontSize: 28, fontWeight: '500', color: '#000', letterSpacing: 0.5, lineHeight: 35 },
   pendCount: { fontSize: 28, fontWeight: '500', color: '#A48341', letterSpacing: 0.5, lineHeight: 35 },
 
@@ -131,7 +134,7 @@ const styles = StyleSheet.create({
   bottomCard: {
     flex: 1, backgroundColor: '#fff',
     borderTopLeftRadius: 20, borderTopRightRadius: 20,
-    paddingTop: 20, paddingHorizontal: 16,
+    paddingTop: 20,
   },
 
   prefCard: {
