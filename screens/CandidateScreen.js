@@ -129,9 +129,9 @@ export default function CandidateScreen({ navigation, route }) {
           </View>
           <Text style={styles.nameLg}>{c.name}</Text>
           <View style={styles.contactRow}>
-            <Text style={styles.contactText}>{c.phone}</Text>
+            <Text style={styles.contactText}>158***9271</Text>
             <View style={styles.contactDivider} />
-            <Text style={styles.contactText}>{c.email}</Text>
+            <Text style={styles.contactText}>ink***@outlook.com</Text>
           </View>
         </View>
 
