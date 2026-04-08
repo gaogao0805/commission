@@ -135,19 +135,6 @@ export default function CandidateScreen({ navigation, route }) {
             </View>
           </View>
 
-          {/* Stats row */}
-          <View style={styles.statsRow}>
-            {[
-              ['工作经验', c.exp],
-              ['学历', c.edu || '本科'],
-              ['薪资要求', c.expectedSalary || '面议'],
-            ].map(([label, val]) => (
-              <View key={label} style={styles.statCol}>
-                <Text style={styles.statVal}>{val}</Text>
-                <Text style={styles.statLabel}>{label}</Text>
-              </View>
-            ))}
-          </View>
 
           {/* AI Reason */}
           <View style={styles.aiReasonRow}>
@@ -199,6 +186,26 @@ export default function CandidateScreen({ navigation, route }) {
             </View>
             <View style={styles.skillsRow}>
               {c.skills.map(s => <View key={s} style={styles.skillTag}><Text style={styles.skillTagT}>{s}</Text></View>)}
+            </View>
+          </View>
+
+          {/* Education */}
+          <View style={styles.expSection}>
+            <View style={styles.expTitleRow}>
+              <View style={styles.expTitleBar} />
+              <Text style={styles.expTitleText}>教育背景</Text>
+            </View>
+            <View style={styles.expItem}>
+              <View style={styles.expItemTop}>
+                <View style={styles.expCompanyLeft}>
+                  <View style={[styles.expLogo, { backgroundColor: '#1677FF' }]}>
+                    <Text style={[styles.expLogoT, { color: '#fff' }]}>北</Text>
+                  </View>
+                  <Text style={styles.expCompany}>{c.edu || '本科'} · 计算机科学</Text>
+                </View>
+                <Text style={styles.expDate}>2016-2020</Text>
+              </View>
+              <Text style={styles.expRole}>北京大学</Text>
             </View>
           </View>
 

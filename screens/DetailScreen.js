@@ -85,14 +85,21 @@ export default function DetailScreen({ navigation }) {
         </View>
 
         {/* Hiring preferences */}
-        <View style={styles.infoSection}>
-          <Text style={styles.infoTitle}>招聘偏好</Text>
-          {hiringPreferences.map((p, i) => (
-            <View key={i} style={styles.prefItem}>
-              <Text style={styles.prefText}>{p.text}</Text>
-              <View style={styles.hashtag}><Text style={styles.hashtagText}>#{p.tag}</Text></View>
-            </View>
-          ))}
+        <View style={styles.prefCard}>
+          <View style={styles.prefHeader}>
+            <Text style={styles.prefTitle}>招聘偏好</Text>
+            <Svg width={20} height={20} viewBox="0 0 20 20" fill="none">
+              <Path d="M14.166 2.5009C14.3849 2.28203 14.6447 2.10842 14.9307 1.98996C15.2167 1.8715 15.5232 1.81055 15.8327 1.81055C16.1422 1.81055 16.4487 1.8715 16.7347 1.98996C17.0207 2.10842 17.2805 2.28203 17.4993 2.5009C17.7182 2.71977 17.8918 2.97961 18.0103 3.2656C18.1287 3.5516 18.1897 3.85811 18.1897 4.16757C18.1897 4.47703 18.1287 4.78354 18.0103 5.06954C17.8918 5.35553 17.7182 5.61537 17.4993 5.83424L6.24935 17.0842L1.66602 18.3342L2.91602 13.7509L14.166 2.5009Z" stroke="#7B838D" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"/>
+            </Svg>
+          </View>
+          <View style={styles.prefDivider} />
+          <View style={styles.prefList}>
+            {hiringPreferences.map((p, i) => (
+              <Text key={i} style={styles.prefItemText}>
+                {p.text + ' '}<Text style={styles.prefTag}>#{p.tag}</Text>
+              </Text>
+            ))}
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -138,8 +145,16 @@ const styles = StyleSheet.create({
   infoLabel: { fontSize: 13, color: '#7B838D' },
   infoValue: { fontSize: 13, fontWeight: '500', color: '#000' },
   infoDesc: { fontSize: 13, color: '#7B838D', lineHeight: 20, marginTop: 10 },
-  prefItem: { paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#F4F4F4' },
-  prefText: { fontSize: 13, color: '#7B838D', lineHeight: 20, marginBottom: 6 },
-  hashtag: { backgroundColor: '#EBFAF5', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 4, alignSelf: 'flex-start' },
-  hashtagText: { fontSize: 11, fontWeight: '500', color: '#008B68' },
+  prefCard: {
+    marginHorizontal: 16, marginBottom: 12, paddingHorizontal: 16, paddingVertical: 14,
+    borderRadius: 12, borderWidth: 1, borderColor: 'rgba(255,255,255,0.8)',
+    backgroundColor: 'rgba(255,255,255,0.85)',
+    shadowColor: '#000', shadowOffset: { width: 1, height: 1 }, shadowOpacity: 0.07, shadowRadius: 5, elevation: 2,
+  },
+  prefHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 9 },
+  prefTitle: { fontSize: 14, fontWeight: '500', color: '#000' },
+  prefDivider: { height: 0.5, backgroundColor: '#F1F2F4', marginBottom: 9 },
+  prefList: { gap: 8 },
+  prefItemText: { fontSize: 13, color: '#7B838D', lineHeight: 21 },
+  prefTag: { fontSize: 13, fontWeight: '600', color: '#008B68' },
 });
