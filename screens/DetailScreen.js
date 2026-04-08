@@ -48,12 +48,12 @@ export default function DetailScreen({ navigation }) {
         <View style={{ width: 24 }} />
       </View>
 
-      {/* Gradient strip: width=screenW/3, centered, height:345 */}
+      {/* Gradient strip — fixed decoration behind scroll content */}
       <View pointerEvents="none" style={styles.gradStrip}>
         <Svg width="100%" height={345} viewBox="0 0 100 345" preserveAspectRatio="none">
           <Defs>
             <SvgLG id="gstrip" x1="0" y1="0" x2="0" y2="1">
-              <Stop offset="0" stopColor="#ffffff" stopOpacity="0" />
+              <Stop offset="0" stopColor="#FFF7F0" stopOpacity="0" />
               <Stop offset="1" stopColor="#FFEEDE" stopOpacity="1" />
             </SvgLG>
           </Defs>
@@ -61,29 +61,23 @@ export default function DetailScreen({ navigation }) {
         </Svg>
       </View>
 
-      {/* Top warm section */}
+      {/* Top warm section — fixed */}
       <View style={styles.topSection}>
-        {/* AI status */}
         <Text style={styles.aiStatus}>AI持续为您匹配优质候选人中……</Text>
-
-        {/* 待处理 + wave as background */}
         <View style={styles.pendSection}>
-          {/* Wave: absolute background */}
           <View style={styles.waveWrap} pointerEvents="none">
             <WaveDecoration />
           </View>
-          {/* Text on top */}
-          <TouchableOpacity
-            style={styles.pendRow}
-            activeOpacity={0.8}
-            onPress={() => newCount > 0 && navigation.navigate('NewCandidates')}
-          >
+          <TouchableOpacity style={styles.pendRow} activeOpacity={0.8} onPress={() => newCount > 0 && navigation.navigate('NewCandidates')}>
             <Text style={styles.pendLabel}>待处理</Text>
-            <Text style={styles.pendCount}>{newCount}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+              <Text style={styles.pendCount}>{newCount}</Text>
+              <Svg width={12} height={12} viewBox="0 0 12 12" fill="none">
+                <Path d="M5 3L8 6L5 9L5 3Z" fill="#A48341" stroke="#A48341" strokeLinejoin="round" />
+              </Svg>
+            </View>
           </TouchableOpacity>
         </View>
-
-        {/* Stats */}
         <View style={styles.statsRow}>
           {[
             { label: '通过', count: passCount, tab: 'pass' },
@@ -91,18 +85,21 @@ export default function DetailScreen({ navigation }) {
             { label: '拒绝', count: rejCount, tab: 'reject' },
           ].map(item => (
             <TouchableOpacity key={item.tab} style={styles.statCol} onPress={() => navigation.navigate('Category', { initialTab: item.tab })}>
-              <Text style={styles.statNum}>{item.count}</Text>
+              <View style={{ position: 'relative', alignItems: 'center', justifyContent: 'center' }}>
+                <Text style={styles.statNum}>{item.count}</Text>
+                <Svg style={{ position: 'absolute', left: '100%' }} width={12} height={12} viewBox="0 0 12 12" fill="none">
+                  <Path d="M5 3L8 6L5 9L5 3Z" fill="#BBC1C9" stroke="#BBC1C9" strokeLinejoin="round" />
+                </Svg>
+              </View>
               <Text style={styles.statLabel}>{item.label}</Text>
             </TouchableOpacity>
           ))}
         </View>
       </View>
 
-      {/* Bottom area: white bg + scroll layered */}
-      <View style={styles.bottomArea}>
-        <View style={styles.bottomBg} pointerEvents="none" />
-        <ScrollView style={styles.bottomCard} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 20, paddingBottom: 40 }}>
-          {/* 招聘偏好 */}
+      {/* White rounded container — stretches to bottom, internal scroll */}
+      <View style={styles.bottomCard}>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: 16, paddingBottom: 40, gap: 12 }}>
           <View style={styles.prefCard}>
             <View style={styles.prefHeader}>
               <Text style={styles.prefTitle}>招聘偏好</Text>
@@ -117,8 +114,6 @@ export default function DetailScreen({ navigation }) {
               ))}
             </View>
           </View>
-
-          {/* 岗位详情 */}
           <View style={styles.prefCard}>
             <View style={styles.prefHeader}>
               <Text style={styles.prefTitle}>岗位详情</Text>
@@ -148,13 +143,14 @@ export default function DetailScreen({ navigation }) {
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: '#FFF7F0', position: 'relative' },
   gradStrip: { position: 'absolute', left: '33.33%', top: 0, width: '33.33%', height: 345, zIndex: 0 },
+
   nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 9 },
   backBtn: { width: 24, height: 24, alignItems: 'center', justifyContent: 'center' },
   navTitle: { fontSize: 16, fontWeight: '600', color: '#171718' },
 
-  topSection: { paddingHorizontal: 16, paddingTop: 12, flex: 0, zIndex: 1 },
+  topSection: { paddingHorizontal: 16, paddingTop: 12, zIndex: 1 },
 
-  aiStatus: { fontSize: 13, color: '#A48341', letterSpacing: 0.5, fontStyle: 'italic', marginBottom: 48 },
+  aiStatus: { fontSize: 13, color: '#A48341', letterSpacing: 0.5, fontStyle: 'italic', marginBottom: 20 },
 
   pendSection: { position: 'relative', height: 89, justifyContent: 'center', marginHorizontal: -16 },
   waveWrap: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },
@@ -167,11 +163,6 @@ const styles = StyleSheet.create({
   statNum: { fontSize: 22, fontWeight: '600', color: '#656D76', textAlign: 'center', letterSpacing: 0.5 },
   statLabel: { fontSize: 12, color: '#9EA7B3', letterSpacing: 0.5 },
 
-  bottomArea: { flex: 1, position: 'relative' },
-  bottomBg: {
-    position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-    backgroundColor: '#fff', borderTopLeftRadius: 20, borderTopRightRadius: 20,
-  },
   bottomCard: { flex: 1, backgroundColor: '#fff', borderTopLeftRadius: 20, borderTopRightRadius: 20 },
 
   prefCard: {
