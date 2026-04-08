@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
   titleLg: { fontSize: 13, color: '#656D76', letterSpacing: 0.5 },
   statsRow: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 15, paddingVertical: 8 },
   statCol: { flex: 1, alignItems: 'center', gap: 0 },
-  statVal: { fontSize: 14, fontWeight: '600', color: '#000', lineHeight: 21, textAlign: 'center' },
+  statVal: { fontSize: 14, fontWeight: '500', color: '#000', lineHeight: 21, textAlign: 'center' },
   statLabel: { fontSize: 12, color: '#9EA7B3', letterSpacing: 0.5 },
   expLg: { fontSize: 12, color: '#BBC1C9', marginTop: 2 },
   section: {

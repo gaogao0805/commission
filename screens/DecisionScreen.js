@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, SafeAreaView, Animated, PanResponder, Dimensions, ScrollView } from 'react-native';
-import Svg, { Path, Rect, Defs, LinearGradient as SvgLinearGradient, Stop } from 'react-native-svg';
+import Svg, { Path, Rect, Defs, LinearGradient as SvgLinearGradient, Stop, Circle } from 'react-native-svg';
 
 const COMPANY_COLORS = {
   '字节跳动': '#1A1A1A', '蚂蚁集团': '#1677FF', '网易': '#D0021B', '拼多多': '#E02E24',
@@ -372,7 +372,7 @@ const styles = StyleSheet.create({
   sectionPad: { paddingHorizontal: 20 },
   statsRow: { flexDirection: 'row', backgroundColor: '#FDFDFD', paddingHorizontal: 15, paddingVertical: 8 },
   statCol: { flex: 1, alignItems: 'center', gap: 2 },
-  statVal: { fontSize: 14, fontWeight: '600', color: '#000', lineHeight: 21 },
+  statVal: { fontSize: 14, fontWeight: '500', color: '#000', lineHeight: 21 },
   statLabel: { fontSize: 12, color: '#9EA7B3', letterSpacing: 0.5 },
   resumeStatusRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, marginTop: 20, marginBottom: 20 },
   resumeLeftCol: { flexDirection: 'column', gap: 3 },
