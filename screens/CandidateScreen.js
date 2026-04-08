@@ -60,20 +60,15 @@ export default function CandidateScreen({ navigation, route }) {
 
 
   // tag颜色与CandidateCard pill完全一致：新简历蓝、有简历绿、已请求黄
-  let resumeText = null, resumeTagBg = null, resumeTagColor = null, resumeDotColor = '#BBC1C9', resumeAction = null;
+  let resumeText = null, resumeTagBg = null, resumeTagColor = null, resumeAction = null;
   if (c.resumeStatus === 'none') {
     resumeAction = 'request';
   } else if (c.resumeStatus === 'requested') {
-    resumeText = '已请求简历'; resumeTagBg = '#FFFBF2'; resumeTagColor = '#E19D16'; resumeDotColor = '#E19D16'; resumeAction = 'waiting';
-  } else if (c.resumeStatus === 'has') {
-    resumeText = '有简历'; resumeTagBg = '#EBFAF5'; resumeTagColor = '#008B68'; resumeDotColor = '#02A87E'; resumeAction = 'view';
-  } else if (c.resumeStatus === 'authorized' || c.resumeStatus === 'proactive') {
-    if (c.hasNewResume && !c.newResumeRead) {
-      resumeText = '新简历'; resumeTagBg = '#F2FAFF'; resumeTagColor = '#1690E1'; resumeDotColor = '#1690E1';
-    } else {
-      resumeText = '有简历'; resumeTagBg = '#EBFAF5'; resumeTagColor = '#008B68'; resumeDotColor = '#02A87E';
-    }
-    resumeAction = 'view';
+    resumeText = '已请求简历'; resumeTagBg = '#FFFBF2'; resumeTagColor = '#E19D16'; resumeAction = 'waiting';
+  } else if (c.hasNewResume) {
+    resumeText = '新简历'; resumeTagBg = '#F2FAFF'; resumeTagColor = '#1690E1'; resumeAction = 'view';
+  } else if (c.resumeStatus === 'has' || c.resumeStatus === 'authorized' || c.resumeStatus === 'proactive') {
+    resumeText = '有简历'; resumeTagBg = '#EBFAF5'; resumeTagColor = '#008B68'; resumeAction = 'view';
   }
 
   const handleDecision = (decision) => {
@@ -342,8 +337,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
   },
   resumeLeftCol: { flexDirection: 'column', gap: 3 },
-  resumeTag: { backgroundColor: '#EBFAF5', borderRadius: 999, paddingHorizontal: 4, paddingVertical: 2, height: 18, alignSelf: 'flex-start', alignItems: 'center', justifyContent: 'center' },
-  resumeTagT: { fontSize: 10, color: '#009688', letterSpacing: 0.5 },
+  resumeTag: { backgroundColor: '#EBFAF5', borderRadius: 999, paddingHorizontal: 8, paddingVertical: 1, alignSelf: 'flex-start' },
+  resumeTagT: { fontSize: 12, color: '#008B68', letterSpacing: 0.5 },
   resumeMatchRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   resumeMatchDot: { width: 4, height: 4, borderRadius: 2 },
   resumeMatchT: { fontSize: 13, fontWeight: '500', letterSpacing: 0.5 },

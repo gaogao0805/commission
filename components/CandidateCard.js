@@ -23,7 +23,7 @@ const C = {
   greenText: '#008B68',
   greenDeep: '#598C75',
   greenBubble: '#EBFAF5',
-  chatBg: '#F6F7F9',
+  chatBg: '#F8FAFC',
   yellow: '#E19D16',
   divider: '#F1F2F4',
   btnBg: '#494949',
@@ -65,13 +65,17 @@ export default function CandidateCard({ candidate, onPress, onRequestResume, hid
               </View>
             )}
           </View>
-          <Text style={s.role}>{c.company} · {c.title}</Text>
+          <View style={s.contactRow}>
+            <Text style={s.contactT}>158***9271</Text>
+            <Text style={s.contactSep}>|</Text>
+            <Text style={s.contactT}>ink***@outlook.com</Text>
+          </View>
         </View>
       </View>
 
-      {/* Skills row */}
+      {/* Certificates row */}
       <View style={s.skills}>
-        {c.skills.map(sk => (
+        {(c.certificates || ['CET-6', '软件设计师', 'AWS 架构师']).map(sk => (
           <View key={sk} style={s.pill}>
             <Text style={s.pillT}>{sk}</Text>
           </View>
@@ -175,7 +179,10 @@ const s = StyleSheet.create({
     borderRadius: 4,
     paddingHorizontal: 12, paddingVertical: 2,
   },
-  pillT: { fontSize: 12, color: C.grayMid, letterSpacing: 0.5, lineHeight: 18 },
+  pillT: { fontSize: 13, color: C.grayMid, lineHeight: 21 },
+  contactRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 },
+  contactT: { fontSize: 12, color: C.grayMid, letterSpacing: 0.5 },
+  contactSep: { fontSize: 12, color: '#DDE2E8' },
 
   // AI Reason
   reasonRow: { flexDirection: 'row', alignItems: 'center' },

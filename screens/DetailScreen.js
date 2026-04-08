@@ -54,9 +54,9 @@ export default function DetailScreen({ navigation }) {
         {/* Category stats */}
         <View style={styles.catRow}>
           {[
-            { label: '通过', count: passCount, color: '#059669', tab: 'pass' },
-            { label: '待定', count: pendCount, color: '#d97706', tab: 'pending' },
-            { label: '拒绝', count: rejCount, color: '#9ca3af', tab: 'reject' },
+            { label: '通过', count: passCount, color: '#02A87E', tab: 'pass' },
+            { label: '待定', count: pendCount, color: '#E19D16', tab: 'pending' },
+            { label: '拒绝', count: rejCount, color: '#7B838D', tab: 'reject' },
           ].map(item => (
             <TouchableOpacity key={item.tab} style={styles.catItem} activeOpacity={0.8}
               onPress={() => navigation.navigate('Category', { initialTab: item.tab })}>
@@ -133,14 +133,15 @@ const styles = StyleSheet.create({
   pendingNumber: { fontSize: 36, fontWeight: '700', color: '#02A87E', marginBottom: 4 },
   pendingLabel: { fontSize: 14, color: '#7B838D', fontWeight: '500' },
   pendingHint: { fontSize: 12, color: '#BBC1C9', marginTop: 6 },
-  catRow: { flexDirection: 'row', gap: 8, paddingHorizontal: 16, marginBottom: 16 },
-  catItem: {
-    flex: 1, paddingVertical: 14, alignItems: 'center', borderRadius: 10,
-    backgroundColor: '#fff',
+  catRow: {
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    marginHorizontal: 16, marginBottom: 16, paddingHorizontal: 34, paddingTop: 18, paddingBottom: 19,
+    borderRadius: 999, backgroundColor: '#fff',
     shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.07, shadowRadius: 4, elevation: 2,
   },
-  catNumber: { fontSize: 22, fontWeight: '700', marginBottom: 2 },
-  catLabel: { fontSize: 12, color: '#7B838D', fontWeight: '500' },
+  catItem: { alignItems: 'center' },
+  catNumber: { fontSize: 22, fontWeight: '600' },
+  catLabel: { fontSize: 12, color: '#9EA7B3', letterSpacing: 0.5 },
   infoSection: {
     marginHorizontal: 16, marginBottom: 12, paddingHorizontal: 16, paddingVertical: 14,
     borderRadius: 12, borderWidth: 1, borderColor: 'rgba(255,255,255,0.8)',
