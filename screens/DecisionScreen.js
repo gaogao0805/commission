@@ -175,7 +175,7 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
             <Text style={styles.expTitleText}>资格证书</Text>
           </View>
           <View style={styles.skillsRow}>
-            {['CET-6', '软件设计师', 'AWS 架构师'].map(cert => (
+            {(c.certificates || []).map(cert => (
               <View key={cert} style={styles.skillTag}><Text style={styles.skillTagT}>{cert}</Text></View>
             ))}
           </View>
