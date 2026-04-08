@@ -33,13 +33,15 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const SWIPE_THRESHOLD = 80;
 const SWIPE_DOWN_THRESHOLD = 100;
 
-function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequestResume, cardRef, passProgress }) {
+function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequestResume, cardRef, passProgress, isFirst }) {
   const pan = useRef(new Animated.ValueXY()).current;
   const pendOp = useRef(new Animated.Value(0)).current;
 
   // Refs to always have latest values inside PanResponder closure
   const isFrontRef = useRef(isFront);
   isFrontRef.current = isFront;
+  const isFirstRef = useRef(isFirst);
+  isFirstRef.current = isFirst;
   const onSwipeRef = useRef(onSwipe);
   onSwipeRef.current = onSwipe;
   const onNavigateRef = useRef(onNavigate);
@@ -70,11 +72,11 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
       pendOp.setValue(Math.min(Math.max(g.dy / SWIPE_DOWN_THRESHOLD, 0), 1) * Math.max(0, 1 - Math.abs(g.dx) / 200));
     },
     onPanResponderRelease: (_, g) => {
-      if (g.dx > SWIPE_THRESHOLD) animateNavigate('prev');
+      if (g.dx > SWIPE_THRESHOLD && !isFirstRef.current) animateNavigate('prev');
       else if (g.dx < -SWIPE_THRESHOLD) animateNavigate('next');
       else if (g.dy > SWIPE_DOWN_THRESHOLD && Math.abs(g.dx) < 50) animateOut('pending');
       else {
-        Animated.spring(pan, { toValue: { x: 0, y: 0 }, useNativeDriver: false }).start();
+        Animated.spring(pan, { toValue: { x: 0, y: 0 }, useNativeDriver: false, friction: 5 }).start();
         pendOp.setValue(0);
       }
     },
@@ -269,20 +271,28 @@ export default function DecisionScreen({ navigation, route }) {
           </Svg>
         </Animated.View>
         <View style={styles.stack}>
-          {newList.slice(index, index + 3).reverse().map((c, i, arr) => {
-            const pos = arr.length - 1 - i;
-            return (
-              <SwipeableCard
-                key={c.id} candidate={c}
-                isFront={pos === 0} behind={pos}
-                onSwipe={handleSwipe}
-                onNavigate={handleNavigate}
-                onRequestResume={handleRequestResume}
-                passProgress={pos === 0 ? passProgress : undefined}
-                cardRef={pos === 0 ? cardRef : undefined}
-              />
-            );
-          })}
+          {(() => {
+            const front = newList[index];
+            if (!front) return null;
+            // Always show 3 layers: front + 2 background (from ahead, or fallback to already-seen)
+            const bg1 = newList[index + 1] || newList[index - 1] || front;
+            const bg2 = newList[index + 2] || newList[index - 2] || front;
+            return [bg2, bg1, front].map((c, i) => {
+              const pos = 2 - i; // 2=far bg, 1=near bg, 0=front
+              return (
+                <SwipeableCard
+                  key={`${c.id}-${pos}`} candidate={c}
+                  isFront={pos === 0} behind={pos}
+                  isFirst={index === 0}
+                  onSwipe={handleSwipe}
+                  onNavigate={handleNavigate}
+                  onRequestResume={handleRequestResume}
+                  passProgress={pos === 0 ? passProgress : undefined}
+                  cardRef={pos === 0 ? cardRef : undefined}
+                />
+              );
+            });
+          })()}
         </View>
       </View>
 
