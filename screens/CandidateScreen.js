@@ -122,19 +122,31 @@ export default function CandidateScreen({ navigation, route }) {
       </View>
 
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
-        {/* Top section: Profile + AI Reason + Skills, gap:12 */}
+        {/* Top section */}
         <View style={styles.topSection}>
           {/* Profile */}
           <View style={styles.profile}>
-            <View style={styles.avatarLgWrap}>
-              <View style={styles.avatarLg}>
-                <Text style={styles.avatarLgT}>{initial}</Text>
-              </View>
+            <View style={styles.avatarLg}>
+              <Text style={styles.avatarLgT}>{initial}</Text>
             </View>
-            <View>
+            <View style={{ gap: 5 }}>
               <Text style={styles.nameLg}>{c.name}</Text>
-              <Text style={styles.titleLg}>{c.title} · {c.company}</Text>
+              <Text style={styles.titleLg}>{c.title}</Text>
             </View>
+          </View>
+
+          {/* Stats row */}
+          <View style={styles.statsRow}>
+            {[
+              ['工作经验', c.exp],
+              ['学历', c.edu || '本科'],
+              ['薪资要求', c.expectedSalary || '面议'],
+            ].map(([label, val]) => (
+              <View key={label} style={styles.statCol}>
+                <Text style={styles.statVal}>{val}</Text>
+                <Text style={styles.statLabel}>{label}</Text>
+              </View>
+            ))}
           </View>
 
           {/* AI Reason */}
@@ -144,11 +156,6 @@ export default function CandidateScreen({ navigation, route }) {
               <View style={styles.aiQuoteWrap}><QuoteIcon /></View>
             </View>
             <Text style={styles.aiReasonText}>{c.aiReason}</Text>
-          </View>
-
-          {/* Skills */}
-          <View style={styles.skillsRow}>
-            {c.skills.map(s => <View key={s} style={styles.skillTag}><Text style={styles.skillTagT}>{s}</Text></View>)}
           </View>
         </View>
 
@@ -182,6 +189,17 @@ export default function CandidateScreen({ navigation, route }) {
             {resumeAction === 'waiting' && (
               <Text style={styles.resumeWaitingT}>等待授权中</Text>
             )}
+          </View>
+
+          {/* Skills */}
+          <View style={styles.expSection}>
+            <View style={styles.expTitleRow}>
+              <View style={styles.expTitleBar} />
+              <Text style={styles.expTitleText}>核心技能</Text>
+            </View>
+            <View style={styles.skillsRow}>
+              {c.skills.map(s => <View key={s} style={styles.skillTag}><Text style={styles.skillTagT}>{s}</Text></View>)}
+            </View>
           </View>
 
           {/* Work Experience */}
@@ -260,12 +278,15 @@ const styles = StyleSheet.create({
   backBtn: { width: 24, height: 24, alignItems: 'center', justifyContent: 'center' },
   navTitle: { fontSize: 16, fontWeight: '600', color: '#171718' },
   topSection: { flexDirection: 'column', gap: 16, paddingHorizontal: 16, paddingTop: 16 },
-  profile: { flexDirection: 'row', alignItems: 'center', gap: 20 },
-  avatarLgWrap: {},
-  avatarLg: { width: 52, height: 52, borderRadius: 26, backgroundColor: '#e8e8ed', alignItems: 'center', justifyContent: 'center' },
-  avatarLgT: { fontSize: 20, fontWeight: '500', color: '#BBC1C9' },
-  nameLg: { fontSize: 20, fontWeight: '600', color: '#000', marginBottom: 2 },
-  titleLg: { fontSize: 13, color: '#7B838D' },
+  profile: { flexDirection: 'row', alignItems: 'center', gap: 16 },
+  avatarLg: { width: 46, height: 46, borderRadius: 23, backgroundColor: '#e8e8ed', alignItems: 'center', justifyContent: 'center' },
+  avatarLgT: { fontSize: 18, fontWeight: '500', color: '#BBC1C9' },
+  nameLg: { fontSize: 20, fontWeight: '500', color: '#000', letterSpacing: 0.5 },
+  titleLg: { fontSize: 16, color: '#000', letterSpacing: 0.5 },
+  statsRow: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 15, paddingVertical: 8 },
+  statCol: { flex: 1, alignItems: 'center', gap: 0 },
+  statVal: { fontSize: 14, fontWeight: '600', color: '#000', lineHeight: 21, textAlign: 'center' },
+  statLabel: { fontSize: 12, color: '#9EA7B3', letterSpacing: 0.5 },
   expLg: { fontSize: 12, color: '#BBC1C9', marginTop: 2 },
   section: {
     marginHorizontal: 16, marginBottom: 12, backgroundColor: '#fff', borderRadius: 16, padding: 16,

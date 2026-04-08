@@ -99,9 +99,9 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onRequestResume, c
           <Animated.View style={[styles.ind, styles.indPend, { opacity: pendOp }]}><Text style={styles.indPendT}>待定</Text></Animated.View>
         </>
       )}
-      <ScrollView showsVerticalScrollIndicator={false} scrollEnabled={isFront} contentContainerStyle={{ gap: 20, paddingBottom: 8 }}>
-        {/* Profile: avatar + name + title */}
-        <View style={styles.swipeHeader}>
+      <ScrollView showsVerticalScrollIndicator={false} scrollEnabled={isFront}>
+        {/* Profile */}
+        <View style={[styles.swipeHeader, styles.sectionPad]}>
           <View style={styles.swipeAvatar}>
             <Text style={styles.swipeAvatarT}>{initial}</Text>
           </View>
@@ -111,7 +111,7 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onRequestResume, c
           </View>
         </View>
 
-        {/* Stats row: 经验 / 学历 / 薪资 */}
+        {/* Stats row: full width, no horizontal padding on card */}
         <View style={styles.statsRow}>
           {[['工作经验', c.exp], ['学历', c.edu || '本科'], ['薪资要求', c.expectedSalary || '面议']].map(([label, val]) => (
             <View key={label} style={styles.statCol}>
@@ -135,7 +135,7 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onRequestResume, c
         </View>
 
         {/* 核心技能 */}
-        <View style={styles.expSection}>
+        <View style={[styles.expSection, styles.sectionPad]}>
           <View style={styles.expTitleRow}>
             <View style={styles.expTitleBar} />
             <Text style={styles.expTitleText}>核心技能</Text>
@@ -146,7 +146,7 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onRequestResume, c
         </View>
 
         {/* 工作经验 */}
-        <View style={styles.expSection}>
+        <View style={[styles.expSection, styles.sectionPad]}>
           <View style={styles.expTitleRow}>
             <View style={styles.expTitleBar} />
             <Text style={styles.expTitleText}>工作经验</Text>
@@ -169,7 +169,7 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onRequestResume, c
         </View>
 
         {/* Agent語 */}
-        <View style={styles.agentRow}>
+        <View style={[styles.agentRow, styles.sectionPad]}>
           <View style={styles.agentIconArea}>
             <Image source={require('../assets/agent-avatar.png')} style={styles.agentAvatar} />
             <View style={styles.agentQuoteWrap}><QuoteIcon /></View>
@@ -301,9 +301,9 @@ const styles = StyleSheet.create({
   passBg: { position: 'absolute', top: 0, left: 0, right: 0, height: 275 },
   stack: { width: '100%', height: 480, position: 'relative' },
   swipeCard: {
-    position: 'absolute', top: 0, left: 0, right: 0, maxHeight: 480,
+    position: 'absolute', top: 0, left: 0, right: 0, maxHeight: 520,
     backgroundColor: '#fff', borderRadius: 16, borderWidth: 1, borderColor: 'rgba(0,0,0,0.06)',
-    padding: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 20, elevation: 5,
+    paddingVertical: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 20, elevation: 5,
   },
   ind: { position: 'absolute', paddingHorizontal: 20, paddingVertical: 8, borderRadius: 8, borderWidth: 3, zIndex: 20 },
   indPass: { top: 20, right: 20, borderColor: '#059669', backgroundColor: 'rgba(5,150,105,0.1)', transform: [{ rotate: '-15deg' }] },
@@ -312,16 +312,17 @@ const styles = StyleSheet.create({
   indRejectT: { fontSize: 18, fontWeight: '700', color: '#dc2626' },
   indPend: { bottom: 20, alignSelf: 'center', left: '35%', borderColor: '#d97706', backgroundColor: 'rgba(217,119,6,0.1)' },
   indPendT: { fontSize: 18, fontWeight: '700', color: '#d97706' },
-  swipeHeader: { flexDirection: 'row', alignItems: 'center', gap: 16 },
+  swipeHeader: { flexDirection: 'row', alignItems: 'center', gap: 16, marginBottom: 20 },
   swipeAvatar: { width: 46, height: 46, borderRadius: 23, backgroundColor: '#e8e8ed', alignItems: 'center', justifyContent: 'center' },
   swipeAvatarT: { fontSize: 18, fontWeight: '500', color: '#BBC1C9' },
   swipeName: { fontSize: 20, fontWeight: '500', color: '#000', letterSpacing: 0.5, lineHeight: 24 },
   swipeTitle: { fontSize: 16, fontWeight: '400', color: '#000', letterSpacing: 0.5, lineHeight: 24 },
-  statsRow: { flexDirection: 'row', backgroundColor: '#FDFDFD', paddingHorizontal: 15, paddingVertical: 8, alignSelf: 'stretch', marginHorizontal: -20 },
+  sectionPad: { paddingHorizontal: 20 },
+  statsRow: { flexDirection: 'row', backgroundColor: '#FDFDFD', paddingHorizontal: 15, paddingVertical: 8 },
   statCol: { flex: 1, alignItems: 'center', gap: 2 },
   statVal: { fontSize: 14, fontWeight: '600', color: '#000', lineHeight: 21 },
   statLabel: { fontSize: 12, color: '#9EA7B3', letterSpacing: 0.5 },
-  resumeStatusRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', alignSelf: 'stretch', marginHorizontal: -20, paddingHorizontal: 18 },
+  resumeStatusRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, marginTop: 4 },
   resumeStatusLeft: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   rTagDot: { width: 4, height: 4, borderRadius: 2 },
   rTagText: { fontSize: 13, fontWeight: '500', letterSpacing: 0.5 },
@@ -330,7 +331,7 @@ const styles = StyleSheet.create({
   skillsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   skillTag: { paddingHorizontal: 12, paddingVertical: 4, borderRadius: 4, backgroundColor: '#F8FAFC' },
   skillTagT: { fontSize: 13, color: '#000', lineHeight: 21 },
-  expSection: { gap: 16 },
+  expSection: { gap: 16, marginTop: 20 },
   expTitleRow: { flexDirection: 'row', alignItems: 'stretch', gap: 8 },
   expTitleBar: { width: 4, borderRadius: 999, backgroundColor: '#6FCDAE' },
   expTitleText: { fontSize: 16, fontWeight: '600', color: '#000', lineHeight: 21 },
@@ -343,7 +344,7 @@ const styles = StyleSheet.create({
   expDate: { fontSize: 12, fontWeight: '300', color: '#78787D', lineHeight: 21 },
   expRole: { fontSize: 13, fontWeight: '400', color: '#000', letterSpacing: 0.5, lineHeight: 18, paddingLeft: 29 },
   expDivider: { height: 0.5, backgroundColor: '#F1F2F4', marginLeft: 12 },
-  agentRow: { flexDirection: 'row', alignItems: 'center' },
+  agentRow: { flexDirection: 'row', alignItems: 'center', marginTop: 20, marginBottom: 8 },
   agentIconArea: { position: 'relative', marginRight: 4 },
   agentAvatar: { width: 20, height: 20, borderRadius: 10 },
   agentQuoteWrap: { position: 'absolute', top: -8, right: -14 },
