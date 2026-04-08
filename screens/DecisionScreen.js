@@ -66,8 +66,8 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
   React.useImperativeHandle(cardRef, () => ({ animateOut }));
 
   const panResponder = useRef(PanResponder.create({
-    onStartShouldSetPanResponder: () => isFrontRef.current,
-    onMoveShouldSetPanResponder: (_, g) => isFrontRef.current && (Math.abs(g.dx) > 8 || Math.abs(g.dy) > 8),
+    onStartShouldSetPanResponder: () => false,
+    onMoveShouldSetPanResponder: (_, g) => isFrontRef.current && Math.abs(g.dx) > Math.abs(g.dy) && Math.abs(g.dx) > 10,
     onPanResponderMove: (_, g) => {
       pan.setValue({ x: g.dx, y: 0 });
       if (passProgress) passProgress.setValue(0);
