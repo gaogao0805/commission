@@ -65,11 +65,13 @@ export default function CandidateCard({ candidate, onPress, onRequestResume, hid
               </View>
             )}
           </View>
-          <View style={s.contactRow}>
-            <Text style={s.contactT}>158***9271</Text>
-            <Text style={s.contactSep}>|</Text>
-            <Text style={s.contactT}>ink***@outlook.com</Text>
-          </View>
+          {(c.phone || c.email) && (
+            <View style={s.contactRow}>
+              {c.phone && <Text style={s.contactT}>{c.phone}</Text>}
+              {c.phone && c.email && <Text style={s.contactSep}>|</Text>}
+              {c.email && <Text style={s.contactT}>{c.email}</Text>}
+            </View>
+          )}
         </View>
       </View>
 

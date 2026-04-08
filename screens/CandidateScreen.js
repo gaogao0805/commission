@@ -123,11 +123,13 @@ export default function CandidateScreen({ navigation, route }) {
             <Text style={styles.avatarLgT}>{initial}</Text>
           </View>
           <Text style={styles.nameLg}>{c.name}</Text>
-          <View style={styles.contactRow}>
-            <Text style={styles.contactText}>158***9271</Text>
-            <View style={styles.contactDivider} />
-            <Text style={styles.contactText}>ink***@outlook.com</Text>
-          </View>
+          {(c.phone || c.email) && (
+            <View style={styles.contactRow}>
+              {c.phone && <Text style={styles.contactText}>{c.phone}</Text>}
+              {c.phone && c.email && <View style={styles.contactDivider} />}
+              {c.email && <Text style={styles.contactText}>{c.email}</Text>}
+            </View>
+          )}
         </View>
 
         {/* AI Reason */}
