@@ -369,7 +369,7 @@ const styles = StyleSheet.create({
   statCol: { flex: 1, alignItems: 'center', gap: 2 },
   statVal: { fontSize: 14, fontWeight: '600', color: '#000', lineHeight: 21 },
   statLabel: { fontSize: 12, color: '#9EA7B3', letterSpacing: 0.5 },
-  resumeStatusRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, marginTop: 20 },
+  resumeStatusRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, marginTop: 20, marginBottom: 20 },
   resumeLeftCol: { flexDirection: 'column', gap: 3 },
   resumeTag: { borderRadius: 999, paddingHorizontal: 8, paddingVertical: 1, alignSelf: 'flex-start' },
   resumeTagT: { fontSize: 10, letterSpacing: 0.5 },
