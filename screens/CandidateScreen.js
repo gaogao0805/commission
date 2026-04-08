@@ -231,6 +231,21 @@ export default function CandidateScreen({ navigation, route }) {
       {/* Bottom Bar */}
       <TouchableOpacity style={styles.bottomBar} onPress={() => setSheetOpen(true)}>
         <View style={styles.bottomLeft}>
+          {dec === 'pass' && (
+            <Svg width={20} height={20} viewBox="0 0 32 32" fill="none">
+              <Path d="M24 9.3335L12.5714 22.6668L8 17.3335" stroke={decColors.pass} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+            </Svg>
+          )}
+          {dec === 'reject' && (
+            <Svg width={20} height={20} viewBox="0 0 32 32" fill="none">
+              <Path d="M8.92893 9.07107L23.0711 23.2132M23.0711 9.07107L8.92893 23.2132" stroke={decColors.reject} strokeWidth={2} strokeLinecap="round" />
+            </Svg>
+          )}
+          {dec === 'pending' && (
+            <Svg width={20} height={20} viewBox="0 0 32 32" fill="none">
+              <Circle cx={16} cy={16} r={8} stroke={decColors.pending} strokeWidth={2} />
+            </Svg>
+          )}
           <Text style={[styles.bottomText, dec && { color: decColors[dec] }]}>{dec ? decLabels[dec] : '选择决策'}</Text>
         </View>
         <View style={styles.bottomArrow}>

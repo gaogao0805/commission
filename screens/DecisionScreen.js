@@ -120,7 +120,7 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
       {isFront && (
         <Animated.View style={[styles.ind, styles.indPend, { opacity: pendOp }]}><Text style={styles.indPendT}>待定</Text></Animated.View>
       )}
-      <ScrollView showsVerticalScrollIndicator={false} scrollEnabled={isFront}>
+      <ScrollView showsVerticalScrollIndicator={false} scrollEnabled={isFront} contentContainerStyle={{ paddingVertical: 20 }}>
         {/* Profile */}
         <View style={[styles.swipeHeader, styles.sectionPad]}>
           <View style={styles.swipeAvatar}>
@@ -360,8 +360,8 @@ const styles = StyleSheet.create({
   stack: { width: '100%', flex: 1, position: 'relative' },
   swipeCard: {
     position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-    backgroundColor: '#fff', borderRadius: 16, borderWidth: 1, borderColor: 'rgba(0,0,0,0.06)',
-    paddingVertical: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 20, elevation: 5,
+    backgroundColor: '#fff', borderRadius: 16,
+    shadowColor: '#000', shadowOffset: { width: 1, height: 1 }, shadowOpacity: 0.07, shadowRadius: 5, elevation: 2, overflow: 'hidden',
   },
   ind: { position: 'absolute', paddingHorizontal: 20, paddingVertical: 8, borderRadius: 8, borderWidth: 3, zIndex: 20 },
   indPass: { top: 20, right: 20, borderColor: '#059669', backgroundColor: 'rgba(5,150,105,0.1)', transform: [{ rotate: '-15deg' }] },
