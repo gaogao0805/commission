@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, SafeAreaView } from 'react-native';
-import Svg, { Path, G } from 'react-native-svg';
+import Svg, { Path, G, Defs, LinearGradient as SvgLG, Stop, Rect } from 'react-native-svg';
 import { useApp } from '../data/AppContext';
 import { jobDetails, hiringPreferences } from '../data/candidates';
 
@@ -46,6 +46,19 @@ export default function DetailScreen({ navigation }) {
         </TouchableOpacity>
         <Text style={styles.navTitle}>{jobDetails.position}</Text>
         <View style={{ width: 24 }} />
+      </View>
+
+      {/* Gradient strip: left:125 width:125 height:345, transparent→#FFEEDE */}
+      <View pointerEvents="none" style={styles.gradStrip}>
+        <Svg width={125} height={345} viewBox="0 0 125 345">
+          <Defs>
+            <SvgLG id="gstrip" x1="0" y1="0" x2="0" y2="1">
+              <Stop offset="0" stopColor="#ffffff" stopOpacity="0" />
+              <Stop offset="1" stopColor="#FFEEDE" stopOpacity="1" />
+            </SvgLG>
+          </Defs>
+          <Rect x="0" y="0" width="125" height="345" fill="url(#gstrip)" />
+        </Svg>
       </View>
 
       {/* Top warm section */}
@@ -110,12 +123,13 @@ export default function DetailScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#FFF7F0' },
+  safe: { flex: 1, backgroundColor: '#FFF7F0', position: 'relative' },
+  gradStrip: { position: 'absolute', left: 125, top: 0, width: 125, height: 345, zIndex: 0 },
   nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 9 },
   backBtn: { width: 24, height: 24, alignItems: 'center', justifyContent: 'center' },
   navTitle: { fontSize: 16, fontWeight: '600', color: '#171718' },
 
-  topSection: { paddingHorizontal: 16, paddingTop: 12, flex: 0 },
+  topSection: { paddingHorizontal: 16, paddingTop: 12, flex: 0, zIndex: 1 },
 
   aiStatus: { fontSize: 13, color: '#A48341', letterSpacing: 0.5, fontStyle: 'italic', marginBottom: 48 },
 
@@ -132,9 +146,7 @@ const styles = StyleSheet.create({
 
   // Bottom white rounded card
   bottomCard: {
-    flex: 1, backgroundColor: '#fff',
-    borderTopLeftRadius: 20, borderTopRightRadius: 20,
-    paddingTop: 20,
+    flex: 1, paddingTop: 20,
   },
 
   prefCard: {
