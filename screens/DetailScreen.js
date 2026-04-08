@@ -98,11 +98,10 @@ export default function DetailScreen({ navigation }) {
         </View>
       </View>
 
-      {/* White rounded bg — decorative only, no clipping */}
-      <View style={styles.bottomBg} pointerEvents="none" />
-
-      {/* ScrollView on top, no parent clipping */}
-      <ScrollView style={styles.bottomCard} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 20, paddingBottom: 40 }}>
+      {/* Bottom area: white bg + scroll layered */}
+      <View style={styles.bottomArea}>
+        <View style={styles.bottomBg} pointerEvents="none" />
+        <ScrollView style={styles.bottomCard} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 20, paddingBottom: 40 }}>
           {/* 招聘偏好 */}
           <View style={styles.prefCard}>
             <View style={styles.prefHeader}>
@@ -118,7 +117,30 @@ export default function DetailScreen({ navigation }) {
               ))}
             </View>
           </View>
-      </ScrollView>
+
+          {/* 岗位详情 */}
+          <View style={styles.prefCard}>
+            <View style={styles.prefHeader}>
+              <Text style={styles.prefTitle}>岗位详情</Text>
+              <EditIcon />
+            </View>
+            <View style={styles.prefDivider} />
+            {[
+              ['岗位名称', jobDetails.position],
+              ['薪资范围', jobDetails.salary],
+              ['工作地点', jobDetails.location],
+              ['经验要求', jobDetails.experience],
+              ['学历要求', jobDetails.education],
+            ].map(([label, value]) => (
+              <View key={label} style={styles.infoRow}>
+                <Text style={styles.infoLabel}>{label}</Text>
+                <Text style={styles.infoValue}>{value}</Text>
+              </View>
+            ))}
+            <Text style={styles.infoDesc}>{jobDetails.description}</Text>
+          </View>
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -145,8 +167,9 @@ const styles = StyleSheet.create({
   statNum: { fontSize: 22, fontWeight: '600', color: '#656D76', textAlign: 'center', letterSpacing: 0.5 },
   statLabel: { fontSize: 12, color: '#9EA7B3', letterSpacing: 0.5 },
 
+  bottomArea: { flex: 1, position: 'relative' },
   bottomBg: {
-    position: 'absolute', bottom: 0, left: 0, right: 0, top: '55%',
+    position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
     backgroundColor: '#fff', borderTopLeftRadius: 20, borderTopRightRadius: 20,
   },
   bottomCard: { flex: 1 },
@@ -157,6 +180,10 @@ const styles = StyleSheet.create({
     shadowColor: '#000', shadowOffset: { width: 1, height: 1 }, shadowOpacity: 0.07, shadowRadius: 5, elevation: 2,
     marginBottom: 12,
   },
+  infoRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 5 },
+  infoLabel: { fontSize: 13, color: '#7B838D' },
+  infoValue: { fontSize: 13, fontWeight: '500', color: '#000' },
+  infoDesc: { fontSize: 13, color: '#7B838D', lineHeight: 20, marginTop: 8 },
   prefHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 9 },
   prefTitle: { fontSize: 14, fontWeight: '500', color: '#000' },
   prefDivider: { height: 0.5, backgroundColor: '#F1F2F4', marginBottom: 9 },
