@@ -121,119 +121,101 @@ export default function CandidateScreen({ navigation, route }) {
         <View style={{ width: 24 }} />
       </View>
 
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
-        {/* Top section */}
-        <View style={styles.topSection}>
-          {/* Profile */}
-          <View style={styles.profile}>
-            <View style={styles.avatarLg}>
-              <Text style={styles.avatarLgT}>{initial}</Text>
-            </View>
-            <View style={{ gap: 4 }}>
-              <Text style={styles.nameLg}>{c.name}</Text>
-              <Text style={styles.titleLg}>{c.company} · {c.title}</Text>
-            </View>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        {/* Profile */}
+        <View style={styles.profile}>
+          <View style={styles.avatarLg}>
+            <Text style={styles.avatarLgT}>{initial}</Text>
           </View>
-
-
-          {/* AI Reason */}
-          <View style={styles.aiReasonRow}>
-            <View style={styles.aiReasonIconArea}>
-              <Image source={require('../assets/agent-avatar.png')} style={styles.aiReasonAvatar} />
-              <View style={styles.aiQuoteWrap}><QuoteIcon /></View>
-            </View>
-            <Text style={styles.aiReasonText}>{c.aiReason}</Text>
+          <View style={{ gap: 4 }}>
+            <Text style={styles.nameLg}>{c.name}</Text>
+            <Text style={styles.titleLg}>{c.company} · {c.title}</Text>
           </View>
         </View>
 
-        {/* Bottom white card: resume + work exp */}
-        <View style={styles.bottomCard}>
-          {/* Resume row */}
-          <View style={styles.resumeRow}>
-            <View style={styles.resumeLeftCol}>
-              {resumeText && (
-                <View style={[styles.resumeTag, { backgroundColor: resumeTagBg }]}>
-                  <Text style={[styles.resumeTagT, { color: resumeTagColor }]}>{resumeText}</Text>
-                </View>
-              )}
-              {matchStatus && (
-                <View style={styles.resumeMatchRow}>
-                  <View style={[styles.resumeMatchDot, { backgroundColor: matchStatus.type === 'green' ? '#02A87E' : matchStatus.type === 'orange' ? '#E19D16' : '#7B838D' }]} />
-                  <Text style={[styles.resumeMatchT, { color: matchStatus.type === 'green' ? '#02A87E' : matchStatus.type === 'orange' ? '#E19D16' : '#7B838D' }]}>{matchStatus.text}</Text>
-                </View>
-              )}
-            </View>
-            {resumeAction === 'request' && (
-              <TouchableOpacity style={styles.resumeActionBtn} onPress={handleRequestResume}>
-                <Text style={styles.resumeActionBtnT}>请求简历</Text>
-              </TouchableOpacity>
-            )}
-            {resumeAction === 'view' && (
-              <TouchableOpacity style={styles.resumeActionBtn}>
-                <Text style={styles.resumeActionBtnT}>查看简历</Text>
-              </TouchableOpacity>
-            )}
-            {resumeAction === 'waiting' && (
-              <Text style={styles.resumeWaitingT}>等待授权中</Text>
+        {/* AI Reason */}
+        <View style={styles.aiReasonRow}>
+          <View style={styles.aiReasonIconArea}>
+            <Image source={require('../assets/agent-avatar.png')} style={styles.aiReasonAvatar} />
+            <View style={styles.aiQuoteWrap}><QuoteIcon /></View>
+          </View>
+          <Text style={styles.aiReasonText}>{c.aiReason}</Text>
+        </View>
+
+        {/* Resume row */}
+        <View style={styles.resumeRow}>
+          <View style={styles.resumeLeftCol}>
+            {matchStatus && (
+              <View style={styles.resumeMatchRow}>
+                <View style={[styles.resumeMatchDot, { backgroundColor: matchStatus.type === 'green' ? '#02A87E' : matchStatus.type === 'orange' ? '#E19D16' : '#7B838D' }]} />
+                <Text style={[styles.resumeMatchT, { color: matchStatus.type === 'green' ? '#02A87E' : matchStatus.type === 'orange' ? '#E19D16' : '#7B838D' }]}>{matchStatus.text}</Text>
+              </View>
             )}
           </View>
+          {resumeAction === 'request' && (
+            <TouchableOpacity style={styles.resumeActionBtn} onPress={handleRequestResume}>
+              <Text style={styles.resumeActionBtnT}>请求简历</Text>
+            </TouchableOpacity>
+          )}
+          {resumeAction === 'view' && (
+            <TouchableOpacity style={styles.resumeActionBtn}>
+              <Text style={styles.resumeActionBtnT}>查看简历</Text>
+            </TouchableOpacity>
+          )}
+          {resumeAction === 'waiting' && (
+            <Text style={styles.resumeWaitingT}>等待授权中</Text>
+          )}
+        </View>
 
-          {/* Skills */}
-          {/* Education */}
+        {/* 资格证书 */}
+        <View style={styles.expSection}>
+          <View style={styles.expTitleRow}>
+            <View style={styles.expTitleBar} />
+            <Text style={styles.expTitleText}>资格证书</Text>
+          </View>
+          <View style={styles.skillsRow}>
+            {['CET-6', '软件设计师', 'AWS 架构师'].map(cert => (
+              <View key={cert} style={styles.skillTag}><Text style={styles.skillTagT}>{cert}</Text></View>
+            ))}
+          </View>
+        </View>
+
+        {/* 教育背景 */}
+        {c.education && c.education.length > 0 && (
           <View style={styles.expSection}>
             <View style={styles.expTitleRow}>
               <View style={styles.expTitleBar} />
               <Text style={styles.expTitleText}>教育背景</Text>
             </View>
-            <View style={styles.expItem}>
-              <View style={styles.expItemTop}>
-                <View style={styles.expCompanyLeft}>
-                  <View style={[styles.expLogo, { backgroundColor: '#1677FF' }]}>
-                    <Text style={[styles.expLogoT, { color: '#fff' }]}>北</Text>
-                  </View>
-                  <Text style={styles.expCompany}>{c.edu || '本科'} · 计算机科学</Text>
-                </View>
-                <Text style={styles.expDate}>2016-2020</Text>
-              </View>
-              <Text style={styles.expRole}>北京大学</Text>
-            </View>
-          </View>
-
-          {/* Certificates */}
-          <View style={styles.expSection}>
-            <View style={styles.expTitleRow}>
-              <View style={styles.expTitleBar} />
-              <Text style={styles.expTitleText}>资格证书</Text>
-            </View>
-            <View style={styles.skillsRow}>
-              {['CET-6', '软件设计师', 'AWS 架构师'].map(cert => (
-                <View key={cert} style={styles.skillTag}><Text style={styles.skillTagT}>{cert}</Text></View>
-              ))}
-            </View>
-          </View>
-
-          {/* Work Experience */}
-          <View style={styles.expSection}>
-            <View style={styles.expTitleRow}>
-              <View style={styles.expTitleBar} />
-              <Text style={styles.expTitleText}>工作经历</Text>
-            </View>
-            {(c.workHistory || [{ company: c.company, title: c.title, period: '至今' }]).flatMap((w, i) => [
-              i > 0 ? <View key={`d${i}`} style={styles.expDivider} /> : null,
-              <View key={i} style={styles.expItem}>
+            {c.education.flatMap((e, i) => [
+              i > 0 ? <View key={`ed${i}`} style={styles.expDivider} /> : null,
+              <View key={i} style={styles.expItemSimple}>
                 <View style={styles.expItemTop}>
-                  <View style={styles.expCompanyLeft}>
-                    <View style={[styles.expLogo, { backgroundColor: getCompanyColor(w.company) }]}>
-                      <Text style={[styles.expLogoT, { color: getCompanyTextColor(w.company) }]}>{w.company.charAt(0)}</Text>
-                    </View>
-                    <Text style={styles.expCompany}>{w.company}</Text>
-                  </View>
-                  <Text style={styles.expDate}>{w.period}</Text>
+                  <Text style={styles.expCompany}>{e.school}</Text>
+                  <Text style={styles.expDate}>{e.period}</Text>
                 </View>
-                <Text style={styles.expRole}>{w.title}</Text>
+                <Text style={styles.expRoleGray}>{e.degree} · {e.major}</Text>
               </View>,
             ])}
           </View>
+        )}
+
+        {/* Work Experience */}
+        <View style={styles.expSection}>
+          <View style={styles.expTitleRow}>
+            <View style={styles.expTitleBar} />
+            <Text style={styles.expTitleText}>工作经历</Text>
+          </View>
+          {(c.workHistory || [{ companyType: c.company, title: c.title, period: '至今' }]).flatMap((w, i) => [
+            i > 0 ? <View key={`d${i}`} style={styles.expDivider} /> : null,
+            <View key={i} style={styles.expItemSimple}>
+              <View style={styles.expItemTop}>
+                <Text style={styles.expCompany}>{w.companyType || w.company}</Text>
+                <Text style={styles.expDate}>{w.period}</Text>
+              </View>
+              <Text style={styles.expRoleGray}>{w.title}</Text>
+            </View>,
+          ])}
         </View>
 
       </ScrollView>
@@ -302,7 +284,7 @@ const styles = StyleSheet.create({
   nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 9, zIndex: 1 },
   backBtn: { width: 24, height: 24, alignItems: 'center', justifyContent: 'center' },
   navTitle: { fontSize: 16, fontWeight: '600', color: '#171718' },
-  topSection: { flexDirection: 'column', gap: 20, paddingHorizontal: 16, paddingTop: 16 },
+  scrollContent: { gap: 20, paddingHorizontal: 16, paddingTop: 16, paddingBottom: 40, flexGrow: 1 },
   profile: { flexDirection: 'row', alignItems: 'center', gap: 16 },
   avatarLg: { width: 46, height: 46, borderRadius: 23, backgroundColor: '#e8e8ed', alignItems: 'center', justifyContent: 'center' },
   avatarLgT: { fontSize: 18, fontWeight: '500', color: '#BBC1C9' },
@@ -331,6 +313,8 @@ const styles = StyleSheet.create({
   expDate: { fontSize: 12, fontWeight: '300', color: '#78787D', lineHeight: 21 },
   expRole: { fontSize: 13, fontWeight: '400', color: '#000', letterSpacing: 0.5, lineHeight: 18, paddingLeft: 29 },
   expDivider: { height: 0.5, backgroundColor: '#F1F2F4', marginLeft: 12 },
+  expItemSimple: { gap: 4, paddingLeft: 12 },
+  expRoleGray: { fontSize: 13, color: '#656D76', letterSpacing: 0.5, lineHeight: 18 },
   aiReasonRow: { flexDirection: 'row', alignItems: 'center' },
   aiReasonIconArea: { position: 'relative', marginRight: 4 },
   aiReasonAvatar: { width: 20, height: 20, borderRadius: 10 },
@@ -345,7 +329,6 @@ const styles = StyleSheet.create({
   },
   resumeRow: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 4, paddingBottom: 16,
   },
   resumeLeftCol: { flexDirection: 'column', gap: 3 },
   resumeTag: { backgroundColor: '#EBFAF5', borderRadius: 999, paddingHorizontal: 4, paddingVertical: 2, height: 18, alignSelf: 'flex-start', alignItems: 'center', justifyContent: 'center' },

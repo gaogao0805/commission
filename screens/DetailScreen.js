@@ -68,7 +68,13 @@ export default function DetailScreen({ navigation }) {
 
         {/* Job details */}
         <View style={styles.infoSection}>
-          <Text style={styles.infoTitle}>岗位详情</Text>
+          <View style={styles.prefHeader}>
+            <Text style={styles.prefTitle}>岗位详情</Text>
+            <Svg width={20} height={20} viewBox="0 0 20 20" fill="none">
+              <Path d="M11.2575 3.17238C12.1522 2.27654 13.6032 2.27586 14.4978 3.17043L16.5749 5.24758C17.4614 6.13448 17.4702 7.57039 16.5945 8.46926L8.90109 16.3628C8.31265 16.9665 7.5052 17.3072 6.66281 17.3071L4.36887 17.3062C3.30368 17.3059 2.45313 16.4191 2.49777 15.354L2.59641 13.0122C2.62944 12.2294 2.9559 11.4866 3.50949 10.9321L11.2575 3.17238ZM17.0915 15.9966C17.4364 15.9967 17.7163 16.2766 17.7165 16.6216C17.7165 16.9669 17.4365 17.2475 17.0915 17.2476H11.99C11.645 17.2475 11.365 16.9669 11.365 16.6216C11.3652 16.2766 11.6451 15.9967 11.99 15.9966H17.0915ZM4.39231 11.8159C4.06021 12.1486 3.86428 12.5944 3.84445 13.064L3.7468 15.4058C3.73213 15.7607 4.01582 16.0562 4.37082 16.0562H6.66477C7.16994 16.056 7.65364 15.8518 8.00656 15.4898L13.448 9.90676L9.87082 6.32863L4.39231 11.8159ZM13.614 4.05519C13.2074 3.64859 12.548 3.64904 12.1413 4.05617L10.7546 5.44387L14.321 9.01027L15.6999 7.59719C16.0981 7.18863 16.0941 6.53553 15.6911 6.13234L13.614 4.05519Z" fill="#7B838D"/>
+            </Svg>
+          </View>
+          <View style={styles.prefDivider} />
           {[
             ['岗位名称', jobDetails.position],
             ['薪资范围', jobDetails.salary, '#4f46e5'],
@@ -136,11 +142,12 @@ const styles = StyleSheet.create({
   catNumber: { fontSize: 22, fontWeight: '700', marginBottom: 2 },
   catLabel: { fontSize: 12, color: '#7B838D', fontWeight: '500' },
   infoSection: {
-    marginHorizontal: 16, marginBottom: 12, padding: 16, borderRadius: 16,
-    backgroundColor: '#fff',
-    shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.07, shadowRadius: 4, elevation: 2,
+    marginHorizontal: 16, marginBottom: 12, paddingHorizontal: 16, paddingVertical: 14,
+    borderRadius: 12, borderWidth: 1, borderColor: 'rgba(255,255,255,0.8)',
+    backgroundColor: 'rgba(255,255,255,0.85)',
+    shadowColor: '#000', shadowOffset: { width: 1, height: 1 }, shadowOpacity: 0.07, shadowRadius: 5, elevation: 2,
   },
-  infoTitle: { fontSize: 13, fontWeight: '600', color: '#000', marginBottom: 12 },
+  infoTitle: { fontSize: 14, fontWeight: '500', color: '#000' },
   infoRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 6 },
   infoLabel: { fontSize: 13, color: '#7B838D' },
   infoValue: { fontSize: 13, fontWeight: '500', color: '#000' },
