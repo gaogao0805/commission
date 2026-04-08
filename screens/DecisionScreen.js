@@ -330,13 +330,19 @@ export default function DecisionScreen({ navigation, route }) {
 
       <View style={styles.actions}>
         <TouchableOpacity style={[styles.actionBtn, styles.rejectBtn]} onPress={() => handleButton('reject')}>
-          <Text style={{ fontSize: 28, color: '#E8705A', lineHeight: 32 }}>✕</Text>
+          <Svg width={32} height={32} viewBox="0 0 32 32" fill="none">
+            <Path d="M8.92893 9.07107L23.0711 23.2132M23.0711 9.07107L8.92893 23.2132" stroke="#F48974" strokeWidth={2} strokeLinecap="round" />
+          </Svg>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.actionBtn, styles.passBtn]} onPress={() => handleButton('pass')}>
-          <Text style={{ fontSize: 28, color: '#fff', lineHeight: 32 }}>✓</Text>
+          <Svg width={32} height={32} viewBox="0 0 32 32" fill="none">
+            <Path d="M24 9.3335L12.5714 22.6668L8 17.3335" stroke="white" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+          </Svg>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.actionBtn, styles.pendBtn]} onPress={() => handleButton('pending')}>
-          <Text style={{ fontSize: 28, color: '#D4A840', lineHeight: 32 }}>○</Text>
+          <Svg width={32} height={32} viewBox="0 0 32 32" fill="none">
+            <Circle cx={16} cy={16} r={8} stroke="#F4D775" strokeWidth={2} />
+          </Svg>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
