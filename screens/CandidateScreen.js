@@ -266,14 +266,22 @@ export default function CandidateScreen({ navigation, route }) {
             {options.map(o => (
               <TouchableOpacity
                 key={o.key}
-                style={[styles.option, dec === o.key && { backgroundColor: o.bg, borderColor: o.border }]}
+                style={[styles.option, { borderColor: dec === o.key ? o.border : '#F1F2F4' }, dec === o.key && { backgroundColor: o.bg }]}
                 onPress={() => handleDecision(o.key)}
               >
                 <View style={styles.optionLeft}>
-                  <View style={[styles.optionDot, { backgroundColor: o.color }]} />
+                  {o.key === 'pass' && <Svg width={20} height={20} viewBox="0 0 32 32" fill="none"><Path d="M24 9.3335L12.5714 22.6668L8 17.3335" stroke={o.color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" /></Svg>}
+                  {o.key === 'reject' && <Svg width={20} height={20} viewBox="0 0 32 32" fill="none"><Path d="M8.92893 9.07107L23.0711 23.2132M23.0711 9.07107L8.92893 23.2132" stroke={o.color} strokeWidth={2} strokeLinecap="round" /></Svg>}
+                  {o.key === 'pending' && <Svg width={20} height={20} viewBox="0 0 32 32" fill="none"><Circle cx={16} cy={16} r={8} stroke={o.color} strokeWidth={2} /></Svg>}
                   <Text style={[styles.optionLabel, { color: o.color }, dec === o.key && { fontWeight: '600' }]}>{o.label}</Text>
                 </View>
-                {dec === o.key && <View style={[styles.optionCheck, { backgroundColor: o.color }]}><Text style={{ color: '#fff', fontSize: 12, fontWeight: '700' }}>✓</Text></View>}
+                {dec === o.key && (
+                  <View style={[styles.optionCheck, { backgroundColor: o.color }]}>
+                    <Svg width={14} height={14} viewBox="0 0 32 32" fill="none">
+                      <Path d="M24 9.3335L12.5714 22.6668L8 17.3335" stroke="white" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
+                    </Svg>
+                  </View>
+                )}
               </TouchableOpacity>
             ))}
             <TouchableOpacity style={styles.cancel} onPress={() => setSheetOpen(false)}>
@@ -360,7 +368,7 @@ const styles = StyleSheet.create({
   sheetGradBg: { position: 'absolute', top: 0, left: 0, right: 0, height: 120 },
   handle: { width: 36, height: 4, borderRadius: 2, backgroundColor: '#DDE2E8', alignSelf: 'center', marginTop: 10, marginBottom: 4 },
   sheetTitle: { textAlign: 'center', fontSize: 13, color: '#BBC1C9', paddingVertical: 10 },
-  option: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 16, borderRadius: 16, marginBottom: 8, borderWidth: 1, borderColor: '#DDE2E8' },
+  option: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 16, borderRadius: 16, marginBottom: 8, borderWidth: 0.5, borderColor: '#F1F2F4' },
   optionLeft: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   optionDot: { width: 10, height: 10, borderRadius: 5 },
   optionLabel: { fontSize: 16, fontWeight: '500' },
