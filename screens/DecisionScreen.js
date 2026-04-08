@@ -121,6 +121,15 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onRequestResume, c
           ))}
         </View>
 
+        {/* Agent語 */}
+        <View style={[styles.agentRow, styles.sectionPad]}>
+          <View style={styles.agentIconArea}>
+            <Image source={require('../assets/agent-avatar.png')} style={styles.agentAvatar} />
+            <View style={styles.agentQuoteWrap}><QuoteIcon /></View>
+          </View>
+          <Text style={styles.agentText}>{c.aiReason}</Text>
+        </View>
+
         {/* Resume status row */}
         <View style={styles.resumeStatusRow}>
           <View style={styles.resumeStatusLeft}>
@@ -166,15 +175,6 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onRequestResume, c
               <Text style={styles.expRole}>{w.title}</Text>
             </View>,
           ])}
-        </View>
-
-        {/* Agent語 */}
-        <View style={[styles.agentRow, styles.sectionPad]}>
-          <View style={styles.agentIconArea}>
-            <Image source={require('../assets/agent-avatar.png')} style={styles.agentAvatar} />
-            <View style={styles.agentQuoteWrap}><QuoteIcon /></View>
-          </View>
-          <Text style={styles.agentText}>{c.aiReason}</Text>
         </View>
       </ScrollView>
     </Animated.View>
