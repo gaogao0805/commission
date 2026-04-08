@@ -85,9 +85,12 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onRequestResume, c
   return (
     <Animated.View
       style={[styles.swipeCard, {
-        transform: isFront ? [{ translateX: pan.x }, { translateY: pan.y }, { rotate }]
-          : [{ scale: behind === 1 ? 0.95 : 0.9 }, { translateY: behind === 1 ? 12 : 24 }],
-        opacity: isFront ? 1 : behind === 1 ? 0.5 : 0.3,
+        transform: isFront
+          ? [{ translateX: pan.x }, { translateY: pan.y }, { rotate }]
+          : behind === 1
+            ? [{ rotate: '-1.2deg' }]
+            : [{ rotate: '2.02deg' }],
+        opacity: isFront ? 1 : 0.8,
         zIndex: isFront ? 10 : behind === 1 ? 5 : 1,
       }]}
       {...(isFront ? panResponder.panHandlers : {})}
@@ -268,24 +271,15 @@ export default function DecisionScreen({ navigation, route }) {
       </View>
 
       <View style={styles.actions}>
-        <View style={styles.actionWrap}>
-          <TouchableOpacity style={[styles.actionBtn, styles.rejectBtn]} onPress={() => handleButton('reject')}>
-            <Text style={{ fontSize: 24, color: '#dc2626' }}>✕</Text>
-          </TouchableOpacity>
-          <Text style={[styles.actionLabel, { color: '#dc2626' }]}>拒绝</Text>
-        </View>
-        <View style={styles.actionWrap}>
-          <TouchableOpacity style={[styles.actionBtn, styles.pendBtn]} onPress={() => handleButton('pending')}>
-            <Text style={{ fontSize: 24, color: '#d97706' }}>—</Text>
-          </TouchableOpacity>
-          <Text style={[styles.actionLabel, { color: '#d97706' }]}>待定</Text>
-        </View>
-        <View style={styles.actionWrap}>
-          <TouchableOpacity style={[styles.actionBtn, styles.passBtn]} onPress={() => handleButton('pass')}>
-            <Text style={{ fontSize: 24, color: '#fff' }}>✓</Text>
-          </TouchableOpacity>
-          <Text style={[styles.actionLabel, { color: '#059669' }]}>通过</Text>
-        </View>
+        <TouchableOpacity style={[styles.actionBtn, styles.rejectBtn]} onPress={() => handleButton('reject')}>
+          <Text style={{ fontSize: 28, color: '#E8705A', lineHeight: 32 }}>✕</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.actionBtn, styles.passBtn]} onPress={() => handleButton('pass')}>
+          <Text style={{ fontSize: 28, color: '#fff', lineHeight: 32 }}>✓</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.actionBtn, styles.pendBtn]} onPress={() => handleButton('pending')}>
+          <Text style={{ fontSize: 28, color: '#D4A840', lineHeight: 32 }}>○</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -335,8 +329,8 @@ const styles = StyleSheet.create({
   expTitleRow: { flexDirection: 'row', alignItems: 'stretch', gap: 8 },
   expTitleBar: { width: 4, borderRadius: 999, backgroundColor: '#6FCDAE' },
   expTitleText: { fontSize: 16, fontWeight: '600', color: '#000', lineHeight: 21 },
-  expItem: { gap: 4, paddingLeft: 12, alignSelf: 'stretch' },
-  expItemTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', height: 21, flex: 1 },
+  expItem: { gap: 4, paddingLeft: 12 },
+  expItemTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', height: 21 },
   expCompanyLeft: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   expLogo: { width: 21, height: 21, borderRadius: 4, alignItems: 'center', justifyContent: 'center' },
   expLogoT: { fontSize: 10, fontWeight: '600' },
@@ -349,13 +343,14 @@ const styles = StyleSheet.create({
   agentAvatar: { width: 20, height: 20, borderRadius: 10 },
   agentQuoteWrap: { position: 'absolute', top: -8, right: -14 },
   agentText: { flex: 1, fontSize: 13, color: '#9EB3B3', letterSpacing: 0.5, lineHeight: 18 },
-  actions: { flexDirection: 'row', justifyContent: 'center', gap: 32, paddingVertical: 16, paddingBottom: 40 },
-  actionWrap: { alignItems: 'center', gap: 8 },
-  actionBtn: { width: 56, height: 56, borderRadius: 28, alignItems: 'center', justifyContent: 'center' },
-  rejectBtn: { backgroundColor: '#fff', borderWidth: 2, borderColor: 'rgba(220,38,38,0.2)' },
-  pendBtn: { backgroundColor: '#fff', borderWidth: 2, borderColor: 'rgba(217,119,6,0.2)' },
-  passBtn: { backgroundColor: '#059669', borderWidth: 2, borderColor: 'rgba(5,150,105,0.2)' },
-  actionLabel: { fontSize: 11, fontWeight: '600' },
+  actions: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 34, paddingVertical: 16, paddingBottom: 40 },
+  actionBtn: {
+    width: 56, height: 56, borderRadius: 28, alignItems: 'center', justifyContent: 'center',
+    shadowColor: '#000', shadowOffset: { width: 15, height: 13 }, shadowOpacity: 0.1, shadowRadius: 30, elevation: 4,
+  },
+  rejectBtn: { backgroundColor: '#fff', borderWidth: 1, borderColor: '#F1C4BA' },
+  pendBtn: { backgroundColor: '#fff', borderWidth: 1, borderColor: '#F1E8BA' },
+  passBtn: { backgroundColor: '#6FCDAE' },
   allDone: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 },
   doneIcon: { width: 80, height: 80, borderRadius: 40, backgroundColor: 'rgba(5,150,105,0.08)', alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
   doneText: { fontSize: 18, fontWeight: '600', color: '#1a1a2e', marginBottom: 6 },
