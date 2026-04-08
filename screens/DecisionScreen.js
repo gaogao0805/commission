@@ -167,6 +167,15 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onRequestResume, c
             </View>,
           ])}
         </View>
+
+        {/* Agent語 */}
+        <View style={styles.agentRow}>
+          <View style={styles.agentIconArea}>
+            <Image source={require('../assets/agent-avatar.png')} style={styles.agentAvatar} />
+            <View style={styles.agentQuoteWrap}><QuoteIcon /></View>
+          </View>
+          <Text style={styles.agentText}>{c.aiReason}</Text>
+        </View>
       </ScrollView>
     </Animated.View>
   );
@@ -308,11 +317,11 @@ const styles = StyleSheet.create({
   swipeAvatarT: { fontSize: 18, fontWeight: '500', color: '#BBC1C9' },
   swipeName: { fontSize: 20, fontWeight: '500', color: '#000', letterSpacing: 0.5, lineHeight: 24 },
   swipeTitle: { fontSize: 16, fontWeight: '400', color: '#000', letterSpacing: 0.5, lineHeight: 24 },
-  statsRow: { flexDirection: 'row', backgroundColor: '#FDFDFD', paddingHorizontal: 15, paddingVertical: 8 },
+  statsRow: { flexDirection: 'row', backgroundColor: '#FDFDFD', paddingHorizontal: 15, paddingVertical: 8, alignSelf: 'stretch', marginHorizontal: -20 },
   statCol: { flex: 1, alignItems: 'center', gap: 2 },
   statVal: { fontSize: 14, fontWeight: '600', color: '#000', lineHeight: 21 },
   statLabel: { fontSize: 12, color: '#9EA7B3', letterSpacing: 0.5 },
-  resumeStatusRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 4 },
+  resumeStatusRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', alignSelf: 'stretch', marginHorizontal: -20, paddingHorizontal: 18 },
   resumeStatusLeft: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   rTagDot: { width: 4, height: 4, borderRadius: 2 },
   rTagText: { fontSize: 13, fontWeight: '500', letterSpacing: 0.5 },
@@ -334,6 +343,11 @@ const styles = StyleSheet.create({
   expDate: { fontSize: 12, fontWeight: '300', color: '#78787D', lineHeight: 21 },
   expRole: { fontSize: 13, fontWeight: '400', color: '#000', letterSpacing: 0.5, lineHeight: 18, paddingLeft: 29 },
   expDivider: { height: 0.5, backgroundColor: '#F1F2F4', marginLeft: 12 },
+  agentRow: { flexDirection: 'row', alignItems: 'center' },
+  agentIconArea: { position: 'relative', marginRight: 4 },
+  agentAvatar: { width: 20, height: 20, borderRadius: 10 },
+  agentQuoteWrap: { position: 'absolute', top: -8, right: -14 },
+  agentText: { flex: 1, fontSize: 13, color: '#9EB3B3', letterSpacing: 0.5, lineHeight: 18 },
   actions: { flexDirection: 'row', justifyContent: 'center', gap: 32, paddingVertical: 16, paddingBottom: 40 },
   actionWrap: { alignItems: 'center', gap: 8 },
   actionBtn: { width: 56, height: 56, borderRadius: 28, alignItems: 'center', justifyContent: 'center' },
