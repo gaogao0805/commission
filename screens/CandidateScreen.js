@@ -275,13 +275,6 @@ export default function CandidateScreen({ navigation, route }) {
                   {o.key === 'pending' && <Svg width={20} height={20} viewBox="0 0 32 32" fill="none"><Circle cx={16} cy={16} r={8} stroke={o.color} strokeWidth={2} /></Svg>}
                   <Text style={[styles.optionLabel, { color: o.color }, dec === o.key && { fontWeight: '600' }]}>{o.label}</Text>
                 </View>
-                {dec === o.key && (
-                  <View style={[styles.optionCheck, { backgroundColor: o.color }]}>
-                    <Svg width={14} height={14} viewBox="0 0 32 32" fill="none">
-                      <Path d="M24 9.3335L12.5714 22.6668L8 17.3335" stroke="white" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
-                    </Svg>
-                  </View>
-                )}
               </TouchableOpacity>
             ))}
             <TouchableOpacity style={styles.cancel} onPress={() => setSheetOpen(false)}>
