@@ -37,25 +37,33 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
   const pan = useRef(new Animated.ValueXY()).current;
   const pendOp = useRef(new Animated.Value(0)).current;
 
+  // Refs to always have latest values inside PanResponder closure
+  const isFrontRef = useRef(isFront);
+  isFrontRef.current = isFront;
+  const onSwipeRef = useRef(onSwipe);
+  onSwipeRef.current = onSwipe;
+  const onNavigateRef = useRef(onNavigate);
+  onNavigateRef.current = onNavigate;
+
   const animateOut = useCallback((decision) => {
     const toX = decision === 'pass' ? SCREEN_WIDTH * 1.5 : decision === 'reject' ? -SCREEN_WIDTH * 1.5 : 0;
     const toY = decision === 'pending' ? 800 : 0;
-    Animated.timing(pan, { toValue: { x: toX, y: toY }, duration: 350, useNativeDriver: false }).start(() => onSwipe(decision));
-  }, [onSwipe]);
+    Animated.timing(pan, { toValue: { x: toX, y: toY }, duration: 350, useNativeDriver: false }).start(() => onSwipeRef.current(decision));
+  }, []);
 
   const animateNavigate = useCallback((direction) => {
     const toX = direction === 'next' ? -SCREEN_WIDTH * 1.5 : SCREEN_WIDTH * 1.5;
     Animated.timing(pan, { toValue: { x: toX, y: 0 }, duration: 300, useNativeDriver: false }).start(() => {
       pan.setValue({ x: 0, y: 0 });
-      onNavigate(direction);
+      onNavigateRef.current(direction);
     });
-  }, [onNavigate]);
+  }, []);
 
   React.useImperativeHandle(cardRef, () => ({ animateOut }));
 
   const panResponder = useRef(PanResponder.create({
-    onStartShouldSetPanResponder: () => isFront,
-    onMoveShouldSetPanResponder: (_, g) => isFront && (Math.abs(g.dx) > 8 || Math.abs(g.dy) > 8),
+    onStartShouldSetPanResponder: () => isFrontRef.current,
+    onMoveShouldSetPanResponder: (_, g) => isFrontRef.current && (Math.abs(g.dx) > 8 || Math.abs(g.dy) > 8),
     onPanResponderMove: (_, g) => {
       pan.setValue({ x: g.dx, y: Math.max(0, g.dy) });
       if (passProgress) passProgress.setValue(0);
@@ -67,7 +75,7 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
       else if (g.dy > SWIPE_DOWN_THRESHOLD && Math.abs(g.dx) < 50) animateOut('pending');
       else {
         Animated.spring(pan, { toValue: { x: 0, y: 0 }, useNativeDriver: false }).start();
-        [pendOp, passProgress].filter(Boolean).forEach(o => Animated.timing(o, { toValue: 0, duration: 200, useNativeDriver: false }).start());
+        pendOp.setValue(0);
       }
     },
   })).current;

@@ -129,9 +129,9 @@ export default function CandidateScreen({ navigation, route }) {
             <View style={styles.avatarLg}>
               <Text style={styles.avatarLgT}>{initial}</Text>
             </View>
-            <View style={{ gap: 5 }}>
+            <View style={{ gap: 4 }}>
               <Text style={styles.nameLg}>{c.name}</Text>
-              <Text style={styles.titleLg}>{c.title}</Text>
+              <Text style={styles.titleLg}>{c.company} · {c.title}</Text>
             </View>
           </View>
 
@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
   avatarLg: { width: 46, height: 46, borderRadius: 23, backgroundColor: '#e8e8ed', alignItems: 'center', justifyContent: 'center' },
   avatarLgT: { fontSize: 18, fontWeight: '500', color: '#BBC1C9' },
   nameLg: { fontSize: 20, fontWeight: '500', color: '#000', letterSpacing: 0.5 },
-  titleLg: { fontSize: 16, color: '#000', letterSpacing: 0.5 },
+  titleLg: { fontSize: 13, color: '#656D76', letterSpacing: 0.5 },
   statsRow: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 15, paddingVertical: 8 },
   statCol: { flex: 1, alignItems: 'center', gap: 0 },
   statVal: { fontSize: 14, fontWeight: '600', color: '#000', lineHeight: 21, textAlign: 'center' },
