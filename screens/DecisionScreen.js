@@ -33,10 +33,8 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const SWIPE_THRESHOLD = 80;
 const SWIPE_DOWN_THRESHOLD = 100;
 
-function SwipeableCard({ candidate, isFront, behind, onSwipe, onRequestResume, cardRef, passProgress }) {
+function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequestResume, cardRef, passProgress }) {
   const pan = useRef(new Animated.ValueXY()).current;
-  const passOp = useRef(new Animated.Value(0)).current;
-  const rejectOp = useRef(new Animated.Value(0)).current;
   const pendOp = useRef(new Animated.Value(0)).current;
 
   const animateOut = useCallback((decision) => {
@@ -45,6 +43,14 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onRequestResume, c
     Animated.timing(pan, { toValue: { x: toX, y: toY }, duration: 350, useNativeDriver: false }).start(() => onSwipe(decision));
   }, [onSwipe]);
 
+  const animateNavigate = useCallback((direction) => {
+    const toX = direction === 'next' ? -SCREEN_WIDTH * 1.5 : SCREEN_WIDTH * 1.5;
+    Animated.timing(pan, { toValue: { x: toX, y: 0 }, duration: 300, useNativeDriver: false }).start(() => {
+      pan.setValue({ x: 0, y: 0 });
+      onNavigate(direction);
+    });
+  }, [onNavigate]);
+
   React.useImperativeHandle(cardRef, () => ({ animateOut }));
 
   const panResponder = useRef(PanResponder.create({
@@ -52,24 +58,21 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onRequestResume, c
     onMoveShouldSetPanResponder: (_, g) => isFront && (Math.abs(g.dx) > 8 || Math.abs(g.dy) > 8),
     onPanResponderMove: (_, g) => {
       pan.setValue({ x: g.dx, y: Math.max(0, g.dy) });
-      const pv = Math.min(Math.max(g.dx / SWIPE_THRESHOLD, 0), 1);
-      passOp.setValue(pv);
-      if (passProgress) passProgress.setValue(pv);
-      rejectOp.setValue(Math.min(Math.max(-g.dx / SWIPE_THRESHOLD, 0), 1));
+      if (passProgress) passProgress.setValue(0);
       pendOp.setValue(Math.min(Math.max(g.dy / SWIPE_DOWN_THRESHOLD, 0), 1) * Math.max(0, 1 - Math.abs(g.dx) / 200));
     },
     onPanResponderRelease: (_, g) => {
-      if (g.dx > SWIPE_THRESHOLD) animateOut('pass');
-      else if (g.dx < -SWIPE_THRESHOLD) animateOut('reject');
+      if (g.dx > SWIPE_THRESHOLD) animateNavigate('prev');
+      else if (g.dx < -SWIPE_THRESHOLD) animateNavigate('next');
       else if (g.dy > SWIPE_DOWN_THRESHOLD && Math.abs(g.dx) < 50) animateOut('pending');
       else {
         Animated.spring(pan, { toValue: { x: 0, y: 0 }, useNativeDriver: false }).start();
-        [passOp, rejectOp, pendOp, passProgress].filter(Boolean).forEach(o => Animated.timing(o, { toValue: 0, duration: 200, useNativeDriver: false }).start());
+        [pendOp, passProgress].filter(Boolean).forEach(o => Animated.timing(o, { toValue: 0, duration: 200, useNativeDriver: false }).start());
       }
     },
   })).current;
 
-  const rotate = pan.x.interpolate({ inputRange: [-200, 0, 200], outputRange: ['-15deg', '0deg', '15deg'] });
+  const rotate = pan.x.interpolate({ inputRange: [-200, 0, 200], outputRange: ['0deg', '0deg', '0deg'] });
   const c = candidate;
   const initial = c.name.charAt(0);
   const isMale = c.gender === 'male';
@@ -96,11 +99,7 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onRequestResume, c
       {...(isFront ? panResponder.panHandlers : {})}
     >
       {isFront && (
-        <>
-          <Animated.View style={[styles.ind, styles.indPass, { opacity: passOp }]}><Text style={styles.indPassT}>通过</Text></Animated.View>
-          <Animated.View style={[styles.ind, styles.indReject, { opacity: rejectOp }]}><Text style={styles.indRejectT}>拒绝</Text></Animated.View>
-          <Animated.View style={[styles.ind, styles.indPend, { opacity: pendOp }]}><Text style={styles.indPendT}>待定</Text></Animated.View>
-        </>
+        <Animated.View style={[styles.ind, styles.indPend, { opacity: pendOp }]}><Text style={styles.indPendT}>待定</Text></Animated.View>
       )}
       <ScrollView showsVerticalScrollIndicator={false} scrollEnabled={isFront}>
         {/* Profile */}
@@ -213,6 +212,14 @@ export default function DecisionScreen({ navigation, route }) {
 
   const handleButton = (decision) => cardRef.current?.animateOut(decision);
 
+  const handleNavigate = useCallback((direction) => {
+    setIndex(prev => {
+      if (direction === 'next') return Math.min(prev + 1, newList.length - 1);
+      if (direction === 'prev') return Math.max(prev - 1, 0);
+      return prev;
+    });
+  }, [newList.length]);
+
   const handleRequestResume = (id) => {
     updateCandidate(id, { resumeStatus: 'requested' });
     setToast({ visible: true, message: '已发送简历请求', type: 'info' });
@@ -261,6 +268,7 @@ export default function DecisionScreen({ navigation, route }) {
                 key={c.id} candidate={c}
                 isFront={pos === 0} behind={pos}
                 onSwipe={handleSwipe}
+                onNavigate={handleNavigate}
                 onRequestResume={handleRequestResume}
                 passProgress={pos === 0 ? passProgress : undefined}
                 cardRef={pos === 0 ? cardRef : undefined}
