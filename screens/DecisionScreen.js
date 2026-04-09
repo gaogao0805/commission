@@ -33,7 +33,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const SWIPE_THRESHOLD = 80;
 const SWIPE_DOWN_THRESHOLD = 100;
 
-function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequestResume, cardRef, passProgress, isFirst, isLast }) {
+function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequestResume, cardRef, passProgress, isFirst, isLast, expanded, onScrollChange }) {
   const pan = useRef(new Animated.ValueXY()).current;
   const pendOp = useRef(new Animated.Value(0)).current;
 
@@ -51,7 +51,7 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
 
   const animateOut = useCallback((decision) => {
     const toX = decision === 'pass' ? SCREEN_WIDTH * 1.5 : decision === 'reject' ? -SCREEN_WIDTH * 1.5 : 0;
-    const toY = decision === 'pending' ? 800 : 0;
+    const toY = decision === 'pending' ? -800 : 0;
     Animated.timing(pan, { toValue: { x: toX, y: toY }, duration: 350, useNativeDriver: false }).start(() => onSwipeRef.current(decision));
   }, []);
 
@@ -107,20 +107,19 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
   return (
     <Animated.View
       style={[styles.swipeCard, {
-        transform: isFront
-          ? [{ translateX: pan.x }, { translateY: pan.y }, { rotate }]
-          : behind === 1
-            ? [{ scale: 0.875 }, { translateY: -40 }, { rotate: '-1.2deg' }]
-            : [{ scale: 0.665 }, { translateY: -80 }, { rotate: '2.79deg' }],
-        opacity: isFront ? 1 : behind === 1 ? 0.9 : 0.7,
-        zIndex: isFront ? 10 : behind === 1 ? 5 : 1,
+        transform: [{ translateX: pan.x }, { translateY: pan.y }],
+        bottom: expanded ? expanded.interpolate({ inputRange: [0, 1], outputRange: [0, -38] }) : 0,
       }]}
       {...(isFront ? panResponder.panHandlers : {})}
     >
       {isFront && (
         <Animated.View style={[styles.ind, styles.indPend, { opacity: pendOp }]}><Text style={styles.indPendT}>待定</Text></Animated.View>
       )}
-      <ScrollView showsVerticalScrollIndicator={false} scrollEnabled={isFront} contentContainerStyle={styles.cardContent}>
+      <ScrollView showsVerticalScrollIndicator={false} scrollEnabled={isFront} contentContainerStyle={styles.cardContent}
+        onScroll={(e) => onScrollChange?.(e.nativeEvent.contentOffset.y)}
+        onMomentumScrollEnd={(e) => onScrollChange?.(e.nativeEvent.contentOffset.y, true)}
+        onScrollEndDrag={(e) => onScrollChange?.(e.nativeEvent.contentOffset.y, true)}
+        scrollEventThrottle={16}>
         {/* Profile row: avatar left | resume button right */}
         <View style={styles.profileRow}>
           <View style={styles.swipeAvatar}>
@@ -232,14 +231,32 @@ export default function DecisionScreen({ navigation, route }) {
   const candidateId = route.params?.candidateId;
   const cardRef = useRef();
   const passProgress = useRef(new Animated.Value(0)).current;
+  const expanded = useRef(new Animated.Value(0)).current;
+  const isExpanded = useRef(false);
   const [toast, setToast] = useState({ visible: false, message: '', type: '' });
+
+  const handleCardScroll = useCallback((y, isEnd) => {
+    if (y > 30 && !isExpanded.current) {
+      isExpanded.current = true;
+      Animated.spring(expanded, { toValue: 1, useNativeDriver: false, friction: 8 }).start();
+    } else if (isEnd && y <= 0 && isExpanded.current) {
+      isExpanded.current = false;
+      Animated.spring(expanded, { toValue: 0, useNativeDriver: false, friction: 8 }).start();
+    }
+  }, []);
 
   const newList = getNew();
   // If coming from list, start at the tapped candidate's position
   const startIndex = candidateId ? Math.max(0, newList.findIndex(c => c.id === candidateId)) : 0;
   const [index, setIndex] = useState(startIndex);
 
+  const resetExpanded = useCallback(() => {
+    expanded.setValue(0);
+    isExpanded.current = false;
+  }, []);
+
   const handleSwipe = useCallback((decision) => {
+    resetExpanded();
     const c = newList[index];
     if (!c) return;
     updateCandidate(c.id, { recruiterDecision: decision === 'pass' ? 'pass' : decision === 'reject' ? 'reject' : 'pending' });
@@ -262,6 +279,7 @@ export default function DecisionScreen({ navigation, route }) {
   const handleButton = (decision) => cardRef.current?.animateOut(decision);
 
   const handleNavigate = useCallback((direction) => {
+    resetExpanded();
     setIndex(prev => {
       if (direction === 'next') return Math.min(prev + 1, newList.length - 1);
       if (direction === 'prev') return Math.max(prev - 1, 0);
@@ -316,45 +334,62 @@ export default function DecisionScreen({ navigation, route }) {
           {(() => {
             const front = newList[index];
             if (!front) return null;
-            // Always show 3 layers: front + 2 background (from ahead, or fallback to already-seen)
-            const bg1 = newList[index + 1] || newList[index - 1] || front;
-            const bg2 = newList[index + 2] || newList[index - 2] || front;
-            return [bg2, bg1, front].map((c, i) => {
-              const pos = 2 - i; // 2=far bg, 1=near bg, 0=front
-              return (
-                <SwipeableCard
-                  key={`${c.id}-${pos}`} candidate={c}
-                  isFront={pos === 0} behind={pos}
-                  isFirst={index === 0}
-                  isLast={index === newList.length - 1}
-                  onSwipe={handleSwipe}
-                  onNavigate={handleNavigate}
-                  onRequestResume={handleRequestResume}
-                  passProgress={pos === 0 ? passProgress : undefined}
-                  cardRef={pos === 0 ? cardRef : undefined}
-                />
-              );
-            });
+            return (
+              <SwipeableCard
+                key={front.id} candidate={front}
+                isFront={true} behind={0}
+                isFirst={index === 0}
+                isLast={index === newList.length - 1}
+                onSwipe={handleSwipe}
+                onNavigate={handleNavigate}
+                onRequestResume={handleRequestResume}
+                passProgress={passProgress}
+                cardRef={cardRef}
+                expanded={expanded}
+                onScrollChange={handleCardScroll}
+              />
+            );
           })()}
         </View>
       </View>
 
 
-      <View style={styles.hint}>
+      <Animated.View style={[styles.hint, { opacity: expanded.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }) }]}>
         <Text style={styles.hintText}>滑动浏览</Text>
-        <Svg width={14} height={14} viewBox="0 0 12 12" fill="none" style={{ transform: [{ rotate: '90deg' }] }}>
-          <Path d="M5 3L8 6L5 9L5 3Z" fill="#9EA7B3" stroke="#9EA7B3" strokeLinejoin="round" />
+        <Svg width={14} height={14} viewBox="0 0 14 14" fill="none">
+          <Defs>
+            <SvgLinearGradient id="hintArrowGrad" x1="7" y1="2.918" x2="7" y2="11.084" gradientUnits="userSpaceOnUse">
+              <Stop offset="0" stopColor="#9EA7B3" stopOpacity="1" />
+              <Stop offset="1" stopColor="#9EA7B3" stopOpacity="0.42" />
+            </SvgLinearGradient>
+          </Defs>
+          <Path d="M10.9122 3.08882C11.14 3.31663 11.14 3.68524 10.9122 3.91304L7.41215 7.41304C7.18434 7.6408 6.81573 7.64083 6.58794 7.41304L3.08794 3.91304C2.86014 3.68525 2.86017 3.31663 3.08794 3.08882C3.31574 2.86102 3.68435 2.86102 3.91215 3.08882L7.00004 6.17671L10.0879 3.08882C10.3157 2.86102 10.6843 2.86102 10.9122 3.08882ZM10.9122 6.58882C11.14 6.81663 11.14 7.18524 10.9122 7.41304L7.41215 10.913C7.18434 11.1408 6.81573 11.1408 6.58793 10.913L3.08794 7.41304C2.86014 7.18525 2.86017 6.81663 3.08794 6.58882C3.31574 6.36102 3.68435 6.36102 3.91215 6.58882L7.00004 9.67671L10.0879 6.58882C10.3157 6.36102 10.6843 6.36102 10.9122 6.58882Z" fill="url(#hintArrowGrad)" />
         </Svg>
-      </View>
+      </Animated.View>
       <View style={styles.actions}>
-        <TouchableOpacity style={[styles.actionBtn, styles.rejectBtn]} onPress={() => handleButton('reject')}>
-          <Text style={styles.actionBtnT}>拒绝</Text>
+        <TouchableOpacity style={styles.actionItem} activeOpacity={0.6} onPress={() => handleButton('reject')}>
+          <View style={[styles.actionCircle, { borderColor: 'rgba(245,137,115,0.4)' }]}>
+            <Svg width={19} height={19} viewBox="0 0 19 19" fill="none">
+              <Path d="M5.10221 5.18514L13.1834 13.2664M13.1834 5.18514L5.10221 13.2664" stroke="#F58973" strokeWidth={2} strokeLinecap="round" />
+            </Svg>
+          </View>
+          <Text style={styles.actionLabel}>拒绝</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.actionBtn, styles.pendBtn]} onPress={() => handleButton('pending')}>
-          <Text style={styles.actionBtnT}>待定</Text>
+        <TouchableOpacity style={styles.actionItem} activeOpacity={0.6} onPress={() => handleButton('pending')}>
+          <View style={[styles.actionCircle, { borderColor: 'rgba(245,215,115,0.4)' }]}>
+            <Svg width={19} height={19} viewBox="0 0 19 19" fill="none">
+              <Circle cx={9.14272} cy={9.14174} r={4.57143} stroke="#F5D773" strokeWidth={2} />
+            </Svg>
+          </View>
+          <Text style={styles.actionLabel}>待定</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.actionBtn, styles.passBtn]} onPress={() => handleButton('pass')}>
-          <Text style={styles.actionBtnT}>通过</Text>
+        <TouchableOpacity style={styles.actionItem} activeOpacity={0.6} onPress={() => handleButton('pass')}>
+          <View style={[styles.actionCircle, { borderColor: 'rgba(111,205,174,0.4)' }]}>
+            <Svg width={19} height={19} viewBox="0 0 19 19" fill="none">
+              <Path d="M13.7144 5.33203L7.18378 12.9511L4.57153 9.90346" stroke="#6FCDAE" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+            </Svg>
+          </View>
+          <Text style={styles.actionLabel}>通过</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -376,7 +411,6 @@ const styles = StyleSheet.create({
     position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
     backgroundColor: '#fff', borderRadius: 12,
     shadowColor: '#000', shadowOffset: { width: 15, height: 13 }, shadowOpacity: 0.1, shadowRadius: 30, elevation: 5,
-    overflow: 'hidden',
   },
   ind: { position: 'absolute', paddingHorizontal: 20, paddingVertical: 8, borderRadius: 8, borderWidth: 3, zIndex: 20 },
   indPass: { top: 20, right: 20, borderColor: '#059669', backgroundColor: 'rgba(5,150,105,0.1)', transform: [{ rotate: '-15deg' }] },
@@ -437,14 +471,12 @@ const styles = StyleSheet.create({
   agentText: { flex: 1, fontSize: 13, color: '#7B838D', letterSpacing: 0.5, lineHeight: 18 },
   dotRow: { flexDirection: 'row', gap: 2, paddingHorizontal: 0, overflow: 'hidden', height: 19, alignItems: 'flex-end' },
   dot: { width: 2, height: 1, borderRadius: 34, backgroundColor: '#BBC1C9' },
-  hint: { alignItems: 'center', gap: 2, paddingVertical: 8 },
+  hint: { alignItems: 'center', gap: 2, marginTop: 4, paddingBottom: 8 },
   hintText: { fontSize: 14, color: '#9EA7B3' },
-  actions: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 62, paddingVertical: 12, paddingBottom: 32 },
-  actionBtn: { width: 61, height: 32, borderRadius: 999, alignItems: 'center', justifyContent: 'center' },
-  actionBtnT: { fontSize: 16, color: '#fff', letterSpacing: 0.5 },
-  rejectBtn: { backgroundColor: '#F58973' },
-  pendBtn: { backgroundColor: '#F5D773' },
-  passBtn: { backgroundColor: '#6FCDAE' },
+  actions: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 48, paddingBottom: 32, paddingTop: 4 },
+  actionItem: { alignItems: 'center', gap: 6 },
+  actionCircle: { width: 32, height: 32, borderRadius: 16, backgroundColor: '#fff', borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
+  actionLabel: { fontSize: 14, color: '#656D76', letterSpacing: 0.5 },
   allDone: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 },
   doneIcon: { width: 80, height: 80, borderRadius: 40, backgroundColor: 'rgba(5,150,105,0.08)', alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
   doneText: { fontSize: 18, fontWeight: '600', color: '#1a1a2e', marginBottom: 6 },

@@ -1,6 +1,8 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, SafeAreaView } from 'react-native';
-import Svg, { Path, G, Defs, LinearGradient as SvgLG, Stop, Rect } from 'react-native-svg';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, SafeAreaView, Animated } from 'react-native';
+import { Image as RNImage } from 'react-native';
+import Svg, { Path, G, Defs, LinearGradient as SvgLG, Stop, Rect, Circle } from 'react-native-svg';
+import { Dimensions } from 'react-native';
 import { useApp } from '../data/AppContext';
 import { jobDetails, hiringPreferences } from '../data/candidates';
 
@@ -30,15 +32,70 @@ const EditIcon = () => (
   </Svg>
 );
 
+const SCREEN_W = Dimensions.get('window').width;
+const SCALE = SCREEN_W / 375;
+const BG_H = SCREEN_W * 275 / 375;
+const DOTS = [
+  { x: 62, y: 127.5, r: 3.5, op: 0.5 },
+  { x: 107, y: 129.5, r: 3, op: 0.45 },
+  { x: 17.6, y: 96, r: 2.5, op: 0.4 },
+  { x: 45.2, y: 36.6, r: 2.5, op: 0.4 },
+  { x: 126.2, y: 69.6, r: 2.5, op: 0.4 },
+  { x: 170.2, y: 89.6, r: 2.2, op: 0.35 },
+  { x: 362, y: 125.4, r: 4, op: 0.5 },
+  { x: 347.5, y: 105.9, r: 3.5, op: 0.45 },
+  { x: 242.2, y: 72.6, r: 2, op: 0.35 },
+  { x: 188.8, y: 21.2, r: 2.8, op: 0.4 },
+  { x: 215.5, y: 12.9, r: 2, op: 0.35 },
+  { x: 303.8, y: 9.2, r: 4.5, op: 0.5 },
+  { x: 362.2, y: 99.6, r: 2.2, op: 0.35 },
+  { x: 30, y: 60, r: 2, op: 0.35 },
+  { x: 145, y: 45, r: 3, op: 0.4 },
+  { x: 200, y: 110, r: 2.5, op: 0.38 },
+  { x: 290, y: 140, r: 3.2, op: 0.42 },
+  { x: 75, y: 160, r: 2.8, op: 0.4 },
+  { x: 320, y: 160, r: 3, op: 0.38 },
+  { x: 270, y: 95, r: 1.8, op: 0.3 },
+  { x: 350, y: 25, r: 2.5, op: 0.36 },
+];
+
+function WarmBg() {
+  return (
+    <View style={[styles.warmBg, { height: BG_H }]} pointerEvents="none">
+      <Svg width={SCREEN_W} height={BG_H} viewBox="0 0 375 275" preserveAspectRatio="xMidYMid slice">
+        <Defs>
+          <SvgLG id="warmBgGrad" x1="169" y1="0" x2="190.686" y2="245.262" gradientUnits="userSpaceOnUse">
+            <Stop stopColor="#FFE9D5" />
+            <Stop offset="1" stopColor="white" stopOpacity="0" />
+          </SvgLG>
+        </Defs>
+        <Rect width="375" height="275" fill="url(#warmBgGrad)" />
+        {DOTS.map((d, i) => (
+          <Circle key={i} cx={d.x} cy={d.y} r={d.r} fill="#F6D9B9" opacity={d.op} />
+        ))}
+      </Svg>
+    </View>
+  );
+}
+
 export default function DetailScreen({ navigation }) {
-  const { getNew, getPassed, getPending, getRejected } = useApp();
+  const { getNew, getPassed, getPending, getRejected, getResumeUpdateCount } = useApp();
   const newCount = getNew().length;
-  const passCount = getPassed().length;
-  const pendCount = getPending().length;
-  const rejCount = getRejected().length;
+  const passed = getPassed();
+  const pending = getPending();
+  const rejected = getRejected();
+  const passCount = passed.length;
+  const pendCount = pending.length;
+  const rejCount = rejected.length;
+  const newCandidates = getNew();
+  const newNewResume = newCandidates.filter(c => c.hasNewResume && !c.newResumeRead).length;
+  const passNewResume = passed.filter(c => c.hasNewResume && !c.newResumeRead).length;
+  const pendNewResume = pending.filter(c => c.hasNewResume && !c.newResumeRead).length;
+  const rejNewResume = rejected.filter(c => c.hasNewResume && !c.newResumeRead).length;
 
   return (
     <SafeAreaView style={styles.safe}>
+      <WarmBg />
       {/* Nav */}
       <View style={styles.nav}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
@@ -48,58 +105,46 @@ export default function DetailScreen({ navigation }) {
         <View style={{ width: 24 }} />
       </View>
 
-      {/* Gradient strip — fixed decoration behind scroll content */}
-      <View pointerEvents="none" style={styles.gradStrip}>
-        <Svg width="100%" height={345} viewBox="0 0 100 345" preserveAspectRatio="none">
-          <Defs>
-            <SvgLG id="gstrip" x1="0" y1="0" x2="0" y2="1">
-              <Stop offset="0" stopColor="#FFF7F0" stopOpacity="0" />
-              <Stop offset="1" stopColor="#FFEEDE" stopOpacity="1" />
-            </SvgLG>
-          </Defs>
-          <Rect x="0" y="0" width="100" height="345" fill="url(#gstrip)" />
-        </Svg>
-      </View>
 
-      {/* Top warm section — fixed */}
-      <View style={styles.topSection}>
-        <Text style={styles.aiStatus}>AI持续为您匹配优质候选人中……</Text>
-        <View style={styles.pendSection}>
-          <View style={styles.waveWrap} pointerEvents="none">
-            <WaveDecoration />
+      {/* Summary card */}
+      <TouchableOpacity style={styles.summaryCard} activeOpacity={0.8} onPress={() => newCount > 0 && navigation.navigate('NewCandidates')}>
+        <Text style={styles.summaryNum}>{newCount}</Text>
+        <View style={styles.summaryTextCol}>
+          <Text style={styles.summaryTitle}>待处理</Text>
+          <Text style={styles.summarySub}>点击逐个处理，支持滑动切换</Text>
+        </View>
+      </TouchableOpacity>
+
+      {/* Stats row */}
+      <View style={styles.statsRow}>
+        <TouchableOpacity style={styles.statCol} onPress={() => navigation.navigate('Category', { initialTab: 'pass' })}>
+          <View style={styles.statNumWrap}>
+            <Text style={styles.statNum}>{passCount}</Text>
+            {passNewResume > 0 && <View style={styles.statBadge}><Text style={styles.statBadgeT}>简历</Text></View>}
           </View>
-          <TouchableOpacity style={styles.pendRow} activeOpacity={0.8} onPress={() => newCount > 0 && navigation.navigate('NewCandidates')}>
-            <Text style={styles.pendLabel}>待处理</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-              <Text style={styles.pendCount}>{newCount}</Text>
-              <Svg width={12} height={12} viewBox="0 0 12 12" fill="none">
-                <Path d="M5 3L8 6L5 9L5 3Z" fill="#A48341" stroke="#A48341" strokeLinejoin="round" />
-              </Svg>
-            </View>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.statsRow}>
-          {[
-            { label: '通过', count: passCount, tab: 'pass' },
-            { label: '待定', count: pendCount, tab: 'pending' },
-            { label: '拒绝', count: rejCount, tab: 'reject' },
-          ].map(item => (
-            <TouchableOpacity key={item.tab} style={styles.statCol} onPress={() => navigation.navigate('Category', { initialTab: item.tab })}>
-              <View style={{ position: 'relative', alignItems: 'center', justifyContent: 'center' }}>
-                <Text style={styles.statNum}>{item.count}</Text>
-                <Svg style={{ position: 'absolute', left: '100%' }} width={12} height={12} viewBox="0 0 12 12" fill="none">
-                  <Path d="M5 3L8 6L5 9L5 3Z" fill="#BBC1C9" stroke="#BBC1C9" strokeLinejoin="round" />
-                </Svg>
-              </View>
-              <Text style={styles.statLabel}>{item.label}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+          <Text style={styles.statLabel}>通过</Text>
+        </TouchableOpacity>
+        <View style={styles.statDivider} />
+        <TouchableOpacity style={styles.statCol} onPress={() => navigation.navigate('Category', { initialTab: 'pending' })}>
+          <View style={styles.statNumWrap}>
+            <Text style={styles.statNum}>{pendCount}</Text>
+            {pendNewResume > 0 && <View style={styles.statBadge}><Text style={styles.statBadgeT}>简历</Text></View>}
+          </View>
+          <Text style={styles.statLabel}>待定</Text>
+        </TouchableOpacity>
+        <View style={styles.statDivider} />
+        <TouchableOpacity style={styles.statCol} onPress={() => navigation.navigate('Category', { initialTab: 'reject' })}>
+          <View style={styles.statNumWrap}>
+            <Text style={styles.statNum}>{rejCount}</Text>
+            {rejNewResume > 0 && <View style={styles.statBadge}><Text style={styles.statBadgeT}>简历</Text></View>}
+          </View>
+          <Text style={styles.statLabel}>拒绝</Text>
+        </TouchableOpacity>
       </View>
 
       {/* White rounded container — stretches to bottom, internal scroll */}
       <View style={styles.bottomCard}>
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: 16, paddingBottom: 40, gap: 12 }}>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 40, gap: 12 }}>
           <View style={styles.prefCard}>
             <View style={styles.prefHeader}>
               <Text style={styles.prefTitle}>招聘偏好</Text>
@@ -108,9 +153,10 @@ export default function DetailScreen({ navigation }) {
             <View style={styles.prefDivider} />
             <View style={styles.prefList}>
               {hiringPreferences.map((p, i) => (
-                <Text key={i} style={styles.prefText}>
-                  {p.text + ' '}<Text style={styles.prefTag}>#{p.tag}</Text>
-                </Text>
+                <View key={i} style={styles.prefRow}>
+                  <Text style={styles.prefText}>{p.text}</Text>
+                  <Text style={styles.prefTag}>#{p.tag}</Text>
+                </View>
               ))}
             </View>
           </View>
@@ -120,19 +166,21 @@ export default function DetailScreen({ navigation }) {
               <EditIcon />
             </View>
             <View style={styles.prefDivider} />
-            {[
-              ['岗位名称', jobDetails.position],
-              ['薪资范围', jobDetails.salary],
-              ['工作地点', jobDetails.location],
-              ['经验要求', jobDetails.experience],
-              ['学历要求', jobDetails.education],
-            ].map(([label, value]) => (
-              <View key={label} style={styles.infoRow}>
-                <Text style={styles.infoLabel}>{label}</Text>
-                <Text style={styles.infoValue}>{value}</Text>
-              </View>
-            ))}
-            <Text style={styles.infoDesc}>{jobDetails.description}</Text>
+            <View style={styles.prefList}>
+              {[
+                { text: jobDetails.position, tag: '岗位名称' },
+                { text: jobDetails.salary, tag: '薪资范围' },
+                { text: jobDetails.location, tag: '工作地点' },
+                { text: jobDetails.experience, tag: '经验要求' },
+                { text: jobDetails.education, tag: '学历要求' },
+                { text: jobDetails.description, tag: '岗位描述' },
+              ].map((p, i) => (
+                <View key={i} style={styles.prefRow}>
+                  <Text style={styles.prefText}>{p.text}</Text>
+                  <Text style={styles.prefTag}>#{p.tag}</Text>
+                </View>
+              ))}
+            </View>
           </View>
         </ScrollView>
       </View>
@@ -141,34 +189,39 @@ export default function DetailScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#FFF7F0', position: 'relative' },
-  gradStrip: { position: 'absolute', left: '33.33%', top: 0, width: '33.33%', height: 345, zIndex: 0 },
+  safe: { flex: 1, backgroundColor: '#FBFBFB', position: 'relative' },
+  warmBg: { position: 'absolute', top: 0, left: 0, right: 0, zIndex: 0 },
 
-  nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 9 },
+  nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 9, marginBottom: 12 },
   backBtn: { width: 24, height: 24, alignItems: 'center', justifyContent: 'center' },
   navTitle: { fontSize: 16, fontWeight: '600', color: '#171718' },
 
-  topSection: { paddingHorizontal: 16, paddingTop: 12, zIndex: 1 },
 
-  aiStatus: { fontSize: 13, color: '#A48341', letterSpacing: 0.5, fontStyle: 'italic', marginBottom: 20 },
+  summaryCard: {
+    flexDirection: 'row', alignItems: 'center', gap: 16,
+    marginHorizontal: 16, paddingHorizontal: 20, paddingVertical: 6, height: 92,
+    backgroundColor: '#fff', borderRadius: 12,
+    shadowColor: '#E8B878', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.3, shadowRadius: 20, elevation: 5,
+  },
+  summaryNum: { fontSize: 60, fontWeight: '500', color: '#A48341', letterSpacing: 1.1, lineHeight: 78 },
+  summaryTextCol: { flex: 1, gap: 6 },
+  summaryTitle: { fontSize: 20, fontWeight: '600', color: '#000', letterSpacing: 0.5, lineHeight: 24 },
+  summarySub: { fontSize: 14, color: '#7B838D', lineHeight: 21 },
 
-  pendSection: { position: 'relative', height: 89, justifyContent: 'center', marginHorizontal: -16 },
-  waveWrap: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },
-  pendRow: { flexDirection: 'row', alignItems: 'center', gap: 16, paddingHorizontal: 16, zIndex: 1 },
-  pendLabel: { fontSize: 28, fontWeight: '500', color: '#000', letterSpacing: 0.5, lineHeight: 35 },
-  pendCount: { fontSize: 28, fontWeight: '500', color: '#A48341', letterSpacing: 0.5, lineHeight: 35 },
-
-  statsRow: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 34, marginBottom: 28, marginTop: 8 },
-  statCol: { alignItems: 'center' },
-  statNum: { fontSize: 22, fontWeight: '600', color: '#656D76', textAlign: 'center', letterSpacing: 0.5 },
+  statsRow: { flexDirection: 'row', alignItems: 'center', marginTop: 24, marginBottom: 24 },
+  statCol: { flex: 1, alignItems: 'center' },
+  statNum: { fontSize: 22, fontWeight: '600', color: '#656D76', letterSpacing: 0.5 },
   statLabel: { fontSize: 12, color: '#9EA7B3', letterSpacing: 0.5 },
+  statNumWrap: { position: 'relative', alignItems: 'center' },
+  statBadge: { position: 'absolute', top: -6, right: -30, width: 28, height: 14, borderRadius: 7, backgroundColor: '#FF394A', alignItems: 'center', justifyContent: 'center', transform: [{ rotate: '6deg' }] },
+  statBadgeT: { fontSize: 8, fontWeight: '500', color: '#fff' },
+  statDivider: { width: 1, height: 24, backgroundColor: '#DDE2E8' },
 
-  bottomCard: { flex: 1, backgroundColor: '#fff', borderTopLeftRadius: 20, borderTopRightRadius: 20 },
+  bottomCard: { flex: 1 },
 
   prefCard: {
     backgroundColor: '#fff', borderRadius: 12, borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.8)', padding: 16,
-    shadowColor: '#000', shadowOffset: { width: 1, height: 1 }, shadowOpacity: 0.07, shadowRadius: 5, elevation: 2,
     marginBottom: 12,
   },
   infoRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 5 },
@@ -179,6 +232,7 @@ const styles = StyleSheet.create({
   prefTitle: { fontSize: 14, fontWeight: '500', color: '#000' },
   prefDivider: { height: 0.5, backgroundColor: '#F1F2F4', marginBottom: 9 },
   prefList: { gap: 8 },
-  prefText: { fontSize: 13, color: '#7B838D', lineHeight: 21 },
-  prefTag: { fontSize: 13, fontWeight: '600', color: '#008B68' },
+  prefRow: { flexDirection: 'column', gap: 2 },
+  prefText: { fontSize: 13, color: '#656D76', lineHeight: 21 },
+  prefTag: { fontSize: 13, fontWeight: '400', color: '#9EA7B3', lineHeight: 21 },
 });
