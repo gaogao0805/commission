@@ -185,6 +185,6 @@ const styles = StyleSheet.create({
   skillTagText: { fontSize: 12, color: '#6b7280' },
   tagsRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 12 },
   resumeTag: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 6 },
-  resumeBtn: { paddingHorizontal: 14, paddingVertical: 6, borderRadius: 8, borderWidth: 1, borderColor: '#6366f1', backgroundColor: 'rgba(99,102,241,0.08)' },
-  resumeBtnText: { fontSize: 12, fontWeight: '500', color: '#4f46e5' },
+  resumeBtn: { paddingHorizontal: 12, paddingVertical: 4, borderRadius: 8, backgroundColor: '#E1EFFF' },
+  resumeBtnText: { fontSize: 12, fontWeight: '500', color: '#487FEF' },
 });
