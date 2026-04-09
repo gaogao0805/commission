@@ -473,7 +473,7 @@ const styles = StyleSheet.create({
   dot: { width: 2, height: 1, borderRadius: 34, backgroundColor: '#BBC1C9' },
   hint: { alignItems: 'center', gap: 2, marginTop: 4, paddingBottom: 8 },
   hintText: { fontSize: 14, color: '#9EA7B3' },
-  actions: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 48, paddingBottom: 32, paddingTop: 4 },
+  actions: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 48, paddingBottom: 8, paddingTop: 4 },
   actionItem: { alignItems: 'center', gap: 6 },
   actionCircle: { width: 32, height: 32, borderRadius: 16, backgroundColor: '#fff', borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
   actionLabel: { fontSize: 14, color: '#656D76', letterSpacing: 0.5 },
