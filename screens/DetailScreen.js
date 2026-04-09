@@ -166,21 +166,19 @@ export default function DetailScreen({ navigation }) {
               <EditIcon />
             </View>
             <View style={styles.prefDivider} />
-            <View style={styles.prefList}>
-              {[
-                { text: jobDetails.position, tag: '岗位名称' },
-                { text: jobDetails.salary, tag: '薪资范围' },
-                { text: jobDetails.location, tag: '工作地点' },
-                { text: jobDetails.experience, tag: '经验要求' },
-                { text: jobDetails.education, tag: '学历要求' },
-                { text: jobDetails.description, tag: '岗位描述' },
-              ].map((p, i) => (
-                <View key={i} style={styles.prefRow}>
-                  <Text style={styles.prefText}>{p.text}</Text>
-                  <Text style={styles.prefTag}>#{p.tag}</Text>
-                </View>
-              ))}
-            </View>
+            {[
+              ['岗位名称', jobDetails.position],
+              ['薪资范围', jobDetails.salary],
+              ['工作地点', jobDetails.location],
+              ['经验要求', jobDetails.experience],
+              ['学历要求', jobDetails.education],
+            ].map(([label, value]) => (
+              <View key={label} style={styles.infoRow}>
+                <Text style={styles.infoLabel}>{label}</Text>
+                <Text style={styles.infoValue}>{value}</Text>
+              </View>
+            ))}
+            <Text style={styles.infoDesc}>{jobDetails.description}</Text>
           </View>
         </ScrollView>
       </View>
@@ -225,9 +223,9 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   infoRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 5 },
-  infoLabel: { fontSize: 13, color: '#7B838D' },
-  infoValue: { fontSize: 13, fontWeight: '500', color: '#000' },
-  infoDesc: { fontSize: 13, color: '#7B838D', lineHeight: 20, marginTop: 8 },
+  infoLabel: { fontSize: 13, color: '#9EA7B3' },
+  infoValue: { fontSize: 13, fontWeight: '500', color: '#656D76' },
+  infoDesc: { fontSize: 13, color: '#656D76', lineHeight: 20, marginTop: 8 },
   prefHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 9 },
   prefTitle: { fontSize: 14, fontWeight: '500', color: '#000' },
   prefDivider: { height: 0.5, backgroundColor: '#F1F2F4', marginBottom: 9 },
