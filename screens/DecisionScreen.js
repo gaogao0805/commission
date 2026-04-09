@@ -110,9 +110,9 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
         transform: isFront
           ? [{ translateX: pan.x }, { translateY: pan.y }, { rotate }]
           : behind === 1
-            ? [{ rotate: '-1.2deg' }]
-            : [{ rotate: '2.02deg' }],
-        opacity: isFront ? 1 : 0.8,
+            ? [{ scale: 0.875 }, { translateY: -40 }, { rotate: '-1.2deg' }]
+            : [{ scale: 0.665 }, { translateY: -80 }, { rotate: '2.79deg' }],
+        opacity: isFront ? 1 : behind === 1 ? 0.9 : 0.7,
         zIndex: isFront ? 10 : behind === 1 ? 5 : 1,
       }]}
       {...(isFront ? panResponder.panHandlers : {})}
@@ -121,37 +121,10 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
         <Animated.View style={[styles.ind, styles.indPend, { opacity: pendOp }]}><Text style={styles.indPendT}>待定</Text></Animated.View>
       )}
       <ScrollView showsVerticalScrollIndicator={false} scrollEnabled={isFront} contentContainerStyle={styles.cardContent}>
-        {/* Profile: centered */}
-        <View style={styles.swipeProfile}>
+        {/* Profile row: avatar left | resume button right */}
+        <View style={styles.profileRow}>
           <View style={styles.swipeAvatar}>
             <Text style={styles.swipeAvatarT}>{initial}</Text>
-          </View>
-          <Text style={styles.swipeName}>{c.name}</Text>
-          <View style={styles.swipeContactRow}>
-            <Text style={styles.swipeContact}>{c.phone}</Text>
-            <View style={styles.swipeContactDivider} />
-            <Text style={styles.swipeContact}>{c.email}</Text>
-          </View>
-        </View>
-
-        {/* Agent语 */}
-        <View style={[styles.agentRow, styles.sectionPad]}>
-          <View style={styles.agentIconArea}>
-            <Image source={require('../assets/agent-avatar.png')} style={styles.agentAvatar} />
-            <View style={styles.agentQuoteWrap}><QuoteIcon /></View>
-          </View>
-          <Text style={styles.agentText}>{c.aiReason}</Text>
-        </View>
-
-        {/* Resume status row */}
-        <View style={styles.resumeStatusRow}>
-          <View style={styles.resumeLeftCol}>
-            {matchStatus && (
-              <View style={styles.resumeMatchRow}>
-                <View style={[styles.resumeMatchDot, { backgroundColor: matchStatus.type === 'green' ? '#02A87E' : matchStatus.type === 'orange' ? '#E19D16' : '#7B838D' }]} />
-                <Text style={[styles.resumeMatchT, { color: matchStatus.type === 'green' ? '#02A87E' : matchStatus.type === 'orange' ? '#E19D16' : '#7B838D' }]}>{matchStatus.text}</Text>
-              </View>
-            )}
           </View>
           {resumeAction === 'request' && (
             <TouchableOpacity style={styles.rBtn} onPress={() => onRequestResume?.(c.id)}>
@@ -168,21 +141,49 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
           )}
         </View>
 
+        {/* Name + match status + contact */}
+        <View style={styles.swipeProfile}>
+          <View style={styles.nameMatchRow}>
+            <Text style={styles.swipeName}>{c.name}</Text>
+            {matchStatus && (
+              <View style={styles.swipeMatchRow}>
+                <View style={[styles.swipeMatchDot, { backgroundColor: matchStatus.type === 'green' ? '#02A87E' : matchStatus.type === 'orange' ? '#E19D16' : '#7B838D' }]} />
+                <Text style={[styles.swipeMatchT, { color: matchStatus.type === 'green' ? '#02A87E' : matchStatus.type === 'orange' ? '#E19D16' : '#7B838D' }]}>{matchStatus.text}</Text>
+              </View>
+            )}
+          </View>
+          <View style={styles.swipeContactRow}>
+            <Text style={styles.swipeContact}>158***9271</Text>
+            <View style={styles.swipeContactDivider} />
+            <Text style={styles.swipeContact}>ink***@outlook.com</Text>
+          </View>
+        </View>
+
+        {/* Agent语 */}
+        <View style={styles.agentRow}>
+          <View style={styles.agentIconArea}>
+            <Image source={require('../assets/agent-avatar.png')} style={styles.agentAvatar} />
+            <View style={styles.agentQuoteWrap}><QuoteIcon /></View>
+          </View>
+          <Text style={styles.agentText}>{c.aiReason}</Text>
+        </View>
+
+
         {/* 资格证书 */}
-        <View style={[styles.expSection, styles.sectionPad]}>
+        <View style={styles.expSection}>
           <View style={styles.expTitleRow}>
             <View style={styles.expTitleBar} />
             <Text style={styles.expTitleText}>资格证书</Text>
           </View>
           <View style={styles.skillsRow}>
-            {(c.certificates || []).map(cert => (
+            {(c.certificates || ['CET-6', '软件设计师']).map(cert => (
               <View key={cert} style={styles.skillTag}><Text style={styles.skillTagT}>{cert}</Text></View>
             ))}
           </View>
         </View>
 
         {/* 教育背景 */}
-        <View style={[styles.expSection, styles.sectionPad]}>
+        <View style={styles.expSection}>
           <View style={styles.expTitleRow}>
             <View style={styles.expTitleBar} />
             <Text style={styles.expTitleText}>教育背景</Text>
@@ -205,7 +206,7 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
         </View>
 
         {/* 工作经验 */}
-        <View style={[styles.expSection, styles.sectionPad]}>
+        <View style={styles.expSection}>
           <View style={styles.expTitleRow}>
             <View style={styles.expTitleBar} />
             <Text style={styles.expTitleText}>工作经验</Text>
@@ -293,7 +294,10 @@ export default function DecisionScreen({ navigation, route }) {
           <BackIcon />
         </TouchableOpacity>
         <Text style={styles.navTitle}>待处理</Text>
-        <Text style={styles.counter}>{index + 1}/{newList.length}</Text>
+        <Text style={styles.counter}>
+          <Text style={styles.counterNum}>{index + 1}</Text>
+          <Text style={styles.counterTotal}>/{newList.length}</Text>
+        </Text>
       </View>
 
       <View style={styles.swipeContainer}>
@@ -335,21 +339,22 @@ export default function DecisionScreen({ navigation, route }) {
         </View>
       </View>
 
+
+      <View style={styles.hint}>
+        <Text style={styles.hintText}>滑动浏览</Text>
+        <Svg width={14} height={14} viewBox="0 0 12 12" fill="none" style={{ transform: [{ rotate: '90deg' }] }}>
+          <Path d="M5 3L8 6L5 9L5 3Z" fill="#9EA7B3" stroke="#9EA7B3" strokeLinejoin="round" />
+        </Svg>
+      </View>
       <View style={styles.actions}>
         <TouchableOpacity style={[styles.actionBtn, styles.rejectBtn]} onPress={() => handleButton('reject')}>
-          <Svg width={32} height={32} viewBox="0 0 32 32" fill="none">
-            <Path d="M8.92893 9.07107L23.0711 23.2132M23.0711 9.07107L8.92893 23.2132" stroke="#F48974" strokeWidth={2} strokeLinecap="round" />
-          </Svg>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.actionBtn, styles.passBtn]} onPress={() => handleButton('pass')}>
-          <Svg width={32} height={32} viewBox="0 0 32 32" fill="none">
-            <Path d="M24 9.3335L12.5714 22.6668L8 17.3335" stroke="white" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-          </Svg>
+          <Text style={styles.actionBtnT}>拒绝</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.actionBtn, styles.pendBtn]} onPress={() => handleButton('pending')}>
-          <Svg width={32} height={32} viewBox="0 0 32 32" fill="none">
-            <Circle cx={16} cy={16} r={8} stroke="#F4D775" strokeWidth={2} />
-          </Svg>
+          <Text style={styles.actionBtnT}>待定</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.actionBtn, styles.passBtn]} onPress={() => handleButton('pass')}>
+          <Text style={styles.actionBtnT}>通过</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -361,14 +366,17 @@ const styles = StyleSheet.create({
   nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 9, zIndex: 1 },
   backBtn: { width: 24, height: 24, alignItems: 'center', justifyContent: 'center' },
   navTitle: { fontSize: 16, fontWeight: '600', color: '#171718' },
-  counter: { fontSize: 14, color: '#7B838D', fontWeight: '500' },
+  counter: { fontSize: 14 },
+  counterNum: { fontSize: 20, fontWeight: '600', color: '#008B68', letterSpacing: 0.5 },
+  counterTotal: { fontSize: 14, color: '#7B838D' },
   swipeContainer: { flex: 1, alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, position: 'relative' },
   passBg: { position: 'absolute', top: 0, left: 0, right: 0, height: 275 },
   stack: { width: '100%', flex: 1, position: 'relative' },
   swipeCard: {
     position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-    backgroundColor: '#fff', borderRadius: 16,
-    shadowColor: '#8a8a8a', shadowOffset: { width: 1, height: 1 }, shadowOpacity: 0.15, shadowRadius: 8, elevation: 3,
+    backgroundColor: '#fff', borderRadius: 12,
+    shadowColor: '#000', shadowOffset: { width: 15, height: 13 }, shadowOpacity: 0.1, shadowRadius: 30, elevation: 5,
+    overflow: 'hidden',
   },
   ind: { position: 'absolute', paddingHorizontal: 20, paddingVertical: 8, borderRadius: 8, borderWidth: 3, zIndex: 20 },
   indPass: { top: 20, right: 20, borderColor: '#059669', backgroundColor: 'rgba(5,150,105,0.1)', transform: [{ rotate: '-15deg' }] },
@@ -377,14 +385,19 @@ const styles = StyleSheet.create({
   indRejectT: { fontSize: 18, fontWeight: '700', color: '#dc2626' },
   indPend: { bottom: 20, alignSelf: 'center', left: '35%', borderColor: '#d97706', backgroundColor: 'rgba(217,119,6,0.1)' },
   indPendT: { fontSize: 18, fontWeight: '700', color: '#d97706' },
-  cardContent: { gap: 28, paddingVertical: 20 },
-  swipeProfile: { alignItems: 'center', gap: 8 },
+  cardContent: { gap: 29, paddingHorizontal: 20, paddingVertical: 10 },
+  profileRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  swipeProfile: { gap: 8 },
+  nameMatchRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  swipeMatchRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  swipeMatchDot: { width: 4, height: 4, borderRadius: 2 },
+  swipeMatchT: { fontSize: 13, fontWeight: '500', letterSpacing: 0.5 },
   swipeAvatar: { width: 52, height: 52, borderRadius: 26, backgroundColor: '#e8e8ed', alignItems: 'center', justifyContent: 'center' },
   swipeAvatarT: { fontSize: 20, fontWeight: '500', color: '#BBC1C9' },
   swipeName: { fontSize: 20, fontWeight: '600', color: '#000', letterSpacing: 0.5, lineHeight: 24 },
   swipeContactRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   swipeContact: { fontSize: 12, color: '#7B838D', letterSpacing: 0.5 },
-  swipeContactDivider: { width: 1, height: 12, backgroundColor: '#F1F2F4' },
+  swipeContactDivider: { width: 1, height: 9.5, backgroundColor: '#DDE2E8' },
   expItemSimple: { gap: 4, paddingLeft: 12 },
   expRoleGray: { fontSize: 13, color: '#656D76', letterSpacing: 0.5, lineHeight: 18 },
   sectionPad: { paddingHorizontal: 20 },
@@ -399,11 +412,11 @@ const styles = StyleSheet.create({
   resumeMatchRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   resumeMatchDot: { width: 4, height: 4, borderRadius: 2 },
   resumeMatchT: { fontSize: 13, fontWeight: '500', letterSpacing: 0.5 },
-  rBtn: { backgroundColor: '#E1EFFF', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 4 },
-  rBtnT: { fontSize: 14, fontWeight: '500', color: '#487FEF', lineHeight: 21 },
+  rBtn: { backgroundColor: '#EBFAF5', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 4 },
+  rBtnT: { fontSize: 14, fontWeight: '500', color: '#009688', lineHeight: 21 },
   skillsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   skillTag: { paddingHorizontal: 12, paddingVertical: 4, borderRadius: 4, backgroundColor: '#F8FAFC' },
-  skillTagT: { fontSize: 13, color: '#000', lineHeight: 21 },
+  skillTagT: { fontSize: 13, color: '#7B838D', lineHeight: 21 },
   expSection: { gap: 12 },
   expTitleRow: { flexDirection: 'row', alignItems: 'stretch', gap: 8 },
   expTitleBar: { width: 4, borderRadius: 999, backgroundColor: '#6FCDAE' },
@@ -422,13 +435,15 @@ const styles = StyleSheet.create({
   agentAvatar: { width: 20, height: 20, borderRadius: 10 },
   agentQuoteWrap: { position: 'absolute', top: -8, right: -14 },
   agentText: { flex: 1, fontSize: 13, color: '#7B838D', letterSpacing: 0.5, lineHeight: 18 },
-  actions: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 34, paddingVertical: 16, paddingBottom: 40 },
-  actionBtn: {
-    width: 56, height: 56, borderRadius: 28, alignItems: 'center', justifyContent: 'center',
-    shadowColor: '#000', shadowOffset: { width: 15, height: 13 }, shadowOpacity: 0.1, shadowRadius: 30, elevation: 4,
-  },
-  rejectBtn: { backgroundColor: '#fff', borderWidth: 1, borderColor: '#F1C4BA' },
-  pendBtn: { backgroundColor: '#fff', borderWidth: 1, borderColor: '#F1E8BA' },
+  dotRow: { flexDirection: 'row', gap: 2, paddingHorizontal: 0, overflow: 'hidden', height: 19, alignItems: 'flex-end' },
+  dot: { width: 2, height: 1, borderRadius: 34, backgroundColor: '#BBC1C9' },
+  hint: { alignItems: 'center', gap: 2, paddingVertical: 8 },
+  hintText: { fontSize: 14, color: '#9EA7B3' },
+  actions: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 62, paddingVertical: 12, paddingBottom: 32 },
+  actionBtn: { width: 61, height: 32, borderRadius: 999, alignItems: 'center', justifyContent: 'center' },
+  actionBtnT: { fontSize: 16, color: '#fff', letterSpacing: 0.5 },
+  rejectBtn: { backgroundColor: '#F58973' },
+  pendBtn: { backgroundColor: '#F5D773' },
   passBtn: { backgroundColor: '#6FCDAE' },
   allDone: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 },
   doneIcon: { width: 80, height: 80, borderRadius: 40, backgroundColor: 'rgba(5,150,105,0.08)', alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
