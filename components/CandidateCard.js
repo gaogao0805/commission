@@ -17,7 +17,7 @@ const C = {
   grayDeep: '#656D76',
   grayMid: '#7B838D',
   grayLight: '#9EA7B3',
-  greenGray: '#9EB3B3',
+  greenGray: '#7B838D',
   grayShadow: '#BBC1C9',
   green: '#02A87E',
   greenText: '#008B68',
@@ -208,9 +208,9 @@ const s = StyleSheet.create({
 
   // Request resume button
   reqBtn: {
-    backgroundColor: C.greenBubble,
+    backgroundColor: '#E1EFFF',
     borderRadius: 8,
     paddingHorizontal: 12, paddingVertical: 4,
   },
-  reqBtnT: { fontSize: 14, fontWeight: '500', color: C.greenText, lineHeight: 21 },
+  reqBtnT: { fontSize: 14, fontWeight: '500', color: '#487FEF', lineHeight: 21 },
 });

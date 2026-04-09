@@ -27,7 +27,7 @@ export default function Toast({ message, type, visible, onHide }) {
     success: '#02A87E', pass: '#02A87E',
     pending: '#E19D16',
     reject: '#dc2626',
-    info: '#6366f1',
+    info: '#487FEF',
   };
   const color = colorMap[type] || '#6366f1';
   const borderColor = color + '4D';
@@ -42,7 +42,7 @@ export default function Toast({ message, type, visible, onHide }) {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute', top: 60, alignSelf: 'center', zIndex: 999,
-    backgroundColor: '#ffffff', borderWidth: 1, borderRadius: 10,
+    backgroundColor: '#ffffff', borderWidth: 1, borderRadius: 999,
     paddingHorizontal: 20, paddingVertical: 10,
     shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.1, shadowRadius: 15, elevation: 8,
   },
