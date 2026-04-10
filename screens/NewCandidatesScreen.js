@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, FlatList, StyleSheet, SafeAreaView } from
 import Svg, { Path } from 'react-native-svg';
 import { useApp } from '../data/AppContext';
 import CandidateCard from '../components/CandidateCard';
+import WarmBg from '../components/WarmBg';
 
 export default function NewCandidatesScreen({ navigation }) {
   const { getNew } = useApp();
@@ -14,6 +15,7 @@ export default function NewCandidatesScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.safe}>
+      <WarmBg />
       <View style={styles.nav}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
           <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -50,7 +52,7 @@ export default function NewCandidatesScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#FBFBFB' },
+  safe: { flex: 1, backgroundColor: '#FBFBFB', position: 'relative' },
   nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 9, zIndex: 1 },
   backBtn: { width: 24, height: 24, alignItems: 'center', justifyContent: 'center' },
   navTitle: { fontSize: 16, fontWeight: '600', color: '#000' },

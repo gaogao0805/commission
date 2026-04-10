@@ -28,6 +28,7 @@ const BackIcon = () => (
 import { useApp } from '../data/AppContext';
 import { getResumeStatusLabel, getMatchingStatus } from '../data/candidates';
 import Toast from '../components/Toast';
+import WarmBg from '../components/WarmBg';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SWIPE_THRESHOLD = 80;
@@ -108,7 +109,7 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
     <Animated.View
       style={[styles.swipeCard, {
         transform: [{ translateX: pan.x }, { translateY: pan.y }],
-        bottom: expanded ? expanded.interpolate({ inputRange: [0, 1], outputRange: [0, -38] }) : 0,
+        bottom: expanded ? expanded.interpolate({ inputRange: [0, 1], outputRange: [0, -48] }) : 0,
       }]}
       {...(isFront ? panResponder.panHandlers : {})}
     >
@@ -235,11 +236,11 @@ export default function DecisionScreen({ navigation, route }) {
   const isExpanded = useRef(false);
   const [toast, setToast] = useState({ visible: false, message: '', type: '' });
 
-  const handleCardScroll = useCallback((y, isEnd) => {
+  const handleCardScroll = useCallback((y) => {
     if (y > 30 && !isExpanded.current) {
       isExpanded.current = true;
       Animated.spring(expanded, { toValue: 1, useNativeDriver: false, friction: 8 }).start();
-    } else if (isEnd && y <= 0 && isExpanded.current) {
+    } else if (y <= 0 && isExpanded.current) {
       isExpanded.current = false;
       Animated.spring(expanded, { toValue: 0, useNativeDriver: false, friction: 8 }).start();
     }
@@ -306,6 +307,7 @@ export default function DecisionScreen({ navigation, route }) {
 
   return (
     <SafeAreaView style={styles.safe}>
+      <WarmBg />
       <Toast {...toast} onHide={() => setToast(t => ({ ...t, visible: false }))} />
       <View style={styles.nav}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
@@ -397,12 +399,12 @@ export default function DecisionScreen({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#FBFBFB' },
+  safe: { flex: 1, backgroundColor: '#FBFBFB', position: 'relative' },
   nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 9, zIndex: 1 },
   backBtn: { width: 24, height: 24, alignItems: 'center', justifyContent: 'center' },
   navTitle: { fontSize: 16, fontWeight: '600', color: '#171718' },
   counter: { fontSize: 14 },
-  counterNum: { fontSize: 20, fontWeight: '600', color: '#008B68', letterSpacing: 0.5 },
+  counterNum: { fontSize: 20, fontWeight: '600', color: '#A48341', letterSpacing: 0.5 },
   counterTotal: { fontSize: 14, color: '#7B838D' },
   swipeContainer: { flex: 1, alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, position: 'relative' },
   passBg: { position: 'absolute', top: 0, left: 0, right: 0, height: 275 },

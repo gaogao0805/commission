@@ -1,10 +1,9 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, SafeAreaView, Animated } from 'react-native';
-import { Image as RNImage } from 'react-native';
-import Svg, { Path, G, Defs, LinearGradient as SvgLG, Stop, Rect, Circle } from 'react-native-svg';
-import { Dimensions } from 'react-native';
+import React from 'react';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, SafeAreaView } from 'react-native';
+import Svg, { Path, G, Defs, LinearGradient as SvgLG, Stop } from 'react-native-svg';
 import { useApp } from '../data/AppContext';
 import { jobDetails, hiringPreferences } from '../data/candidates';
+import WarmBg from '../components/WarmBg';
 
 const BackIcon = () => (
   <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -31,52 +30,6 @@ const EditIcon = () => (
     <Path d="M11.2575 3.17238C12.1522 2.27654 13.6032 2.27586 14.4978 3.17043L16.5749 5.24758C17.4614 6.13448 17.4702 7.57039 16.5945 8.46926L8.90109 16.3628C8.31265 16.9665 7.5052 17.3072 6.66281 17.3071L4.36887 17.3062C3.30368 17.3059 2.45313 16.4191 2.49777 15.354L2.59641 13.0122C2.62944 12.2294 2.9559 11.4866 3.50949 10.9321L11.2575 3.17238ZM17.0915 15.9966C17.4364 15.9967 17.7163 16.2766 17.7165 16.6216C17.7165 16.9669 17.4365 17.2475 17.0915 17.2476H11.99C11.645 17.2475 11.365 16.9669 11.365 16.6216C11.3652 16.2766 11.6451 15.9967 11.99 15.9966H17.0915ZM4.39231 11.8159C4.06021 12.1486 3.86428 12.5944 3.84445 13.064L3.7468 15.4058C3.73213 15.7607 4.01582 16.0562 4.37082 16.0562H6.66477C7.16994 16.056 7.65364 15.8518 8.00656 15.4898L13.448 9.90676L9.87082 6.32863L4.39231 11.8159ZM13.614 4.05519C13.2074 3.64859 12.548 3.64904 12.1413 4.05617L10.7546 5.44387L14.321 9.01027L15.6999 7.59719C16.0981 7.18863 16.0941 6.53553 15.6911 6.13234L13.614 4.05519Z" fill="#7B838D"/>
   </Svg>
 );
-
-const SCREEN_W = Dimensions.get('window').width;
-const SCALE = SCREEN_W / 375;
-const BG_H = SCREEN_W * 275 / 375;
-const DOTS = [
-  { x: 62, y: 127.5, r: 3.5, op: 0.5 },
-  { x: 107, y: 129.5, r: 3, op: 0.45 },
-  { x: 17.6, y: 96, r: 2.5, op: 0.4 },
-  { x: 45.2, y: 36.6, r: 2.5, op: 0.4 },
-  { x: 126.2, y: 69.6, r: 2.5, op: 0.4 },
-  { x: 170.2, y: 89.6, r: 2.2, op: 0.35 },
-  { x: 362, y: 125.4, r: 4, op: 0.5 },
-  { x: 347.5, y: 105.9, r: 3.5, op: 0.45 },
-  { x: 242.2, y: 72.6, r: 2, op: 0.35 },
-  { x: 188.8, y: 21.2, r: 2.8, op: 0.4 },
-  { x: 215.5, y: 12.9, r: 2, op: 0.35 },
-  { x: 303.8, y: 9.2, r: 4.5, op: 0.5 },
-  { x: 362.2, y: 99.6, r: 2.2, op: 0.35 },
-  { x: 30, y: 60, r: 2, op: 0.35 },
-  { x: 145, y: 45, r: 3, op: 0.4 },
-  { x: 200, y: 110, r: 2.5, op: 0.38 },
-  { x: 290, y: 140, r: 3.2, op: 0.42 },
-  { x: 75, y: 160, r: 2.8, op: 0.4 },
-  { x: 320, y: 160, r: 3, op: 0.38 },
-  { x: 270, y: 95, r: 1.8, op: 0.3 },
-  { x: 350, y: 25, r: 2.5, op: 0.36 },
-];
-
-function WarmBg() {
-  return (
-    <View style={[styles.warmBg, { height: BG_H }]} pointerEvents="none">
-      <Svg width={SCREEN_W} height={BG_H} viewBox="0 0 375 275" preserveAspectRatio="xMidYMid slice">
-        <Defs>
-          <SvgLG id="warmBgGrad" x1="169" y1="0" x2="190.686" y2="245.262" gradientUnits="userSpaceOnUse">
-            <Stop stopColor="#FFE9D5" />
-            <Stop offset="1" stopColor="white" stopOpacity="0" />
-          </SvgLG>
-        </Defs>
-        <Rect width="375" height="275" fill="url(#warmBgGrad)" />
-        {DOTS.map((d, i) => (
-          <Circle key={i} cx={d.x} cy={d.y} r={d.r} fill="#F6D9B9" opacity={d.op} />
-        ))}
-      </Svg>
-    </View>
-  );
-}
 
 export default function DetailScreen({ navigation }) {
   const { getNew, getPassed, getPending, getRejected, getResumeUpdateCount } = useApp();
@@ -188,7 +141,6 @@ export default function DetailScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: '#FBFBFB', position: 'relative' },
-  warmBg: { position: 'absolute', top: 0, left: 0, right: 0, zIndex: 0 },
 
   nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 9, marginBottom: 12 },
   backBtn: { width: 24, height: 24, alignItems: 'center', justifyContent: 'center' },
