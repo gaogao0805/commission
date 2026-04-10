@@ -61,7 +61,7 @@ export default function DetailScreen({ navigation }) {
 
       {/* Summary card */}
       <TouchableOpacity style={styles.summaryCard} activeOpacity={0.8} onPress={() => newCount > 0 && navigation.navigate('NewCandidates')}>
-        <Text style={styles.summaryNum}>{newCount}</Text>
+        <Text style={[styles.summaryNum, newCount === 0 && { color: '#DDE2E8' }]}>{newCount}</Text>
         <View style={styles.summaryTextCol}>
           <Text style={styles.summaryTitle}>待处理</Text>
           <Text style={styles.summarySub}>点击逐个处理，支持滑动切换</Text>
