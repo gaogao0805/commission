@@ -1,6 +1,8 @@
-import React, { useRef } from 'react';
-import { View, StyleSheet, useWindowDimensions } from 'react-native';
+import React, { useRef, useEffect, useMemo } from 'react';
+import { View, StyleSheet, Animated, Easing, useWindowDimensions } from 'react-native';
 import Svg, { Defs, LinearGradient, Stop, Rect, Circle } from 'react-native-svg';
+
+const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 const DOTS = [
   { x: 62, y: 127.5, r: 3.5, op: 0.5 },
@@ -26,12 +28,50 @@ const DOTS = [
   { x: 350, y: 25, r: 2.5, op: 0.36 },
 ];
 
+const TWO_PI = 2 * Math.PI;
+const STEPS_N = 8;
+const STEPS = Array.from({ length: STEPS_N + 1 }, (_, k) => k / STEPS_N);
+
 let _idCounter = 0;
 
 export default function WarmBg() {
   const { width } = useWindowDimensions();
   const bgH = width * 275 / 375;
   const gradId = useRef(`warmBgGrad_${++_idCounter}`).current;
+  const anim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.timing(anim, {
+        toValue: 1,
+        duration: 12000,
+        easing: Easing.linear,
+        useNativeDriver: false,
+      })
+    ).start();
+    return () => anim.stopAnimation();
+  }, []);
+
+  const dotAnims = useMemo(() => {
+    return DOTS.map((d, i) => {
+      const phase = (i * TWO_PI) / DOTS.length;
+      const ampX = 3 + (i % 5) * 1.5;
+      const ampY = 2 + ((i + 2) % 4) * 1.2;
+
+      return {
+        cx: anim.interpolate({
+          inputRange: STEPS,
+          outputRange: STEPS.map(t => d.x + ampX * Math.sin(TWO_PI * t + phase)),
+        }),
+        cy: anim.interpolate({
+          inputRange: STEPS,
+          outputRange: STEPS.map(t => d.y + ampY * Math.cos(TWO_PI * t + phase)),
+        }),
+        r: d.r,
+        op: d.op,
+      };
+    });
+  }, [anim]);
 
   return (
     <View style={[styles.warmBg, { height: bgH }]} pointerEvents="none">
@@ -43,8 +83,8 @@ export default function WarmBg() {
           </LinearGradient>
         </Defs>
         <Rect width="375" height="275" fill={`url(#${gradId})`} />
-        {DOTS.map((d, i) => (
-          <Circle key={i} cx={d.x} cy={d.y} r={d.r} fill="#F6D9B9" opacity={d.op} />
+        {dotAnims.map((d, i) => (
+          <AnimatedCircle key={i} cx={d.cx} cy={d.cy} r={d.r} fill="#F6D9B9" opacity={d.op} />
         ))}
       </Svg>
     </View>
