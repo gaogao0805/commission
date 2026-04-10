@@ -1,9 +1,7 @@
-import React from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import React, { useRef } from 'react';
+import { View, StyleSheet, useWindowDimensions } from 'react-native';
 import Svg, { Defs, LinearGradient, Stop, Rect, Circle } from 'react-native-svg';
 
-const SCREEN_W = Dimensions.get('window').width;
-const BG_H = SCREEN_W * 275 / 375;
 const DOTS = [
   { x: 62, y: 127.5, r: 3.5, op: 0.5 },
   { x: 107, y: 129.5, r: 3, op: 0.45 },
@@ -28,17 +26,23 @@ const DOTS = [
   { x: 350, y: 25, r: 2.5, op: 0.36 },
 ];
 
+let _idCounter = 0;
+
 export default function WarmBg() {
+  const { width } = useWindowDimensions();
+  const bgH = width * 275 / 375;
+  const gradId = useRef(`warmBgGrad_${++_idCounter}`).current;
+
   return (
-    <View style={[styles.warmBg, { height: BG_H }]} pointerEvents="none">
+    <View style={[styles.warmBg, { height: bgH }]} pointerEvents="none">
       <Svg width="100%" height="100%" viewBox="0 0 375 275" preserveAspectRatio="xMidYMid slice">
         <Defs>
-          <LinearGradient id="warmBgGrad" x1="169" y1="0" x2="190.686" y2="245.262" gradientUnits="userSpaceOnUse">
+          <LinearGradient id={gradId} x1="169" y1="0" x2="190.686" y2="245.262" gradientUnits="userSpaceOnUse">
             <Stop stopColor="#FFE9D5" />
             <Stop offset="1" stopColor="white" stopOpacity="0" />
           </LinearGradient>
         </Defs>
-        <Rect width="375" height="275" fill="url(#warmBgGrad)" />
+        <Rect width="375" height="275" fill={`url(#${gradId})`} />
         {DOTS.map((d, i) => (
           <Circle key={i} cx={d.x} cy={d.y} r={d.r} fill="#F6D9B9" opacity={d.op} />
         ))}
@@ -48,5 +52,5 @@ export default function WarmBg() {
 }
 
 const styles = StyleSheet.create({
-  warmBg: { position: 'absolute', top: 0, left: 0, right: 0, zIndex: 0 },
+  warmBg: { position: 'absolute', top: 0, left: 0, right: 0, width: '100%', zIndex: 0 },
 });
