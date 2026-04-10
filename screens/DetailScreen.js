@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff', borderRadius: 12,
     shadowColor: '#E8B878', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.3, shadowRadius: 20, elevation: 5,
   },
-  summaryNum: { fontSize: 60, fontWeight: '500', color: '#A48341', letterSpacing: 1.1, lineHeight: 78 },
+  summaryNum: { fontSize: 60, fontWeight: '500', color: '#EFB54D', letterSpacing: 1.1, lineHeight: 78 },
   summaryTextCol: { flex: 1, gap: 6 },
   summaryTitle: { fontSize: 20, fontWeight: '600', color: '#000', letterSpacing: 0.5, lineHeight: 24 },
   summarySub: { fontSize: 14, color: '#7B838D', lineHeight: 21 },
