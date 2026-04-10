@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, SafeAreaView, Animated, PanResponder, Dimensions, ScrollView } from 'react-native';
+import { View, Text, Image, TouchableOpacity, Pressable, StyleSheet, SafeAreaView, Animated, PanResponder, Dimensions, ScrollView } from 'react-native';
 import Svg, { Path, Rect, Defs, LinearGradient as SvgLinearGradient, Stop, Circle } from 'react-native-svg';
 
 const COMPANY_COLORS = {
@@ -369,30 +369,42 @@ export default function DecisionScreen({ navigation, route }) {
         </Svg>
       </Animated.View>
       <View style={styles.actions}>
-        <TouchableOpacity style={styles.actionItem} activeOpacity={0.6} onPress={() => handleButton('reject')}>
-          <View style={[styles.actionCircle, { borderColor: 'rgba(245,137,115,0.4)' }]}>
-            <Svg width={19} height={19} viewBox="0 0 19 19" fill="none">
-              <Path d="M5.10221 5.18514L13.1834 13.2664M13.1834 5.18514L5.10221 13.2664" stroke="#F58973" strokeWidth={2} strokeLinecap="round" />
-            </Svg>
-          </View>
-          <Text style={styles.actionLabel}>拒绝</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.actionItem} activeOpacity={0.6} onPress={() => handleButton('pending')}>
-          <View style={[styles.actionCircle, { borderColor: 'rgba(245,215,115,0.4)' }]}>
-            <Svg width={19} height={19} viewBox="0 0 19 19" fill="none">
-              <Circle cx={9.14272} cy={9.14174} r={4.57143} stroke="#F5D773" strokeWidth={2} />
-            </Svg>
-          </View>
-          <Text style={styles.actionLabel}>待定</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.actionItem} activeOpacity={0.6} onPress={() => handleButton('pass')}>
-          <View style={[styles.actionCircle, { borderColor: 'rgba(111,205,174,0.4)' }]}>
-            <Svg width={19} height={19} viewBox="0 0 19 19" fill="none">
-              <Path d="M13.7144 5.33203L7.18378 12.9511L4.57153 9.90346" stroke="#6FCDAE" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-            </Svg>
-          </View>
-          <Text style={styles.actionLabel}>通过</Text>
-        </TouchableOpacity>
+        <Pressable style={styles.actionItem} onPress={() => handleButton('reject')}>
+          {({ pressed }) => (
+            <>
+              <View style={[styles.actionCircle, { borderColor: pressed ? '#F58973' : 'rgba(245,137,115,0.4)', backgroundColor: pressed ? '#F58973' : '#fff' }]}>
+                <Svg width={19} height={19} viewBox="0 0 19 19" fill="none">
+                  <Path d="M5.10221 5.18514L13.1834 13.2664M13.1834 5.18514L5.10221 13.2664" stroke={pressed ? '#fff' : '#F58973'} strokeWidth={2} strokeLinecap="round" />
+                </Svg>
+              </View>
+              <Text style={styles.actionLabel}>拒绝</Text>
+            </>
+          )}
+        </Pressable>
+        <Pressable style={styles.actionItem} onPress={() => handleButton('pending')}>
+          {({ pressed }) => (
+            <>
+              <View style={[styles.actionCircle, { borderColor: pressed ? '#F5D773' : 'rgba(245,215,115,0.4)', backgroundColor: pressed ? '#F5D773' : '#fff' }]}>
+                <Svg width={19} height={19} viewBox="0 0 19 19" fill="none">
+                  <Circle cx={9.14272} cy={9.14174} r={4.57143} stroke={pressed ? '#fff' : '#F5D773'} strokeWidth={2} />
+                </Svg>
+              </View>
+              <Text style={styles.actionLabel}>待定</Text>
+            </>
+          )}
+        </Pressable>
+        <Pressable style={styles.actionItem} onPress={() => handleButton('pass')}>
+          {({ pressed }) => (
+            <>
+              <View style={[styles.actionCircle, { borderColor: pressed ? '#6FCDAE' : 'rgba(111,205,174,0.4)', backgroundColor: pressed ? '#6FCDAE' : '#fff' }]}>
+                <Svg width={19} height={19} viewBox="0 0 19 19" fill="none">
+                  <Path d="M13.7144 5.33203L7.18378 12.9511L4.57153 9.90346" stroke={pressed ? '#fff' : '#6FCDAE'} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+                </Svg>
+              </View>
+              <Text style={styles.actionLabel}>通过</Text>
+            </>
+          )}
+        </Pressable>
       </View>
     </SafeAreaView>
   );
