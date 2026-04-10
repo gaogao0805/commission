@@ -264,14 +264,10 @@ export default function DecisionScreen({ navigation, route }) {
     const labels = { pass: '已通过', pending: '已待定', reject: '已拒绝' };
     setToast({ visible: true, message: `${labels[decision]} · ${c.name}`, type: decision });
     // 决策后该卡从newList移除，index保持不动即可显示下一张
-    // 只有当列表全部处理完才结束
     setTimeout(() => {
       setIndex(prev => {
-        const remaining = newList.length - 1; // 决策后剩余数量
-        if (remaining <= 0) {
-          setTimeout(() => navigation.goBack(), 1500);
-          return 0;
-        }
+        const remaining = newList.length - 1;
+        if (remaining <= 0) return 0;
         return Math.min(prev, remaining - 1);
       });
     }, 100);
@@ -294,15 +290,8 @@ export default function DecisionScreen({ navigation, route }) {
   };
 
   if (newList.length === 0) {
-    return (
-      <SafeAreaView style={styles.safe}>
-        <View style={styles.allDone}>
-          <View style={styles.doneIcon}><Text style={{ fontSize: 36 }}>✓</Text></View>
-          <Text style={styles.doneText}>全部处理完成</Text>
-          <Text style={styles.doneSub}>候选人已分配到对应分类</Text>
-        </View>
-      </SafeAreaView>
-    );
+    navigation.navigate('Detail');
+    return null;
   }
 
   return (
