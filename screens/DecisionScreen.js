@@ -109,7 +109,12 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
     <Animated.View
       style={[styles.swipeCard, {
         transform: [{ translateX: pan.x }, { translateY: pan.y }],
-        bottom: expanded ? expanded.interpolate({ inputRange: [0, 1], outputRange: [0, -108] }) : 0,
+        left: expanded ? expanded.interpolate({ inputRange: [0, 1], outputRange: [0, -16] }) : 0,
+        right: expanded ? expanded.interpolate({ inputRange: [0, 1], outputRange: [0, -16] }) : 0,
+        top: expanded ? expanded.interpolate({ inputRange: [0, 1], outputRange: [0, -12] }) : 0,
+        bottom: expanded ? expanded.interpolate({ inputRange: [0, 1], outputRange: [0, -130] }) : 0,
+        borderRadius: expanded ? expanded.interpolate({ inputRange: [0, 1], outputRange: [12, 0] }) : 12,
+        shadowOpacity: expanded ? expanded.interpolate({ inputRange: [0, 1], outputRange: [0.1, 0] }) : 0.1,
       }]}
       {...(isFront ? panResponder.panHandlers : {})}
     >
@@ -311,9 +316,9 @@ export default function DecisionScreen({ navigation, route }) {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <WarmBg />
+      <WarmBg expanded={expanded} />
       <Toast {...toast} onHide={() => setToast(t => ({ ...t, visible: false }))} />
-      <View style={styles.nav}>
+      <Animated.View style={[styles.nav, { backgroundColor: expanded.interpolate({ inputRange: [0, 1], outputRange: ['rgba(255,255,255,0)', 'rgba(255,255,255,1)'] }) }]}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
           <BackIcon />
         </TouchableOpacity>
@@ -322,7 +327,7 @@ export default function DecisionScreen({ navigation, route }) {
           <Text style={styles.counterNum}>{index + 1}</Text>
           <Text style={styles.counterTotal}>/{newList.length}</Text>
         </Text>
-      </View>
+      </Animated.View>
 
       <View style={styles.swipeContainer}>
         <Animated.View pointerEvents="none" style={[styles.passBg, { opacity: passProgress }]}>
@@ -372,7 +377,7 @@ export default function DecisionScreen({ navigation, route }) {
           <Path d="M10.9122 3.08882C11.14 3.31663 11.14 3.68524 10.9122 3.91304L7.41215 7.41304C7.18434 7.6408 6.81573 7.64083 6.58794 7.41304L3.08794 3.91304C2.86014 3.68525 2.86017 3.31663 3.08794 3.08882C3.31574 2.86102 3.68435 2.86102 3.91215 3.08882L7.00004 6.17671L10.0879 3.08882C10.3157 2.86102 10.6843 2.86102 10.9122 3.08882ZM10.9122 6.58882C11.14 6.81663 11.14 7.18524 10.9122 7.41304L7.41215 10.913C7.18434 11.1408 6.81573 11.1408 6.58793 10.913L3.08794 7.41304C2.86014 7.18525 2.86017 6.81663 3.08794 6.58882C3.31574 6.36102 3.68435 6.36102 3.91215 6.58882L7.00004 9.67671L10.0879 6.58882C10.3157 6.36102 10.6843 6.36102 10.9122 6.58882Z" fill="url(#hintArrowGrad)" />
         </Svg>
       </Animated.View>
-      <View style={styles.actions}>
+      <Animated.View style={[styles.actions, { transform: [{ translateY: expanded.interpolate({ inputRange: [0, 1], outputRange: [0, 36] }) }] }]}>
         <Pressable style={styles.actionItem} onPress={() => handleButton('reject')}>
           {({ pressed }) => (
             <>
@@ -409,22 +414,22 @@ export default function DecisionScreen({ navigation, route }) {
             </>
           )}
         </Pressable>
-      </View>
+      </Animated.View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#FBFBFB', position: 'relative' },
-  nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 9, zIndex: 1 },
+  safe: { flex: 1, backgroundColor: '#fff', position: 'relative' },
+  nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 9, zIndex: 10 },
   backBtn: { width: 24, height: 24, alignItems: 'center', justifyContent: 'center' },
   navTitle: { fontSize: 16, fontWeight: '600', color: '#171718' },
   counter: { fontSize: 14 },
   counterNum: { fontSize: 20, fontWeight: '600', color: '#DF940E', letterSpacing: 0.5 },
   counterTotal: { fontSize: 14, color: '#7B838D' },
-  swipeContainer: { flex: 1, alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, position: 'relative' },
+  swipeContainer: { flex: 1, alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, position: 'relative', overflow: 'visible' },
   passBg: { position: 'absolute', top: 0, left: 0, right: 0, height: 275 },
-  stack: { width: '100%', flex: 1, position: 'relative' },
+  stack: { width: '100%', flex: 1, position: 'relative', overflow: 'visible' },
   swipeCard: {
     position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
     backgroundColor: '#fff', borderRadius: 12,

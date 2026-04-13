@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useMemo } from 'react';
-import { View, StyleSheet, Animated, Easing, useWindowDimensions } from 'react-native';
+import { StyleSheet, Animated, Easing, useWindowDimensions } from 'react-native';
 import Svg, { Defs, LinearGradient, Stop, Rect, Circle } from 'react-native-svg';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
@@ -34,7 +34,7 @@ const STEPS = Array.from({ length: STEPS_N + 1 }, (_, k) => k / STEPS_N);
 
 let _idCounter = 0;
 
-export default function WarmBg() {
+export default function WarmBg({ expanded }) {
   const { width } = useWindowDimensions();
   const bgH = width * 275 / 375;
   const gradId = useRef(`warmBgGrad_${++_idCounter}`).current;
@@ -74,7 +74,7 @@ export default function WarmBg() {
   }, [anim]);
 
   return (
-    <View style={[styles.warmBg, { height: bgH }]} pointerEvents="none">
+    <Animated.View style={[styles.warmBg, { height: bgH, opacity: expanded ? expanded.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }) : 1 }]} pointerEvents="none">
       <Svg width="100%" height="100%" viewBox="0 0 375 275" preserveAspectRatio="xMidYMid slice">
         <Defs>
           <LinearGradient id={gradId} x1="169" y1="0" x2="190.686" y2="245.262" gradientUnits="userSpaceOnUse">
@@ -87,7 +87,7 @@ export default function WarmBg() {
           <AnimatedCircle key={i} cx={d.cx} cy={d.cy} r={d.r} fill="#F6D9B9" opacity={d.op} />
         ))}
       </Svg>
-    </View>
+    </Animated.View>
   );
 }
 

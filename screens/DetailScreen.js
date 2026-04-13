@@ -60,7 +60,7 @@ export default function DetailScreen({ navigation }) {
 
 
       {/* Summary card */}
-      <TouchableOpacity style={styles.summaryCard} activeOpacity={0.8} onPress={() => newCount > 0 && navigation.navigate('NewCandidates')}>
+      <TouchableOpacity style={styles.summaryCard} activeOpacity={0.8} onPress={() => newCount > 0 && navigation.navigate('Decision')}>
         <Text style={[styles.summaryNum, newCount === 0 && { color: '#DDE2E8' }]}>{newCount}</Text>
         <View style={styles.summaryTextCol}>
           <Text style={styles.summaryTitle}>待处理</Text>
@@ -73,7 +73,7 @@ export default function DetailScreen({ navigation }) {
         <TouchableOpacity style={styles.statCol} onPress={() => navigation.navigate('Category', { initialTab: 'pass' })}>
           <View style={styles.statNumWrap}>
             <Text style={styles.statNum}>{passCount}</Text>
-            {passNewResume > 0 && <View style={styles.statBadge}><Text style={styles.statBadgeT}>简历</Text></View>}
+            {passNewResume > 0 && <View style={styles.statRedDot} />}
           </View>
           <Text style={styles.statLabel}>通过</Text>
         </TouchableOpacity>
@@ -163,6 +163,7 @@ const styles = StyleSheet.create({
   statNum: { fontSize: 22, fontWeight: '600', color: '#656D76', letterSpacing: 0.5 },
   statLabel: { fontSize: 12, color: '#9EA7B3', letterSpacing: 0.5 },
   statNumWrap: { position: 'relative', alignItems: 'center' },
+  statRedDot: { position: 'absolute', top: -2, right: -10, width: 6, height: 6, borderRadius: 3, backgroundColor: '#FF394A' },
   statBadge: { position: 'absolute', top: -6, right: -30, width: 28, height: 14, borderRadius: 7, backgroundColor: '#FF394A', alignItems: 'center', justifyContent: 'center', transform: [{ rotate: '6deg' }] },
   statBadgeT: { fontSize: 8, fontWeight: '500', color: '#fff' },
   statDivider: { width: 1, height: 24, backgroundColor: '#DDE2E8' },
