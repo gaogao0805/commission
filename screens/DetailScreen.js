@@ -31,6 +31,18 @@ const EditIcon = () => (
   </Svg>
 );
 
+const QuoteIcon = () => (
+  <Svg width={14} height={10} viewBox="0 0 14 10" fill="none">
+    <Path opacity={0.5} d="M11.2596 0L12.5404 1.19186L10.9319 2.87791C11.2894 3.38178 11.7163 3.90504 12.2128 4.44767C12.7291 4.99031 13.3248 5.56201 14 6.16279C13.4837 6.70543 12.9078 7.24806 12.2723 7.7907C11.6369 8.31395 11.0511 8.75969 10.5149 9.12791C9.81986 8.25581 9.16454 7.37403 8.54894 6.48256C7.93333 5.5717 7.36738 4.67054 6.85106 3.77907C7.5461 3.23643 8.27092 2.63566 9.02553 1.97674C9.8 1.31783 10.5447 0.658914 11.2596 0ZM4.40851 0.872092L5.68936 2.06395L4.08085 3.75C4.4383 4.25388 4.86525 4.77713 5.3617 5.31977C5.87801 5.8624 6.47376 6.43411 7.14894 7.03488C6.63262 7.57752 6.05674 8.12016 5.42128 8.66279C4.78582 9.18605 4.2 9.63178 3.66383 10C2.96879 9.12791 2.31348 8.24612 1.69787 7.35465C1.08227 6.4438 0.516312 5.54264 0 4.65116C0.695035 4.10853 1.41986 3.50775 2.17447 2.84884C2.94894 2.18992 3.69362 1.53101 4.40851 0.872092Z" fill="#DDE2E8" />
+  </Svg>
+);
+
+const ChevronRight = () => (
+  <Svg width={12} height={12} viewBox="0 0 12 12" fill="none">
+    <Path d="M5 9L8 6L5 3L5 9Z" fill="#BBC1C9" stroke="#BBC1C9" strokeLinejoin="round" />
+  </Svg>
+);
+
 export default function DetailScreen({ navigation }) {
   const { getNew, getPassed, getPending, getRejected, getResumeUpdateCount } = useApp();
   const newCount = getNew().length;
@@ -67,6 +79,31 @@ export default function DetailScreen({ navigation }) {
           <Text style={styles.summarySub}>点击逐个处理，支持滑动切换</Text>
         </View>
       </TouchableOpacity>
+
+      {/* Candidate preview card */}
+      {newCount > 0 && (
+        <View style={styles.previewCard}>
+          {newCandidates.slice(0, 2).map((c, i) => (
+            <React.Fragment key={c.id}>
+              {i > 0 && <View style={styles.previewDivider} />}
+              <TouchableOpacity style={styles.previewItem} activeOpacity={0.7} onPress={() => navigation.navigate('Decision', { candidateId: c.id })}>
+                <View style={styles.previewNameRow}>
+                  <Text style={styles.previewName}>{c.name}</Text>
+                  <Text style={styles.previewMeta}>{c.exp}经验 · {c.edu}</Text>
+                </View>
+                <View style={styles.previewQuoteRow}>
+                  <QuoteIcon />
+                  <Text style={styles.previewQuote} numberOfLines={1}>{c.aiReason}</Text>
+                </View>
+              </TouchableOpacity>
+            </React.Fragment>
+          ))}
+          <TouchableOpacity style={styles.previewFooter} activeOpacity={0.7} onPress={() => navigation.navigate('Decision')}>
+            <Text style={styles.previewFooterText}>查看全部候选人</Text>
+            <ChevronRight />
+          </TouchableOpacity>
+        </View>
+      )}
 
       {/* Stats row */}
       <View style={styles.statsRow}>
@@ -150,13 +187,28 @@ const styles = StyleSheet.create({
   summaryCard: {
     flexDirection: 'row', alignItems: 'center', gap: 16,
     marginHorizontal: 16, paddingHorizontal: 20, paddingVertical: 6, height: 92,
-    backgroundColor: '#fff', borderRadius: 12,
-    shadowColor: '#E8B878', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.3, shadowRadius: 20, elevation: 5,
+    backgroundColor: '#fff', borderRadius: 12, zIndex: 2,
+    shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 16, elevation: 5,
   },
   summaryNum: { fontSize: 60, fontWeight: '500', color: '#EFB54D', letterSpacing: 1.1, lineHeight: 78 },
   summaryTextCol: { flex: 1, gap: 6 },
   summaryTitle: { fontSize: 20, fontWeight: '600', color: '#000', letterSpacing: 0.5, lineHeight: 24 },
   summarySub: { fontSize: 14, color: '#7B838D', lineHeight: 21 },
+  previewCard: {
+    marginHorizontal: 16, marginTop: -12,
+    backgroundColor: '#fff', borderBottomLeftRadius: 12, borderBottomRightRadius: 12,
+    paddingHorizontal: 16, paddingTop: 28, paddingBottom: 14, gap: 12,
+    shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.04, shadowRadius: 12, elevation: 2,
+  },
+  previewItem: { gap: 4 },
+  previewNameRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  previewName: { fontSize: 16, fontWeight: '600', color: '#000' },
+  previewMeta: { fontSize: 12, color: '#000', letterSpacing: 0.5, lineHeight: 18 },
+  previewQuoteRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  previewQuote: { flex: 1, fontSize: 13, color: '#7B838D', letterSpacing: 0.5, lineHeight: 18 },
+  previewDivider: { height: 0.5, backgroundColor: '#F1F2F4' },
+  previewFooter: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
+  previewFooterText: { fontSize: 14, color: '#BBC1C9', lineHeight: 21 },
 
   statsRow: { flexDirection: 'row', alignItems: 'center', marginTop: 24, marginBottom: 24 },
   statCol: { flex: 1, alignItems: 'center' },
