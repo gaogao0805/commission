@@ -109,7 +109,7 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
     <Animated.View
       style={[styles.swipeCard, {
         transform: [{ translateX: pan.x }, { translateY: pan.y }],
-        bottom: expanded ? expanded.interpolate({ inputRange: [0, 1], outputRange: [0, -48] }) : 0,
+        bottom: expanded ? expanded.interpolate({ inputRange: [0, 1], outputRange: [0, -108] }) : 0,
       }]}
       {...(isFront ? panResponder.panHandlers : {})}
     >
@@ -223,6 +223,21 @@ function SwipeableCard({ candidate, isFront, behind, onSwipe, onNavigate, onRequ
           ])}
         </View>
       </ScrollView>
+      <Animated.View pointerEvents="none" style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0, height: 48,
+        borderBottomLeftRadius: 12, borderBottomRightRadius: 12, overflow: 'hidden',
+        opacity: expanded ? expanded.interpolate({ inputRange: [0, 1], outputRange: [0, 1] }) : 0,
+      }}>
+        <Svg width="100%" height="48" preserveAspectRatio="none">
+          <Defs>
+            <SvgLinearGradient id="cardFadeGrad" x1="0" y1="0" x2="0" y2="1">
+              <Stop offset="0" stopColor="#ffffff" stopOpacity="0" />
+              <Stop offset="1" stopColor="#ffffff" stopOpacity="1" />
+            </SvgLinearGradient>
+          </Defs>
+          <Rect x="0" y="0" width="100%" height="48" fill="url(#cardFadeGrad)" />
+        </Svg>
+      </Animated.View>
     </Animated.View>
   );
 }
@@ -236,11 +251,11 @@ export default function DecisionScreen({ navigation, route }) {
   const isExpanded = useRef(false);
   const [toast, setToast] = useState({ visible: false, message: '', type: '' });
 
-  const handleCardScroll = useCallback((y) => {
+  const handleCardScroll = useCallback((y, isEnd) => {
     if (y > 30 && !isExpanded.current) {
       isExpanded.current = true;
       Animated.spring(expanded, { toValue: 1, useNativeDriver: false, friction: 8 }).start();
-    } else if (y <= 0 && isExpanded.current) {
+    } else if (y <= 0 && isExpanded.current && isEnd) {
       isExpanded.current = false;
       Animated.spring(expanded, { toValue: 0, useNativeDriver: false, friction: 8 }).start();
     }
@@ -366,7 +381,7 @@ export default function DecisionScreen({ navigation, route }) {
                   <Path d="M5.10221 5.18514L13.1834 13.2664M13.1834 5.18514L5.10221 13.2664" stroke={pressed ? '#fff' : '#F58973'} strokeWidth={2} strokeLinecap="round" />
                 </Svg>
               </View>
-              <Text style={styles.actionLabel}>拒绝</Text>
+              <Animated.Text style={[styles.actionLabel, { opacity: expanded.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }) }]}>拒绝</Animated.Text>
             </>
           )}
         </Pressable>
@@ -378,7 +393,7 @@ export default function DecisionScreen({ navigation, route }) {
                   <Circle cx={9.14272} cy={9.14174} r={4.57143} stroke={pressed ? '#fff' : '#F5D773'} strokeWidth={2} />
                 </Svg>
               </View>
-              <Text style={styles.actionLabel}>待定</Text>
+              <Animated.Text style={[styles.actionLabel, { opacity: expanded.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }) }]}>待定</Animated.Text>
             </>
           )}
         </Pressable>
@@ -390,7 +405,7 @@ export default function DecisionScreen({ navigation, route }) {
                   <Path d="M13.7144 5.33203L7.18378 12.9511L4.57153 9.90346" stroke={pressed ? '#fff' : '#6FCDAE'} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
                 </Svg>
               </View>
-              <Text style={styles.actionLabel}>通过</Text>
+              <Animated.Text style={[styles.actionLabel, { opacity: expanded.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }) }]}>通过</Animated.Text>
             </>
           )}
         </Pressable>
@@ -422,7 +437,7 @@ const styles = StyleSheet.create({
   indRejectT: { fontSize: 18, fontWeight: '700', color: '#dc2626' },
   indPend: { bottom: 20, alignSelf: 'center', left: '35%', borderColor: '#d97706', backgroundColor: 'rgba(217,119,6,0.1)' },
   indPendT: { fontSize: 18, fontWeight: '700', color: '#d97706' },
-  cardContent: { gap: 29, paddingHorizontal: 20, paddingVertical: 10 },
+  cardContent: { gap: 29, paddingHorizontal: 20, paddingTop: 10, paddingBottom: 56 },
   profileRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   swipeProfile: { gap: 8 },
   nameMatchRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
@@ -476,7 +491,7 @@ const styles = StyleSheet.create({
   dot: { width: 2, height: 1, borderRadius: 34, backgroundColor: '#BBC1C9' },
   hint: { alignItems: 'center', gap: 2, marginTop: 4, paddingBottom: 8 },
   hintText: { fontSize: 14, color: '#9EA7B3' },
-  actions: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 48, paddingBottom: 8, paddingTop: 4 },
+  actions: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 48, paddingBottom: 8, paddingTop: 4, zIndex: 10 },
   actionItem: { alignItems: 'center', gap: 6 },
   actionCircle: { width: 36, height: 36, borderRadius: 18, backgroundColor: '#fff', borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
   actionLabel: { fontSize: 14, color: '#656D76', letterSpacing: 0.5 },
